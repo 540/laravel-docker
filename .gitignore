@@ -3,7 +3,6 @@
 #  please consider a global .gitignore https://help.github.com/articles/ignoring-files
 .vagrant*
 bin
-mysql/*
 docker/docker
 .*.swp
 a.out
