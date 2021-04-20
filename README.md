@@ -1,5 +1,3 @@
-<p align="center"><a href="https://540deg.com" target="_blank"><img src="https://pbs.twimg.com/profile_images/626765331357413376/p6BePNV1_400x400.jpg" width="200"></a></p>
-
 Laravel docker
 
 The project must be mounted using docker:
