@@ -1,5 +1,3 @@
-<p align="center"><a href="https://540deg.com" target="_blank"><img src="https://pbs.twimg.com/profile_images/626765331357413376/p6BePNV1_400x400.jpg" width="200"></a></p>
-
 Laravel docker
 
 The project must be mounted using docker:
@@ -10,7 +8,12 @@ The project must be mounted using docker:
 - From inside the machine:
   - Run: composer install
   - Copy the .env.example to .env
+  - Add "APP_KEY=" to new .env
   - Run: php artisan key:generate
+- From outside the machine:
+  - Run: composer install
+  - Run: cp git-hooks/pre-commit .git/hooks/pre-commit
+  - Run: chmod +x .git/hooks/pre-commit
 - Web running on http://localhost:8088
 - Api status check running on GET request: http://localhost:8088/api/status
 - Swagger running on http://localhost:8082/

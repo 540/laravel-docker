@@ -21,5 +21,6 @@ bundles/
 .hg/
 .git/
 vendor/pkg/
+vendor
 pyenv
 Vagrantfile
