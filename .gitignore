@@ -23,4 +23,5 @@ bundles/
 vendor/pkg/
 vendor
 pyenv
-Vagrantfile
+Vagrantfile 
+mysql/ib*
