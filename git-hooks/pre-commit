@@ -26,7 +26,7 @@ fi
 
 echo "\n\033[32mNo PHP syntax errors detected!\033[0m\n"
 
-echo "\nValidating PHPCS:"
+echo "\n\nValidating PHPCS:"
 
 # Check for phpcs
 which ./vendor/bin/phpcs &> /dev/null
@@ -62,8 +62,26 @@ echo "\nPHPCS validation completed!\n"
 if ! $PASS; then
   echo "\033[41mCOMMIT FAILED:\033[0m Your commit contains files that should pass PHPCS but do not. Please fix the PHPCS errors and try again.\n"
   exit 1
+fi
+
+echo "\n\nValidating PHP Unit Tests:\n"
+
+./vendor/bin/phpunit --configuration src/phpunit.xml
+
+if [[ "$?" == 0 ]]; then
+  echo "\n\033[32mPHP Unit Tests Passed\033[0m"
 else
-  echo "\033[42mCOMMIT SUCCEEDED\033[0m\n"
+  echo "\n\033[41mPHP Unit Tests Failed\033[0m"
+  PASS=false
+fi
+
+echo "\nPHP Unit Tests validation completed!"
+
+if ! $PASS; then
+  echo "\n\033[41mCOMMIT FAILED:\033[0m Your commit files should pass PHP Unit Tests but do not. Please fix the PHP Unit TestsZ errors and try again.\n"
+  exit 1
+else
+  echo "\n\033[42mCOMMIT SUCCEEDED\033[0m\n"
 fi
 
 exit $?
