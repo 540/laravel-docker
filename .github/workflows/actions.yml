@@ -23,9 +23,13 @@ jobs:
              composer install;
              composer update;
 
-      - name: Run php lint
+      - name: Run php app lint
         run: cd src;
              php -l app -q;
+
+      - name: Run php routes lint
+          run: cd src;
+               php -l routes -q;
 
       - name: Run php test lint
         run: cd src;
