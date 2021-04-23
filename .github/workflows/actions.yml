@@ -25,7 +25,7 @@ jobs:
 
       - name: Run php lint
         run: cd src;
-             php -l src -q;
+             php -l app -q;
 
       - name: Run php test lint
         run: cd src;
