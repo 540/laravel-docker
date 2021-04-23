@@ -25,7 +25,7 @@ jobs:
           php-version: '7.4'
 
       - name: Install dependencies
-        uses: composer.json
+        uses: src/composer.json
         with:
           path: /src
 
