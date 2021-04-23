@@ -18,9 +18,6 @@ jobs:
           tools: composer:v2
           php-version: '7.4'
 
-      - name: Check files
-        run: ls -al
-
       - name: Install dependencies
         run: composer install
 
