@@ -19,7 +19,7 @@ jobs:
           php-version: '7.4'
 
       - name: Update dependencies
-        run: composer update
+        run: src/composer update
 
       - name: Run unit test
         run: ./vendor/bin/phpunit -c phpunit.xml
