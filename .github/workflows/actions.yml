@@ -12,14 +12,20 @@ jobs:
       - name: Checkout develop
         uses: actions/checkout@v2
 
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache/files
+          key: dependencies-composer-${{ hashFiles('composer.json') }}
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           tools: composer:v2
           php-version: '7.4'
 
-      - name: Update dependencies
-        run: ./commands.bat
+      - name: Install dependencies
+        run: composer install
 
       - name: Run unit test
         run: ./vendor/bin/phpunit -c phpunit.xml
