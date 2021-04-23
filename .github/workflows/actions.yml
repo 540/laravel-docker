@@ -25,9 +25,9 @@ jobs:
           php-version: '7.4'
 
       - name: Install dependencies
-        uses: src/composer.json
-        with:
-          path: /src
+        run: cd /src;
+             composer install;
+             composer update;
 
       - name: Run unit test
         run: ./vendor/bin/phpunit -c phpunit.xml
