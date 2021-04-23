@@ -30,4 +30,5 @@ jobs:
              composer update;
 
       - name: Run unit test
-        run: ./vendor/bin/phpunit -c phpunit.xml
+        run: cd src;
+             ./vendor/bin/phpunit -c phpunit.xml;
