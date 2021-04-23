@@ -3,7 +3,7 @@ on:
   push:
     branches: [ develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ develop ]
 
 jobs:
   validate:
@@ -18,8 +18,8 @@ jobs:
           tools: composer:v2
           php-version: '7.4'
 
-      - name: Install dependencies
-        run: composer install
+      - name: Update dependencies
+        run: composer update
 
       - name: Run unit test
         run: ./vendor/bin/phpunit -c phpunit.xml
