@@ -12,12 +12,6 @@ jobs:
       - name: Checkout develop
         uses: actions/checkout@v2
 
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.composer/cache/files
-          key: dependencies-composer-${{ hashFiles('composer.json') }}
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -28,6 +22,14 @@ jobs:
         run: cd src;
              composer install;
              composer update;
+
+      - name: Run php lint
+        run: cd src;
+             php -l src -q;
+
+      - name: Run php test lint
+        run: cd src;
+             php -l tests -q;
 
       - name: Run unit test
         run: cd src;
