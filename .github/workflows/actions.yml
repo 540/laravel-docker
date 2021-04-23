@@ -25,9 +25,9 @@ jobs:
           php-version: '7.4'
 
       - name: Install dependencies
+        run: composer install
         with:
           path: ~/.composer/cache/files
-        run: composer install
 
       - name: Run unit test
         run: ./vendor/bin/phpunit -c phpunit.xml
