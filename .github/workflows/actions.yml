@@ -28,8 +28,8 @@ jobs:
              php -l app -q;
 
       - name: Run php routes lint
-          run: cd src;
-               php -l routes -q;
+        run: cd src;
+             php -l routes -q;
 
       - name: Run php test lint
         run: cd src;
