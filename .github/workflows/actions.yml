@@ -25,7 +25,9 @@ jobs:
           php-version: '7.4'
 
       - name: Install dependencies
-        uses: commands.bat
+        uses: composer.json
+        with:
+          path: /src
 
       - name: Run unit test
         run: ./vendor/bin/phpunit -c phpunit.xml
