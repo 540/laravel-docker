@@ -23,6 +23,9 @@ jobs:
              composer install;
              composer update;
 
+      - name: Generate key
+        run:  php artisan key:generate;
+
       - name: Run php app lint
         run: cd src;
              php -l app -q;
