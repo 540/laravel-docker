@@ -24,7 +24,8 @@ jobs:
              composer update;
 
       - name: Generate key
-        run:  php artisan key:generate;
+        run:  cd src;
+              php artisan key:generate;
 
       - name: Run php app lint
         run: cd src;
