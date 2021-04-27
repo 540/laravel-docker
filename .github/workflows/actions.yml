@@ -24,7 +24,7 @@ jobs:
              composer update;
 
       - name: Generate key
-        run:  cp .env /src;
+        run:  cp .env src;
               cd src;
               php artisan key:generate;
 
