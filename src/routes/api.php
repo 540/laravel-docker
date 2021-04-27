@@ -23,3 +23,8 @@ Route::get(
     '/status',
     StatusController::class
 );
+
+Route::post(
+    '/wallet/open',
+    StatusController::class
+);
