@@ -23,3 +23,4 @@ Route::get(
     '/status',
     StatusController::class
 );
+
