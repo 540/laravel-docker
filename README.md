@@ -1,4 +1,4 @@
-Laravel docker
+**Laravel docker**
 
 The project must be mounted using docker:
 
@@ -31,4 +31,10 @@ The project must be mounted using docker:
 - To stop de container:
   docker-compose stop
 
+**Git rules**
+- Commit syntax => git commit -m "[] - Your text..."
+- Create one branch for each issue => (git branch <new branch name> , git checkout <new branch name>)
+- When an issue is closed => git commit -m "[#issueId] - Your text..."
+
 :)
+
