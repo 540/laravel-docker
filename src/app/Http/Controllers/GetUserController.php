@@ -10,12 +10,23 @@ use Illuminate\Support\Facades\DB;
 
 class GetUserController extends BaseController
 {
-    public function __invoke(string $id): JsonResponse
+    private $isEarlyAdopterService;
+
+    public function __constructor($isEarlyAdopterService){
+        $this->isEarlyAdopterService = $isEarlyAdopterService;
+    }
+
+    public function __invoke($id): JsonResponse
     {
-        $user = DB::table('users')->where('id', $id)->first();
+        try{
+            $isEarlyAdopter = $this->isEarlyAdopterService->execute();
+        }catch (Exception $exception){
+            return response()->json([
+                'error' => $exception->getMessage()
+            ]);
+        }
         return response()->json([
-            'name' => $user->name,
-            'email' => $user->email
+            'earlyAdopter' => $isEarlyAdopter
         ], Response::HTTP_OK);
     }
 }

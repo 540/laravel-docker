@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GetUserController;
 use App\Http\Controllers\StatusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,11 @@ use Illuminate\Support\Facades\Route;
 Route::get(
     '/status',
     StatusController::class
+);
+
+Route::get(
+    '/user/{email}',
+    GetUserController::class
 );
 
 Route::post(
