@@ -13,8 +13,7 @@ class StatusController extends BaseController
 
 
     public function __invoke(): JsonResponse
-    {
-        try {
+    {try {
             DB::connection()->getDatabaseName();
             DB::connection()->getPdo();
         } catch (Exception $exception) {
