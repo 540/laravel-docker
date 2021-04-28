@@ -13,14 +13,15 @@ class StatusController extends BaseController
 
 
     public function __invoke(): JsonResponse
-    {try {
+    {
+        try {
             DB::connection()->getDatabaseName();
             DB::connection()->getPdo();
         } catch (Exception $exception) {
             return response()->json(
                 [
-                    'status' => 'Error', 'message' => 'Database is not available',
-                    'data' => $exception->getMessage()
+                'status' => 'Error', 'message' => 'Database is not available',
+                'data' => $exception->getMessage()
                 ],
                 Response::HTTP_NOT_FOUND
             );
