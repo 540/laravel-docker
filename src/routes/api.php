@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\IsEarlyAdopterController;
 use App\Http\Controllers\StatusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,3 +25,8 @@ Route::get(
     StatusController::class
 );
 
+// EJEMPLO PARA OBTENER LOS DATOS DE UN USUARIO
+Route::get(
+    'user/{id}', //así se obtienen parametros por url
+    IsEarlyAdopterController::class
+);
