@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\IsEarlyAdopterController;
+use App\Http\Controllers\OpenWalletController;
 use App\Http\Controllers\StatusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,3 +31,9 @@ Route::get(
     'user/{id}', //así se obtienen parametros por url
     IsEarlyAdopterController::class
 );
+
+Route::post(
+    '/wallet/open', //así se obtienen parametros por url
+    OpenWalletController::class
+);
+

@@ -53,4 +53,5 @@ class IsEarlyAdopterController extends BaseController
             'adopter' => $ieEarlyAdopter
         ], Response::HTTP_OK);
     }
+
 }
