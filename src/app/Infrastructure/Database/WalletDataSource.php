@@ -24,6 +24,6 @@ class WalletDataSource
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
      */
     public function findWalletByUserId($id){
-        return DB::table('wallet')->where('id_user',$id)->first();
+        return DB::table('wallet')->select('id')->where('id_user',$id)->first();
     }
 }
