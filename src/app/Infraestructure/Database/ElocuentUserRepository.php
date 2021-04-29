@@ -7,6 +7,6 @@ namespace App\Infraestructure\Database;
 class ElocuentUserRepository
 {
     public function findByEmail($email){
-        return $user = DB::tabler('susers')->where('email', $email)->first();
+        return $user = DB::table('susers')->where('email', $email)->first();
     }
 }
