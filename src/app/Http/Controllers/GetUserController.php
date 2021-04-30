@@ -12,14 +12,15 @@ class GetUserController extends BaseController
 {
     private $isEarlyAdopterService;
 
-    public function __constructor($isEarlyAdopterService){
+    public function __constructor($isEarlyAdopterService)
+    {
         $this->isEarlyAdopterService = $isEarlyAdopterService;
     }
 
-    public function __invoke($id): JsonResponse
+    public function __invoke($email): JsonResponse
     {
         try{
-            $isEarlyAdopter = $this->isEarlyAdopterService->execute();
+            $isEarlyAdopter = $this->isEarlyAdopterService->execute($email);
         }catch (Exception $exception){
             return response()->json([
                 'error' => $exception->getMessage()

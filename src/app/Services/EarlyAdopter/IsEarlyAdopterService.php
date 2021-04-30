@@ -15,9 +15,8 @@ class IsEarlyAdopterService
         $this->elocuentUserRepository = $elocuentUserDataSource;
     }
 
-
     public function execute(string $email){
-        $user =$this->elocuentUserRepository->findByEmail($email);
+        $user = $this->elocuentUserRepository->findByEmail($email);
         if($user == null){
             throw new \Exception('User not found');
         }

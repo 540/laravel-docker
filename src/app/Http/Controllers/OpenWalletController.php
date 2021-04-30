@@ -8,10 +8,19 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Scalar\String_;
 
 class OpenWalletController extends BaseController
 {
-    public function store(Request $request){
-        //$wallet = DB::table('wallet')->create('idWallet', $request->data()['userId'])->;
+
+    public function __constructor(){
     }
+
+    public function openWallet(String $userId): JsonResponse
+    {
+        return response()->json([
+            'error' => "Error while creating the wallet"
+        ]);
+    }
+
 }

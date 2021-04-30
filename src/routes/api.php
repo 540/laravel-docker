@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GetUserController;
+use App\Http\Controllers\OpenWalletController;
 use App\Http\Controllers\StatusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,6 @@ Route::get(
 );
 
 Route::post(
-    '/wallet/open',
-    'OpenWalletContoller@store'
+    '/wallet/open/{userId}',
+    'OpenWalletController@openWallet'
 );

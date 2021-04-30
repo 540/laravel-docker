@@ -4,9 +4,11 @@
 namespace App\Infraestructure\Database;
 
 
+use Illuminate\Support\Facades\DB;
+
 class ElocuentUserRepository
 {
     public function findByEmail($email){
-        return $user = DB::table('susers')->where('email', $email)->first();
+        return $user = DB::table('users')->where('email', $email)->first();
     }
 }
