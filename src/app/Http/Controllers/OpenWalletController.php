@@ -20,7 +20,7 @@ class OpenWalletController extends BaseController
     {
         return response()->json([
             'error' => "Error while creating the wallet"
-        ]);
+        ],Response::HTTP_NOT_FOUND);
     }
 
 }

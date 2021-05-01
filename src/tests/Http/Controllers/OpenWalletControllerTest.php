@@ -5,7 +5,8 @@ namespace Tests\Unit\Controllers;
 use App\Http\Controllers\OpenWalletController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Support\Facades\Event;
+use Tests\TestCase;
 
 class OpenWalletControllerTest extends TestCase
 {
@@ -25,5 +26,4 @@ class OpenWalletControllerTest extends TestCase
 
         $this->assertJson($expectedResponse, $response);
     }
-
 }
