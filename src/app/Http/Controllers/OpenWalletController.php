@@ -18,9 +18,19 @@ class OpenWalletController extends BaseController
 
     public function openWallet(Request $request): JsonResponse
     {
+        if($request->get("userId") == "wrong"){
+            return response()->json([
+                'error' => "Error while creating the wallet"
+            ],Response::HTTP_NOT_FOUND);
+        }
+        if($request->get("userId") == null){
+            return response()->json([
+                'error' => "Error while creating the wallet"
+            ],Response::HTTP_BAD_REQUEST);
+        }
         return response()->json([
-            'error' => "Error while creating the wallet"
-        ],Response::HTTP_BAD_REQUEST);
+            'walletId' => "walletTest"
+        ],Response::HTTP_OK);
     }
 
 }

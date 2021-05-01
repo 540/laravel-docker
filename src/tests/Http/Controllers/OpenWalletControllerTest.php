@@ -3,6 +3,7 @@
 namespace Tests\Unit\Controllers;
 
 use App\Http\Controllers\OpenWalletController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
@@ -13,21 +14,60 @@ class OpenWalletControllerTest extends TestCase
     /**
      * @test
      **/
-    public function getErrorMessageWhenAInvalidUserIdIsReceived ()
+    public function getsHttpNotFoundWhenAInvalidUserIdIsReceived ()
     {
-        Event::fake();
-
         $openWalletController = new OpenWalletController();
 
         $request = Request::create('/wallet/open', 'POST',[
-            'title'     =>     'foo',
-            'text'     =>     'bar',
+            'userId' => 'wrong'
         ]);
 
         $response = $openWalletController->openWallet($request);
-        $json = json_encode(array('error' => "Error while creating the wallet"));
 
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertEquals($json, $response->getContent());
+        $expectedResponse = response()->json([
+            'error' => "Error while creating the wallet"
+        ],Response::HTTP_NOT_FOUND);
+
+        $this->assertEquals($expectedResponse, $response);
+    }
+
+    /**
+     * @test
+     **/
+    public function getsHttpBadRequestWhenUserIdFieldIsNotFound ()
+    {
+        $openWalletController = new OpenWalletController();
+
+        $request = Request::create('/wallet/open', 'POST',[
+            'user_Id' => 'wrong'
+        ]);
+
+        $response = $openWalletController->openWallet($request);
+
+        $expectedResponse = response()->json([
+            'error' => "Error while creating the wallet"
+        ],Response::HTTP_BAD_REQUEST);
+
+        $this->assertEquals($expectedResponse, $response);
+    }
+
+    /**
+     * @test
+     **/
+    public function getsSuccessfulOperationWhenUserIdIsFound ()
+    {
+        $openWalletController = new OpenWalletController();
+
+        $request = Request::create('/wallet/open', 'POST',[
+            'userId' => 'userId'
+        ]);
+
+        $response = $openWalletController->openWallet($request);
+
+        $expectedResponse = response()->json([
+            'walletId' => "walletTest"
+        ],Response::HTTP_OK);
+
+        $this->assertEquals($expectedResponse, $response);
     }
 }
