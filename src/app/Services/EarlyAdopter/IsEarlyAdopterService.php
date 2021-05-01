@@ -5,6 +5,7 @@ namespace App\Services\EarlyAdopter;
 
 
 use App\Infraestructure\Database\ElocuentUserRepository;
+use App\Services\ServiceManager;
 use Egulias\EmailValidator\Exception\ExpectingAT;
 
 class IsEarlyAdopterService

@@ -3,26 +3,41 @@
 namespace Tests\Unit\Controllers;
 
 use App\Http\Controllers\OpenWalletController;
+use App\Services\ServiceManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
+use Prophecy\Prophet;
 use Tests\TestCase;
 
 class OpenWalletControllerTest extends TestCase
 {
+    private ServiceManager $serviceManager;
+    private Prophet $prophet;
+    private OpenWalletController $openWalletController;
+
+    protected function setUp():void
+    {
+        $this->prophet = new Prophet;
+        $this->serviceManager = $this->prophet->prophesize(ServiceManager::class);
+        $this->openWalletController = new OpenWalletController($this->serviceManager->reveal());
+    }
+
     /**
      * @test
      **/
     public function getsHttpNotFoundWhenAInvalidUserIdIsReceived ()
     {
-        $openWalletController = new OpenWalletController();
+        $this->setUp();
 
         $request = Request::create('/wallet/open', 'POST',[
             'userId' => 'wrong'
         ]);
 
-        $response = $openWalletController->openWallet($request);
+        $this->serviceManager->getResponse($request)->willReturn("wrong");
+
+        $response = $this->openWalletController->openWallet($request);
 
         $expectedResponse = response()->json([
             'error' => "Error while creating the wallet"
@@ -36,13 +51,15 @@ class OpenWalletControllerTest extends TestCase
      **/
     public function getsHttpBadRequestWhenUserIdFieldIsNotFound ()
     {
-        $openWalletController = new OpenWalletController();
+        $this->setUp();
 
         $request = Request::create('/wallet/open', 'POST',[
             'user_Id' => 'wrong'
         ]);
 
-        $response = $openWalletController->openWallet($request);
+        $this->serviceManager->getResponse($request)->willReturn(null);
+
+        $response = $this->openWalletController->openWallet($request);
 
         $expectedResponse = response()->json([
             'error' => "Error while creating the wallet"
@@ -56,13 +73,15 @@ class OpenWalletControllerTest extends TestCase
      **/
     public function getsSuccessfulOperationWhenUserIdIsFound ()
     {
-        $openWalletController = new OpenWalletController();
+        $this->setUp();
 
         $request = Request::create('/wallet/open', 'POST',[
             'userId' => 'userId'
         ]);
 
-        $response = $openWalletController->openWallet($request);
+        $this->serviceManager->getResponse($request)->willReturn("walletTest");
+
+        $response = $this->openWalletController->openWallet($request);
 
         $expectedResponse = response()->json([
             'walletId' => "walletTest"
