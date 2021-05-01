@@ -32,6 +32,6 @@ Route::get(
 );
 
 Route::post(
-    '/wallet/open/{userId}',
+    '/wallet/open',
     'OpenWalletController@openWallet'
 );

@@ -3,9 +3,9 @@
 namespace Tests\Unit\Controllers;
 
 use App\Http\Controllers\OpenWalletController;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Request;
 use Tests\TestCase;
 
 class OpenWalletControllerTest extends TestCase
@@ -15,15 +15,19 @@ class OpenWalletControllerTest extends TestCase
      **/
     public function getErrorMessageWhenAInvalidUserIdIsReceived ()
     {
-        $wrongUserId = "wrongUserId";
+        Event::fake();
 
         $openWalletController = new OpenWalletController();
-        $response = $openWalletController->openWallet($wrongUserId);
 
-        $expectedResponseArray = array('error' => "Error while creating the wallet");
+        $request = Request::create('/wallet/open', 'POST',[
+            'title'     =>     'foo',
+            'text'     =>     'bar',
+        ]);
 
-        $expectedResponse = json_encode($expectedResponseArray);
+        $response = $openWalletController->openWallet($request);
+        $json = json_encode(array('error' => "Error while creating the wallet"));
 
-        $this->assertJson($expectedResponse, $response);
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals($json, $response->getContent());
     }
 }
