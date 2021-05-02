@@ -16,8 +16,10 @@ class WalletDatabase implements DatabaseManager
         if($user == null){
             return null;
         }
-
-        $wallet = new Wallet();
+        $id = DB::table('wallet')->insertGetId(
+            ['userId' => $value]
+        );
+        return new Wallet($id, $value);
     }
 
     public function get(string $field)

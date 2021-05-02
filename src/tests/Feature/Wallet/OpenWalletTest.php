@@ -5,7 +5,7 @@ namespace Tests\Feature\Wallet;
 use App\Http\Controllers\OpenWalletController;
 use App\Models\User;
 use App\Services\ServiceManager;
-use FakeUserManager;
+use Database\Fakers\FakeUserManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
