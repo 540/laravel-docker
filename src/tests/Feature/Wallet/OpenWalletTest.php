@@ -3,9 +3,11 @@
 namespace Tests\Feature\Wallet;
 
 use App\Http\Controllers\OpenWalletController;
+use App\Infraestructure\Database\WalletDatabase;
 use App\Models\User;
+use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\ServiceManager;
-use Database\Fakers\FakeUserManager;
+use Database\FakeUserManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -14,36 +16,25 @@ use Prophecy\Prophet;
 
 class OpenWalletTest extends TestCase
 {
-    private $serviceManager;
+    private FakeUserManager $fakeUserManager;
     private OpenWalletController $openWalletController;
-
-    protected function setUp():void
-    {
-        parent::setUp();
-        $prophet = new Prophet;
-        $this->serviceManager = $prophet->prophesize(ServiceManager::class);
-        $this->openWalletController = new OpenWalletController($this->serviceManager->reveal());
-    }
 
     /**
      * @test
      **/
     public function getsHttpNotFoundWhenAInvalidUserIdIsReceived ()
     {
-        $userId = "invalidUserId";
+        $userId = 'invalidUserId';
+        $this->openWalletController = new OpenWalletController(new OpenWalletService(new WalletDatabase()));
+
+
         $request = Request::create('/wallet/open', 'POST',[
             'userId' => $userId
         ]);
 
-        $this->serviceManager->getResponse($request)->willReturn("user not found");
-
         $response = $this->openWalletController->openWallet($request);
 
-        $expectedResponse = response()->json([
-            'error' => "Error while creating the wallet"
-        ],Response::HTTP_NOT_FOUND);
-
-        $this->assertEquals($expectedResponse, $response);
+        $response->assertStatus(404);
     }
 
     /**
@@ -51,20 +42,17 @@ class OpenWalletTest extends TestCase
      **/
     public function getsHttpBadRequestWhenUserIdFieldIsNotFound ()
     {
-        $userIdField = "invalidUserIdField";
-        $request = Request::create('/wallet/open', 'POST',[
-            $userIdField => 'userId'
-        ]);
+        $userId = "unknow";
 
-        $this->serviceManager->getResponse($request)->willReturn("user id field not found");
+        $this->openWalletController = new OpenWalletController(new OpenWalletService(new WalletDatabase()));
+
+        $request = Request::create('/wallet/open', 'POST',[
+            'user' => $userId
+        ]);
 
         $response = $this->openWalletController->openWallet($request);
 
-        $expectedResponse = response()->json([
-            'error' => "Error while creating the wallet"
-        ],Response::HTTP_BAD_REQUEST);
-
-        $this->assertEquals($expectedResponse, $response);
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -73,13 +61,19 @@ class OpenWalletTest extends TestCase
     public function getsSuccessfulOperationWhenUserIdIsFound ()
     {
         $userId = "validUserId";
-        $faker = new FakeUserManager(new User($userId));
-        $faker->insertFakeUser();
+        $this->openWalletController = new OpenWalletController(new OpenWalletService(new WalletDatabase()));
 
-        $response = $this->postJson('/api/wallet/open', ['userId' => $userId]);
-        $faker->deleteFakeUser();
+        $this->fakeUserManager = new FakeUserManager(new User($userId));
+        $this->fakeUserManager->insertFakeUser();
 
-        $response
-            ->assertStatus(200);
+        $request = Request::create('/wallet/open', 'POST',[
+            'userId' => $userId
+        ]);
+
+        $response = $this->openWalletController->openWallet($request);
+
+        $this->fakeUserManager->deleteFakeUser();
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\ServiceManager;
 use Exception;
 use Illuminate\Http\Request;
@@ -28,16 +29,17 @@ class OpenWalletController extends BaseController
 
     public function openWallet(Request $request): JsonResponse
     {
-        $response = $this->serviceManager->getResponse($request);
-        if($response == self::ERRORS['USER_NOT_FOUND_ERROR']){
-            return response()->json([
-                self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
-            ],Response::HTTP_NOT_FOUND);
-        }
-        if($response == self::ERRORS['USER_ID_FIELD_NOT_FOUND_ERROR']){
+        if ($request->has("userId") === false) {
             return response()->json([
                 self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
             ],Response::HTTP_BAD_REQUEST);
+        }
+
+        $response = $this->serviceManager->getResponse($request);
+        if($response == self::ERRORS['USER_ID_FIELD_NOT_FOUND_ERROR']){
+            return response()->json([
+                self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
+            ],Response::HTTP_NOT_FOUND);
         }
         return response()->json([
             'walletId' => $response

@@ -19,7 +19,7 @@ class OpenWalletService implements ServiceManager
 
     public function getResponse(Request $request): string
     {
-        $wallet = $this->databaseManager->set("userId", $request->get('userId'));
+        $wallet = $this->databaseManager->set("userId", $request->get("userId"));
         if($wallet == null){
             return "user not found";
         }
