@@ -13,6 +13,13 @@ use PhpParser\Node\Scalar\String_;
 
 class OpenWalletController extends BaseController
 {
+    private const ERRORS = [
+        'USER_NOT_FOUND_ERROR' => "user not found",
+        'USER_ID_FIELD_NOT_FOUND_ERROR' => "user id field not found",
+        'ERROR_FIELD' => "error",
+        'ERROR_MESSAGE' => "Error while creating the wallet"
+    ];
+
     private ServiceManager $serviceManager;
 
     public function __construct(ServiceManager $serviceManager){
@@ -22,14 +29,14 @@ class OpenWalletController extends BaseController
     public function openWallet(Request $request): JsonResponse
     {
         $response = $this->serviceManager->getResponse($request);
-        if($response == "wrong"){
+        if($response == self::ERRORS['USER_NOT_FOUND_ERROR']){
             return response()->json([
-                'error' => "Error while creating the wallet"
+                self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
             ],Response::HTTP_NOT_FOUND);
         }
-        if($response == null){
+        if($response == self::ERRORS['USER_ID_FIELD_NOT_FOUND_ERROR']){
             return response()->json([
-                'error' => "Error while creating the wallet"
+                self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
             ],Response::HTTP_BAD_REQUEST);
         }
         return response()->json([
