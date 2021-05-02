@@ -4,6 +4,7 @@ namespace Tests\Services\OpenWalletService;
 
 use App\Http\Controllers\OpenWalletController;
 use App\Infraestructure\Database\DatabaseManager;
+use App\Models\Wallet;
 use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\ServiceManager;
 use Illuminate\Http\Request;
@@ -52,12 +53,13 @@ class OpenWalletServiceTest extends TestCase
             'userId' => $userId
         ]);
 
-        $this->databaseManager->set("userId", $userId)->willReturn(null);
+        $walletId = "validWalletId";
+        $wallet = new Wallet($userId, $walletId);
+        $this->databaseManager->set("userId", $userId)->willReturn($wallet);
 
         $response = $this->openWalletService->getResponse($request);
-        $expectedResult = "user not found";
 
-        $this->assertEquals($expectedResult, $response);
+        $this->assertEquals($walletId, $response);
     }
 
 }

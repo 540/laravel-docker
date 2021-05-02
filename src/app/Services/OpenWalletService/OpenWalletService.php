@@ -5,10 +5,11 @@ namespace App\Services\OpenWalletService;
 
 
 use App\Infraestructure\Database\DatabaseManager;
+use App\Services\ServiceManager;
 use Illuminate\Http\Request;
 use Symfony\Component\VarDumper\Cloner\Data;
 
-class OpenWalletService implements \App\Services\ServiceManager
+class OpenWalletService implements ServiceManager
 {
     private DatabaseManager $databaseManager;
     public function __construct(DatabaseManager $databaseManager)
@@ -22,6 +23,6 @@ class OpenWalletService implements \App\Services\ServiceManager
         if($wallet == null){
             return "user not found";
         }
-        return $wallet->id;
+        return $wallet->getId();
     }
 }
