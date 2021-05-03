@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GetWalletCryptocurrenciesController;
 use App\Http\Controllers\IsEarlyAdopterController;
 use App\Http\Controllers\OpenWalletController;
 use App\Http\Controllers\StatusController;
@@ -33,7 +34,11 @@ Route::get(
 );
 
 Route::post(
-    '/wallet/open', //así se obtienen parametros por url
+    '/wallet/open',
     OpenWalletController::class
 );
 
+Route::get(
+    '/wallet/{wallet_id}',
+    GetWalletCryptocurrenciesController::class
+);
