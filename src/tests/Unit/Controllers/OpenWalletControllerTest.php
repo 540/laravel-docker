@@ -3,6 +3,7 @@
 namespace Tests\Unit\Controllers;
 
 use App\Http\Controllers\OpenWalletController;
+use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\ServiceManager;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -12,15 +13,15 @@ use Tests\TestCase;
 
 class OpenWalletControllerTest extends TestCase
 {
-    private $serviceManager;
+    private $openWalletService;
     private OpenWalletController $openWalletController;
 
     protected function setUp():void
     {
         parent::setUp();
         $prophet = new Prophet;
-        $this->serviceManager = $prophet->prophesize(ServiceManager::class);
-        $this->openWalletController = new OpenWalletController($this->serviceManager->reveal());
+        $this->openWalletService = $prophet->prophesize(OpenWalletService::class);
+        $this->openWalletController = new OpenWalletController($this->openWalletService->reveal());
     }
 
     /**
@@ -33,7 +34,7 @@ class OpenWalletControllerTest extends TestCase
             'userId' => $userId
         ]);
 
-        $this->serviceManager->getResponse($request)->willReturn("user not found");
+        $this->openWalletService->execute($userId)->willReturn(new \Exception("hola bom dia"));
 
         $response = $this->openWalletController->openWallet($request);
 
@@ -54,7 +55,7 @@ class OpenWalletControllerTest extends TestCase
             $userIdField => 'userId'
         ]);
 
-        $this->serviceManager->getResponse($request)->willReturn("user id field not found");
+        $this->openWalletService->execute($userIdField)->willReturn("user id field not found");
 
         $response = $this->openWalletController->openWallet($request);
 
@@ -76,7 +77,7 @@ class OpenWalletControllerTest extends TestCase
         ]);
 
         $walletId = "validWalletId";
-        $this->serviceManager->getResponse($request)->willReturn($walletId);
+        $this->openWalletService->execute($userId)->willReturn($walletId);
 
         $response = $this->openWalletController->openWallet($request);
 

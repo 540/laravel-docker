@@ -6,10 +6,12 @@ namespace App\Services\OpenWalletService;
 
 use App\Infraestructure\Database\DatabaseManager;
 use App\Services\ServiceManager;
+use Exception;
 use Illuminate\Http\Request;
 use Symfony\Component\VarDumper\Cloner\Data;
+use function PHPUnit\Framework\throwException;
 
-class OpenWalletService implements ServiceManager
+class OpenWalletService
 {
     private DatabaseManager $databaseManager;
     public function __construct(DatabaseManager $databaseManager)
@@ -17,12 +19,16 @@ class OpenWalletService implements ServiceManager
         $this->databaseManager = $databaseManager;
     }
 
-    public function getResponse(Request $request): string
+    /**
+     * @throws Exception
+     */
+    public function execute($userId): string
     {
-        $wallet = $this->databaseManager->set("userId", $request->get("userId"));
+        $wallet = $this->databaseManager->set("userId",$userId);
         if($wallet == null){
-            return "user not found";
+            throw new Exception("Error");
         }
         return $wallet->getId();
     }
+
 }

@@ -21,10 +21,10 @@ class OpenWalletController extends BaseController
         'ERROR_MESSAGE' => "Error while creating the wallet"
     ];
 
-    private ServiceManager $serviceManager;
+    private OpenWalletService $openWalletService;
 
-    public function __construct(ServiceManager $serviceManager){
-        $this->serviceManager = $serviceManager;
+    public function __construct(OpenWalletService $serviceManager){
+        $this->openWalletService = $serviceManager;
     }
 
     public function openWallet(Request $request): JsonResponse
@@ -34,16 +34,18 @@ class OpenWalletController extends BaseController
                 self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
             ],Response::HTTP_BAD_REQUEST);
         }
+        try {
+            $response = $this->openWalletService->execute($request->get("userId"));
+            echo $response;
+            return response()->json([
+                'walletId' => $response
+            ],Response::HTTP_OK);
+        } catch (Exception $exception) {
 
-        $response = $this->serviceManager->getResponse($request);
-        if($response == self::ERRORS['USER_ID_FIELD_NOT_FOUND_ERROR']){
             return response()->json([
                 self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
             ],Response::HTTP_NOT_FOUND);
         }
-        return response()->json([
-            'walletId' => $response
-        ],Response::HTTP_OK);
     }
 
 }

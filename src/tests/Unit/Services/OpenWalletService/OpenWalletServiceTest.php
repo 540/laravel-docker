@@ -35,9 +35,9 @@ class OpenWalletServiceTest extends TestCase
             'userId' => $userId
         ]);
 
-        $this->databaseManager->set("userId", $userId)->willReturn(null);
+        $this->databaseManager->set("userId", $userId)->willThrow(new \Exception("error"));
 
-        $response = $this->openWalletService->getResponse($request);
+        $response = $this->openWalletService->execute($userId);
         $expectedResult = "user not found";
 
         $this->assertEquals($expectedResult, $response);
