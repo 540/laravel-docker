@@ -5,6 +5,7 @@ namespace Tests\Unit\Controllers;
 use App\Http\Controllers\OpenWalletController;
 use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\ServiceManager;
+use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
@@ -34,7 +35,7 @@ class OpenWalletControllerTest extends TestCase
             'userId' => $userId
         ]);
 
-        $this->openWalletService->execute($userId)->willReturn(new \Exception("hola bom dia"));
+        $this->openWalletService->execute($userId)->willThrow(new Exception("Error"));
 
         $response = $this->openWalletController->openWallet($request);
 

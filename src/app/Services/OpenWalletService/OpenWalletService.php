@@ -19,9 +19,6 @@ class OpenWalletService
         $this->databaseManager = $databaseManager;
     }
 
-    /**
-     * @throws Exception
-     */
     public function execute($userId): string
     {
         $wallet = $this->databaseManager->set("userId",$userId);
