@@ -7,7 +7,7 @@ use App\Infraestructure\Database\WalletDatabase;
 use App\Models\User;
 use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\ServiceManager;
-use Database\FakeUserManager;
+use Database\Fakers\FakeUserManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -16,7 +16,7 @@ use Prophecy\Prophet;
 
 class OpenWalletTest extends TestCase
 {
-    private FakeUserManager $fakeUserManager;
+
     private OpenWalletController $openWalletController;
 
     /**
@@ -34,7 +34,7 @@ class OpenWalletTest extends TestCase
 
         $response = $this->openWalletController->openWallet($request);
 
-        $response->assertStatus(404);
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     /**
@@ -63,8 +63,8 @@ class OpenWalletTest extends TestCase
         $userId = "validUserId";
         $this->openWalletController = new OpenWalletController(new OpenWalletService(new WalletDatabase()));
 
-        $this->fakeUserManager = new FakeUserManager(new User($userId));
-        $this->fakeUserManager->insertFakeUser();
+        $fakeUserManager = new FakeUserManager(new User($userId));
+        $fakeUserManager->insertFakeUser();
 
         $request = Request::create('/wallet/open', 'POST',[
             'userId' => $userId
@@ -72,7 +72,7 @@ class OpenWalletTest extends TestCase
 
         $response = $this->openWalletController->openWallet($request);
 
-        $this->fakeUserManager->deleteFakeUser();
+        $fakeUserManager->deleteFakeUser();
 
         $this->assertEquals(200, $response->getStatusCode());
     }
