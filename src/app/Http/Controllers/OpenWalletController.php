@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\Adopter\GetWalletCryptocurrenciesService;
+use App\Http\Services\Adopter\OpenWalletService;
 use App\Infrastructure\Database\WalletDataSource;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,21 +18,23 @@ use Illuminate\Routing\Controller as BaseController;
 class OpenWalletController extends BaseController
 {
     /**
-     * @var WalletDataSource
+     * @var OpenWalletService
      */
-    private $wallet;
+    private $openWalletService;
 
     /**
-     * OpenWalletController constructor.
+     * IsEarlyAdopterController constructor.
+     * @param OpenWalletService $walletService
      */
-    public function __construct()
+    public function __construct(OpenWalletService $walletService)
     {
-        $this->wallet = new WalletDataSource();
+        $this->openWalletService = $walletService;
     }
 
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function __invoke(Request $request): JsonResponse
     {
@@ -38,11 +42,11 @@ class OpenWalletController extends BaseController
         $id = $request->input("user_id");
 
         // Guardar los datos
-        $wallet_id = $this->wallet->insertById($id);
+        $wallet = $this->openWalletService->execute($id);
 
         // Devolver json
         return response()->json([
-            'wallet_id' => $wallet_id
+            'wallet_id' => $wallet
         ], Response::HTTP_OK);
     }
 }

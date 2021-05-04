@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BuyCoinsController;
 use App\Http\Controllers\GetWalletCryptocurrenciesController;
 use App\Http\Controllers\IsEarlyAdopterController;
 use App\Http\Controllers\OpenWalletController;
@@ -41,4 +42,9 @@ Route::post(
 Route::get(
     '/wallet/{wallet_id}',
     GetWalletCryptocurrenciesController::class
+);
+
+Route::post(
+    '/coin/buy',
+    BuyCoinsController::class
 );
