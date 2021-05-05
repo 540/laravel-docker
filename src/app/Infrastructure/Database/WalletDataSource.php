@@ -24,7 +24,7 @@ class WalletDataSource
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
      */
     public function findWalletByUserId($id){
-        return DB::table('wallet')->select('id_wallet')->where('id_user',$id)->max('id_wallet');  //max para obtener el último resultado
+        return DB::table('wallet')->select('id')->where('id_user',$id)->max('id');  //max para obtener el último resultado
     }
 
     /**
@@ -32,7 +32,7 @@ class WalletDataSource
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
      */
     public function findWalletDataByWalletId($idWallet){
-        return DB::table('wallet')->where('id_wallet',$idWallet)->first();
+        return DB::table('transaction')->where('id_wallet',$idWallet)->get();
     }
 
     /**
@@ -40,19 +40,23 @@ class WalletDataSource
      * @param $idWallet
      * @param $amount
      * @param $buyedBitcoins
-     * @param $idUser
+     * @param $coinPrice
+     * @param $operation
      * @return string
      */
-    public function updateByIdWallet($idCoin, $idWallet, $amount, $buyedBitcoins, $idUser): string
+    public function insertByIdWallet($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation): string
     {
-        DB::table('wallet')->where('id_wallet',$idWallet)->where('id_user',$idUser)
-            ->update([
-                'id_wallet' => $idWallet,
-                'id_user' => $idUser,
-                'id_coin' => $idCoin,
-                'buyed_amount' => $amount,
-                'buy_price' => $buyedBitcoins
-            ]);
+        DB::table('transaction')->insert([
+            'id_wallet' => $idWallet,
+            'id_coin' => $idCoin,
+            'usd_buyed_amount' => $amount,
+            'buyed_coins_amount' => $buyedBitcoins,
+            'buyed_coins_usd_price'=>$coinPrice,
+            'operation'=>$operation
+        ]);
+
         return "OK";
+
+
     }
 }

@@ -14,11 +14,8 @@ class Wallet extends Migration
     public function up()
     {
         Schema::create('wallet', function (Blueprint $table) {
-            $table->id('id_wallet');
+            $table->id();
             $table->string('id_user');
-            $table->string('id_coin')->primary();       // 90
-            $table->string('buyed_amount');             // 50
-            $table->string('buy_price');                // 50/6000
             $table->timestamps();
         });
     }

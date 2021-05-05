@@ -51,14 +51,18 @@ class BuyCoinsController extends BaseController
         $coinData = json_decode($this->curl("https://api.coinlore.net/api/ticker/?id=".$idCoin));
 
         // Obtener precio de la moneda
-        $price = $coinData[0]->price_usd;
-        $buyedBitcoins = $amount/$price;
+        $coinPrice = $coinData[0]->price_usd;
+        $buyedCoins = $amount/$coinPrice;
+        $operation = "buy";
 
-        // Obtener el usuario de esa cartera
-        $walletData = $this->walletService->execute($idWallet); // devuelve todos los datos de esa cartera
         // Insertar en la cartera
-        $idUser = $walletData->id_user;
-        $response = $this->buyCoinsService->execute($idCoin, $idWallet, $amount, $buyedBitcoins, $idUser).Response::HTTP_OK;
+        try{
+            $response = $this->buyCoinsService->execute($idCoin, $idWallet, $amount, $buyedCoins, $coinPrice, $operation);
+        }catch (\Exception $ex){
+            return response()->json([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         // Devolver json
         return response()->json([

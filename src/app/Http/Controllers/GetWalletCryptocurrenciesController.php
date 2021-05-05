@@ -27,22 +27,20 @@ class GetWalletCryptocurrenciesController extends BaseController
     }
 
     /**
-     * @param string $wallet_id
+     * @param string $idWallet
      * @param $walletService
-     * @return JsonResponse
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|JsonResponse|object
      */
-    public function __invoke(string $wallet_id): JsonResponse
+    public function __invoke(string $idWallet)
     {
         try{
-            $wallet = $this->walletService->execute($wallet_id);
+            $wallet = $this->walletService->execute($idWallet);
         }catch (Exception $ex){
             return response()->json([
                 'error' => $ex->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return response()->json([
-            'wallet' => $wallet
-        ], Response::HTTP_OK);
+        return $wallet;
     }
 }
