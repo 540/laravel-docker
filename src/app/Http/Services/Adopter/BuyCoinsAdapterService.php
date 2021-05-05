@@ -34,9 +34,8 @@ class BuyCoinsAdapterService
      */
     public function execute($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation): string
     {
-        // Hacer una consulta
-        $wallet = $this->walletRepository->insertByIdWallet($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation);
-        // Si no devuelve nada
+        $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation);
+
         if ($wallet == null) {
             throw new \Exception('wallet not found');
         }

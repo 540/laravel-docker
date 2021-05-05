@@ -19,20 +19,15 @@ class BuyCoinsController extends BaseController
      * @var BuyCoinsAdapterService
      */
     private $buyCoinsService;
-    /**
-     * @var BuyCoinsAdapterService
-     */
-    private $walletService;
 
     /**
      * BuyCoinsController constructor.
      * @param BuyCoinsAdapterService $openWalletService
      * @param OpenWalletService $getWalletService
      */
-    public function __construct(BuyCoinsAdapterService $openWalletService, GetWalletCryptocurrenciesService $getWalletService)
+    public function __construct(BuyCoinsAdapterService $openWalletService)
     {
         $this->buyCoinsService = $openWalletService;
-        $this->walletService = $getWalletService;
     }
 
     /**
@@ -50,14 +45,16 @@ class BuyCoinsController extends BaseController
         // Conectar a la API con la moneda requerida
         $coinData = json_decode($this->curl("https://api.coinlore.net/api/ticker/?id=".$idCoin));
 
+        // Indicar operación
+        $operation = "buy";
         // Obtener precio de la moneda
         $coinPrice = $coinData[0]->price_usd;
+        // Caulcular los bitcoins comprados
         $buyedCoins = $amount/$coinPrice;
-        $operation = "buy";
 
         // Insertar en la cartera
         try{
-            $response = $this->buyCoinsService->execute($idCoin, $idWallet, $amount, $buyedCoins, $coinPrice, $operation);
+            $buyCoinsResponse = $this->buyCoinsService->execute($idCoin, $idWallet, $amount, $buyedCoins, $coinPrice, $operation);
         }catch (\Exception $ex){
             return response()->json([
                 'error' => $ex->getMessage()
@@ -66,7 +63,7 @@ class BuyCoinsController extends BaseController
 
         // Devolver json
         return response()->json([
-            'buy_response' => $response
+            'buy_response' => $buyCoinsResponse
         ], Response::HTTP_OK);
     }
 

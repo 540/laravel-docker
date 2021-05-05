@@ -44,7 +44,7 @@ class WalletDataSource
      * @param $operation
      * @return string
      */
-    public function insertByIdWallet($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation): string
+    public function insertTransaction($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation): string
     {
         DB::table('transaction')->insert([
             'id_wallet' => $idWallet,
@@ -55,8 +55,6 @@ class WalletDataSource
             'operation'=>$operation
         ]);
 
-        return "OK";
-
-
+        return "Successful Operation";
     }
 }

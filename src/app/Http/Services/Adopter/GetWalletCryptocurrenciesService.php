@@ -29,9 +29,8 @@ class GetWalletCryptocurrenciesService
      * @throws \Exception
      */
     public function execute(string $id){
-        // Hacer una consulta
         $wallet = $this->walletRepository->findWalletDataByWalletId($id);
-        // Si no devuelve nada
+
         if($wallet == null){
             throw new \Exception('wallet not found');
         }
