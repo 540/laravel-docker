@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class StatusController extends BaseController
 {
-
-
     public function __invoke(): JsonResponse
     {
         try {

@@ -46,7 +46,6 @@ RULESET=./phpcs.xml
 
 for FILE in $STAGED_FILES
 do
-  ./vendor/bin/phpcbf --standard="$RULESET" "$FILE"
   ./vendor/bin/phpcs --standard="$RULESET" "$FILE"
 
   if [[ "$?" == 0 ]]; then
