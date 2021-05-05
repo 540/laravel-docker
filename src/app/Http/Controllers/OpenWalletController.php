@@ -35,13 +35,11 @@ class OpenWalletController extends BaseController
             ],Response::HTTP_BAD_REQUEST);
         }
         try {
-            $response = $this->openWalletService->execute($request->get("userId"));
-            echo $response;
+            $walletId = $this->openWalletService->execute($request->get("userId"));
             return response()->json([
-                'walletId' => $response
+                'walletId' => $walletId
             ],Response::HTTP_OK);
         } catch (Exception $exception) {
-
             return response()->json([
                 self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
             ],Response::HTTP_NOT_FOUND);

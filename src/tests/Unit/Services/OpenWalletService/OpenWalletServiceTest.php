@@ -7,6 +7,7 @@ use App\Infraestructure\Database\DatabaseManager;
 use App\Models\Wallet;
 use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\ServiceManager;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use PHPUnit\Framework\TestCase;
@@ -35,11 +36,10 @@ class OpenWalletServiceTest extends TestCase
             'userId' => $userId
         ]);
 
-        $this->databaseManager->set("userId", $userId)->willThrow(new \Exception("error"));
+        $this->databaseManager->set("userId", $userId)->willThrow(new Exception("error"));
 
         $response = $this->openWalletService->execute($userId);
         $expectedResult = "user not found";
-
         $this->assertEquals($expectedResult, $response);
     }
 
