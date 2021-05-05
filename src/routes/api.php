@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\IsEarlyAdopterUserController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,4 +25,12 @@ Route::get(
     StatusController::class
 );
 
-Route::get('user/{email}', IsEarlyAdopterUserController::class);
+Route::get(
+    '/wallet/{wallet_id}',
+    WalletController::class
+);
+
+Route::get(//de iker
+    'user/{email}',
+    IsEarlyAdopterUserController::class
+);
