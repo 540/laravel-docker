@@ -51,6 +51,8 @@ class BalanceAdopterService
             throw new \Exception('No operations. Wallet not found');
         }
 
-        return $coinsBuyedAmount-$coinsSelledAmount;
+        $coinsAmount = $coinsBuyedAmount-$coinsSelledAmount;
+
+        return $coinsAmount;
     }
 }
