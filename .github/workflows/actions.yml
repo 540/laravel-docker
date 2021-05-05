@@ -28,6 +28,10 @@ jobs:
               cd src;
               php artisan key:generate;
 
+      - name: Migrate DB
+        run:  cd src;
+              php artisan migrate;
+
       - name: Run php app lint
         run: cd src;
              php -l app -q;
