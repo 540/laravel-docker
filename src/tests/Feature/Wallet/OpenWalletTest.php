@@ -68,7 +68,7 @@ class OpenWalletTest extends TestCase
         User::factory(User::class)->create();
 
         $request = Request::create('/wallet/open', 'POST',[
-            'id' => $userId
+            'userId' => $userId
         ]);
 
         $response = $this->openWalletController->openWallet($request);
