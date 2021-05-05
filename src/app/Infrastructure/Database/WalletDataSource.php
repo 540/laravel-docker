@@ -57,4 +57,30 @@ class WalletDataSource
 
         return "Successful Operation";
     }
+
+    /**
+     * @param $idCoin
+     * @param $idWallet
+     * @return int|mixed
+     */
+    public function selectAmountBuyedCoins($idCoin, $idWallet): int
+    {
+        return DB::table('transaction')->where('id_coin',$idCoin)
+            ->where('id_wallet',$idWallet)
+            ->where('operation','buy')
+            ->sum('buyed_coins_amount');
+    }
+
+    /**
+    * @param $idCoin
+    * @param $idWallet
+    * @return int|mixed
+    */
+    public function selectAmountSelledCoins($idCoin, $idWallet): int
+    {
+        return DB::table('transaction')->where('id_coin',$idCoin)
+            ->where('id_wallet',$idWallet)
+            ->where('operation','sell')
+            ->sum('buyed_coins_amount');
+    }
 }

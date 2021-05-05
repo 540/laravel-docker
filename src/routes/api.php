@@ -4,6 +4,7 @@ use App\Http\Controllers\BuyCoinsController;
 use App\Http\Controllers\GetWalletCryptocurrenciesController;
 use App\Http\Controllers\IsEarlyAdopterController;
 use App\Http\Controllers\OpenWalletController;
+use App\Http\Controllers\SellCoinsController;
 use App\Http\Controllers\StatusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,4 +48,9 @@ Route::get(
 Route::post(
     '/coin/buy',
     BuyCoinsController::class
+);
+
+Route::post(
+    '/coin/sell',
+    SellCoinsController::class
 );
