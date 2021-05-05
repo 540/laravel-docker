@@ -32,9 +32,10 @@ The project must be mounted using docker:
   docker-compose stop
 
 **Git rules**
-- Commit syntax => git commit -m "[] - Your text..."
+- Commit syntax => git commit -m "[] - Your commit..."
+- If there is a PHPCS Failed in a File, run: "./phpfixer"
 - Create one branch for each issue => (git branch <new branch name> , git checkout <new branch name>)
-- When an issue is closed => git commit -m "[#issueId] - Your text..."
+- When an issue is closed => git commit -m "[#issueId] - Your commit..."
 
 :)
 
