@@ -28,7 +28,9 @@ class OpenWalletServiceTest extends TestCase
 
     /**
      * @test
-     **/
+     *
+     * @throws Exception
+     */
     public function getsErrorWhenAUserDoesNotExist ()
     {
         $userId = "invalidUserId";
@@ -36,16 +38,19 @@ class OpenWalletServiceTest extends TestCase
             'userId' => $userId
         ]);
 
-        $this->databaseManager->set("userId", $userId)->willThrow(new Exception("error"));
+        $this->expectException(Exception::class);
 
-        $response = $this->openWalletService->execute($userId);
-        $expectedResult = "user not found";
-        $this->assertEquals($expectedResult, $response);
+        $this->databaseManager->set("userId", $userId)->willThrow(new Exception("Error"));
+
+        $this->openWalletService->execute($userId);
+
     }
 
     /**
      * @test
-     **/
+     *
+     * @throws Exception
+     */
     public function getsSuccessfulOperationWhenUserIdIsFound ()
     {
         $userId = "validUserId";
@@ -57,7 +62,7 @@ class OpenWalletServiceTest extends TestCase
         $wallet = new Wallet($userId, $walletId);
         $this->databaseManager->set("userId", $userId)->willReturn($wallet);
 
-        $response = $this->openWalletService->getResponse($request);
+        $response = $this->openWalletService->execute($userId);
 
         $this->assertEquals($walletId, $response);
     }
