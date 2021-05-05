@@ -21,7 +21,7 @@ class OpenWalletService
 
     public function execute($userId): string
     {
-        $wallet = $this->databaseManager->set("userId",$userId);
+        $wallet = $this->databaseManager->set("id",$userId);
         if($wallet == null){
             throw new Exception("Error");
         }
