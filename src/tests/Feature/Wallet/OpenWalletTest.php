@@ -9,6 +9,7 @@ use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\ServiceManager;
 use Database\Factories\UserFactory;
 use Database\Fakers\FakeUserManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -17,7 +18,7 @@ use Prophecy\Prophet;
 
 class OpenWalletTest extends TestCase
 {
-
+    use RefreshDatabase;
     private OpenWalletController $openWalletController;
 
     /**
@@ -61,13 +62,13 @@ class OpenWalletTest extends TestCase
      **/
     public function getsSuccessfulOperationWhenUserIdIsFound ()
     {
-        $userId = "validUserId";
+        $userId = "1";
         $this->openWalletController = new OpenWalletController(new OpenWalletService(new WalletDatabase()));
 
-        UserFactory::factory(User::class)->create();
+        User::factory(User::class)->create();
 
         $request = Request::create('/wallet/open', 'POST',[
-            'userId' => $userId
+            'id' => $userId
         ]);
 
         $response = $this->openWalletController->openWallet($request);
