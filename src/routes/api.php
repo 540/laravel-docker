@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\BuyCoinsController;
 use App\Http\Controllers\GetWalletCryptocurrenciesController;
 use App\Http\Controllers\IsEarlyAdopterController;
@@ -53,4 +54,9 @@ Route::post(
 Route::post(
     '/coin/sell',
     SellCoinsController::class
+);
+
+Route::get(
+    '/wallet/{wallet_id}/balance',
+    BalanceController::class
 );

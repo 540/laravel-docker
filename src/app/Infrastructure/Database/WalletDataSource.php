@@ -83,4 +83,16 @@ class WalletDataSource
             ->where('operation','sell')
             ->sum('buyed_coins_amount');
     }
+
+    /**
+     * @param $idWallet
+     * @return \Illuminate\Support\Collection
+     */
+    public function findTypeCoinsbyIdWallet($idWallet): \Illuminate\Support\Collection
+    {
+        return DB::table('transaction')->select('id_coin')
+            ->where('id_wallet',$idWallet)
+            ->distinct()
+            ->get();
+    }
 }

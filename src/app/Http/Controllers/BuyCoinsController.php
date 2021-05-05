@@ -23,7 +23,6 @@ class BuyCoinsController extends BaseController
     /**
      * BuyCoinsController constructor.
      * @param BuyCoinsAdapterService $openWalletService
-     * @param OpenWalletService $getWalletService
      */
     public function __construct(BuyCoinsAdapterService $openWalletService)
     {

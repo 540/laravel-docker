@@ -39,7 +39,7 @@ class SellCoinsAdapterService
         $coinsBuyedAmount = $this->walletRepository->selectAmountBuyedCoins($idCoin,$idWallet);
         $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
         $coinsAmount = $coinsBuyedAmount-$coinsSelledAmount;
-echo $coinsAmount;
+
         if($coinsAmount < $amount){
             throw new \Exception('not enough coins to sell');
         }else{
