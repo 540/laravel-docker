@@ -7,6 +7,7 @@ use App\Infraestructure\Database\WalletDatabase;
 use App\Models\User;
 use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\ServiceManager;
+use Database\Factories\UserFactory;
 use Database\Fakers\FakeUserManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -63,16 +64,13 @@ class OpenWalletTest extends TestCase
         $userId = "validUserId";
         $this->openWalletController = new OpenWalletController(new OpenWalletService(new WalletDatabase()));
 
-        $fakeUserManager = new FakeUserManager(new User($userId));
-        $fakeUserManager->insertFakeUser();
+        UserFactory::factory(User::class)->create();
 
         $request = Request::create('/wallet/open', 'POST',[
             'userId' => $userId
         ]);
 
         $response = $this->openWalletController->openWallet($request);
-
-        $fakeUserManager->deleteFakeUser();
 
         $this->assertEquals(200, $response->getStatusCode());
     }
