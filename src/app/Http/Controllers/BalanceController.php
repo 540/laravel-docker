@@ -4,10 +4,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\Adopter\BalanceAdopterService;
-use App\Http\Services\Adopter\BuyCoinsAdapterService;
 use Barryvdh\Debugbar\Controllers\BaseController;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class BalanceController extends BaseController
@@ -18,7 +16,7 @@ class BalanceController extends BaseController
     private $balanceService;
 
     /**
-     * BalanceController constructor.
+     * BalanceAdopterService constructor.
      * @param BalanceAdopterService $balanceService
      */
     public function __construct(BalanceAdopterService $balanceService)

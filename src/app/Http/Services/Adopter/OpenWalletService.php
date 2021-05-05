@@ -27,12 +27,15 @@ class OpenWalletService
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object
      * @throws \Exception
      */
-    public function execute(string $id){
+    public function execute($id){
+        if($id == null){
+            throw new \Exception('Bad request error');
+        }
         // Hacer una consulta
         $wallet = $this->walletRepository->insertById($id);
         // Si no devuelve nada
         if($wallet == null){
-            throw new \Exception('wallet not found');
+            throw new \Exception('Bad request error');
         }
         return $wallet;
     }

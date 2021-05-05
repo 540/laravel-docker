@@ -38,11 +38,14 @@ class OpenWalletController extends BaseController
      */
     public function __invoke(Request $request): JsonResponse
     {
-        // Recibir los datos en json de postman
-        $user_id = $request->input("user_id");
-
-        // Guardar los datos
-        $walletId = $this->openWalletService->execute($user_id);
+        try{
+            $user_id = $request->input("user_id");
+            $walletId = $this->openWalletService->execute($user_id);
+        }catch (\Exception $ex){
+            return response()->json([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         // Devolver json
         return response()->json([
