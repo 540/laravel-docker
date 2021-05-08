@@ -1,28 +1,13 @@
 <?php
 
-
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Wallet
+class Wallet extends Model
 {
-    private String $userId;
-    private String $id;
+    use HasFactory;
 
-    public function __construct(String $userId, String $walletId){
-        $this->userId = $userId;
-        $this->id = $walletId;
-    }
-
-    public function getUserId(): string
-    {
-        return $this->userId;
-    }
-
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-
+    protected $fillable = ['id', 'name', 'email'];
 }
