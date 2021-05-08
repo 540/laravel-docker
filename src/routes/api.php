@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GetUserController;
+use App\Http\Controllers\GetWalletCryptocurrenciesController;
 use App\Http\Controllers\OpenWalletController;
 use App\Http\Controllers\StatusController;
 use Illuminate\Http\Request;
@@ -34,4 +35,9 @@ Route::get(
 Route::post(
     '/wallet/open',
     'OpenWalletController@openWallet'
+);
+
+Route::get(
+    '/wallet/{user_id}',
+    [GetWalletCryptocurrenciesController::class, 'getWalletCryptocurrencies']
 );
