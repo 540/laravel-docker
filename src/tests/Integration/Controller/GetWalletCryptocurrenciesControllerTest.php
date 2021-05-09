@@ -31,9 +31,9 @@ class GetWalletCryptocurrenciesControllerTest extends TestCase
      */
     public function cryptocurrenciesAreGivenForASpecifiedWalletId()
     {
-        Wallet::factory(Wallet::class)->create();
         $coin = Coin::factory(Coin::class)->create()->first();
         $walletCoin = WalletCoin::factory(WalletCoin::class)->create()->first();
+
         $expectedJson = [
             'coin_id' => $walletCoin->coin_id,
             'name' => $coin->name,
@@ -46,17 +46,4 @@ class GetWalletCryptocurrenciesControllerTest extends TestCase
 
         $response->assertStatus(Response::HTTP_OK)->assertJson($expectedJson);
     }
-
-
-//    /**
-//     * @test
-//     */
-//    public function userIsEarlyAdopter()
-//    {
-//        User::factory(User::class)->create();
-//
-//        $response = $this->get('/api/user/email@email.com');
-//
-//        $response->assertStatus(Response::HTTP_OK)->assertExactJson(['earlyAdopter' => true]);
-//    }
 }
