@@ -31,7 +31,7 @@ class SellCoinControllerTest extends TestCase
         $coinId = "invalidCoinId";
         $walletId = "validWalletId";
         $amountUSD = 0;
-        $request = Request::create('/coin/sell', 'POST',[
+        $request = Request::create('/coin/sell', 'POST', [
             'coinId' => $coinId,
             'walletId' => $walletId,
             'amountUSD' => $amountUSD
