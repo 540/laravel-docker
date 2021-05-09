@@ -4,11 +4,9 @@ namespace Tests\Unit\Controllers;
 
 use App\Http\Controllers\OpenWalletController;
 use App\Services\OpenWalletService\OpenWalletService;
-use App\Services\ServiceManager;
 use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Event;
 use Prophecy\Prophet;
 use Tests\TestCase;
 

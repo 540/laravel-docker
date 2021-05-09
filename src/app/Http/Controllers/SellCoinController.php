@@ -34,9 +34,9 @@ class SellCoinController extends BaseController
         try
         {
             $this->sellCoinService->execute(
-                $request->get("coin_id"),
-                $request->get("wallet_id"),
-                $request->get("amount_usd")
+                $request->get("coinId"),
+                $request->get("walletId"),
+                $request->get("amountUSD")
             );
             return response()->json([
                 // 200 - Successful operation

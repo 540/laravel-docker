@@ -2,14 +2,11 @@
 
 namespace Tests\Services\OpenWalletService;
 
-use App\Http\Controllers\OpenWalletController;
 use App\Infraestructure\Database\DatabaseManager;
 use App\Models\Wallet;
 use App\Services\OpenWalletService\OpenWalletService;
-use App\Services\ServiceManager;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
 
@@ -31,7 +28,7 @@ class OpenWalletServiceTest extends TestCase
      *
      * @throws Exception
      */
-    public function getsErrorWhenAUserDoesNotExist ()
+    public function getsErrorWhenAUserDoesNotExist()
     {
         $userId = "invalidUserId";
         $request = Request::create('/wallet/open', 'POST',[

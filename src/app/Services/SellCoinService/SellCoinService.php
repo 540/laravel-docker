@@ -3,6 +3,7 @@
 namespace App\Services\SellCoinService;
 
 use App\Infraestructure\Database\DatabaseManager;
+use Exception;
 
 class SellCoinService
 {
@@ -13,8 +14,15 @@ class SellCoinService
         $this->databaseManager = $databaseManager;
     }
 
-    public function execute($coin_id, $wallet_id, $amount_usd)
+    public function execute($coinId, $walletId, $amount_usd)
     {
-        
+        //$coin = $this->databaseManager->set("coinId", $coinId);
+        //$coin = $this->databaseManager->set("walletId", $walletId);
+        //$coin = $this->databaseManager->set("amountUSD", $amountUSD);
+
+        /*if($coin === null)
+        {
+            throw new Exception("Error");
+        }*/
     }
 }

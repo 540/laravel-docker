@@ -4,24 +4,24 @@ namespace App\Models;
 
 class Coin
 {
-    private string $coin_id;
+    private string $coinId;
     private string $name;
     private string $symbol;
     private float $amount;
-    private float $value_usd;
+    private float $valueUSD;
 
-    public function __construct(string $coin_id, string $name, string $symbol, float $amount, float $value_usd)
+    public function __construct(string $coinId, string $name, string $symbol, float $amount, float $valueUSD)
     {
-        $this->coin_id = $coin_id;
+        $this->coinId = $coinId;
         $this->name = $name;
         $this->symbol = $symbol;
         $this->amount = $amount;
-        $this->value_usd = $value_usd;
+        $this->valueUSD = $valueUSD;
     }
 
     public function getCoinId(): string
     {
-        return $this->coin_id;
+        return $this->coinId;
     }
 
     public function getName(): string
@@ -39,8 +39,8 @@ class Coin
         return $this->amount;
     }
 
-    public function getValueUsd(): float
+    public function getValueUSD(): float
     {
-        return $this->value_usd;
+        return $this->valueUSD;
     }
 }
