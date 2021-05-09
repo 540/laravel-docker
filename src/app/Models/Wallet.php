@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Models;
-
 
 class Wallet
 {
@@ -23,6 +21,4 @@ class Wallet
     {
         return $this->id;
     }
-
-
 }
