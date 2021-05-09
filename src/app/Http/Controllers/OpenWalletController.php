@@ -26,24 +26,24 @@ class OpenWalletController extends BaseController
 
     public function openWallet(Request $request): JsonResponse
     {
-        if ($request->has("userId") === false)
+        if($request->has("userId") === false)
         {
             return response()->json([
                 self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
-            ],Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_BAD_REQUEST);
         }
         try
         {
             $walletId = $this->openWalletService->execute($request->get("userId"));
             return response()->json([
                 'walletId' => $walletId
-            ],Response::HTTP_OK);
+            ], Response::HTTP_OK);
         }
-        catch (Exception $exception)
+        catch(Exception $exception)
         {
             return response()->json([
                 self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
-            ],Response::HTTP_NOT_FOUND);
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 }

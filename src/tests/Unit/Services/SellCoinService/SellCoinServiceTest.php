@@ -32,7 +32,7 @@ class SellCoinServiceTest extends TestCase
     {
         $coinId = "invalidCoinId";
         $walletId = "validWalletId";
-        $amountUSD = 1.0;
+        $amountUSD = 0;
 
         $this->expectException(Exception::class);
         $this->databaseManager->set("coinId", $coinId)->willThrow(new Exception("Error"));
