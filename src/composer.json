@@ -18,7 +18,8 @@
         "squizlabs/php_codesniffer": "@stable",
         "friendsofphp/php-cs-fixer": "@stable",
         "symfony/console": "@stable",
-        "symfony/process": "@stable"
+        "symfony/process": "@stable",
+      "ext-http": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

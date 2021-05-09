@@ -8,6 +8,7 @@ use Exception;
 class OpenWalletService
 {
     private DatabaseManager $databaseManager;
+
     public function __construct(DatabaseManager $databaseManager)
     {
         $this->databaseManager = $databaseManager;
