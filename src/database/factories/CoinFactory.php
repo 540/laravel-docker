@@ -22,7 +22,7 @@ class CoinFactory extends Factory
     public function definition()
     {
         return [
-            'coin_id' => $this->faker->buildingNumber,
+            'coin_id' => rand(80, 100),
             'name' => $this->faker->word,
             'symbol' => $this->faker->currencyCode,
             'amount' => 1,

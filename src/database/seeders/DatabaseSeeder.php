@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Coin;
 use App\Models\User;
 use App\Models\Wallet;
-use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GetUserController;
+use App\Http\Controllers\GetWalletBalanceController;
 use App\Http\Controllers\GetWalletCryptocurrenciesController;
 use App\Http\Controllers\OpenWalletController;
 use App\Http\Controllers\StatusController;
@@ -38,6 +39,11 @@ Route::post(
 );
 
 Route::get(
-    '/wallet/{user_id}',
+    '/wallet/{wallet_id}',
     [GetWalletCryptocurrenciesController::class, 'getWalletCryptocurrencies']
+);
+
+Route::get(
+    '/wallet/{wallet_id}/balance',
+    [GetWalletBalanceController::class, 'getWalletBalance']
 );
