@@ -22,9 +22,8 @@ class CoinFactory extends Factory
     public function definition()
     {
         return [
-            'coin_id' => 1,
-            'name' => 'Bitcoin',
-            'symbol' => 'BTC'
+            'name' => $this->faker->word,
+            'symbol' => $this->faker->currencyCode
         ];
     }
 }

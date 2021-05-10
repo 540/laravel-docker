@@ -6,6 +6,7 @@ namespace App\Services\WalletCryptocurrencies;
 
 use App\DataSource\Database\EloquentWalletCoinDataSource;
 use Exception;
+use function PHPUnit\Framework\isNull;
 
 class GetWalletCryptocurrenciesService
 {
@@ -19,13 +20,24 @@ class GetWalletCryptocurrenciesService
 
     public function execute($walletId): array
     {
-        $walletCoins = $this->eloquentWalletDataSource->findWalletCoins($walletId);
-        return [
-            'coin_id' => 1,
-            'name' => 'Bitcoin',
-            'symbol' => 'BTC',
-            'amount' => 1,
-            'value_usd' => 1
-        ];
+        $wallet = $this->eloquentWalletDataSource->findWalletById($walletId);
+
+        if(isNull($wallet)){
+            throw new Exception('a wallet with the specified ID was not found.');
+        }
+
+        $coins = [];
+
+        foreach ($wallet->coins as $coin){
+            array_push($coins,[
+                'coin_id' => $coin->id,
+                'name' => $coin->name,
+                'symbol' => $coin->symbol,
+                'amount' => $coin->pivot->amount,
+                'value_usd' => $coin->pivot->value_usd
+            ]);
+        }
+
+        return $coins;
     }
 }

@@ -10,4 +10,12 @@ class Wallet extends Model
     use HasFactory;
 
     protected $fillable = ['id', 'user_id'];
+
+    public function coins(){
+        return $this->belongsToMany(Coin::class,
+            'wallet_coins',
+            'wallet_id',
+            'coin_id',
+        )->withPivot(['amount'])->withPivot(['value_usd']);
+    }
 }

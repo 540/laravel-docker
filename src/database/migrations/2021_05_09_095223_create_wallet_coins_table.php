@@ -14,13 +14,12 @@ class CreateWalletCoinsTable extends Migration
     public function up()
     {
         Schema::create('wallet_coins', function (Blueprint $table) {
-            $table->primary(['wallet_id', 'coin_id']);
             $table->unsignedBigInteger('wallet_id');
             $table->unsignedBigInteger('coin_id');
             $table->float('amount');
             $table->float('value_usd');
-            $table->foreign('wallet_id')->references('wallet_id')->on('wallets')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('coin_id')->references('coin_id')->on('coins')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('wallet_id')->references('id')->on('wallets')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('coin_id')->references('id')->on('coins')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

@@ -4,8 +4,10 @@ namespace Tests\Unit\Services\WalletCryptocurrencies;
 
 use App\DataSource\Database\EloquentWalletCoinDataSource;
 use App\Models\Coin;
+use App\Models\Wallet;
 use App\Models\WalletCoin;
 use App\Services\WalletCryptocurrencies\GetWalletCryptocurrenciesService;
+use Composer\InstalledVersions;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Prophecy\Prophet;
@@ -32,7 +34,7 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
         $walletId = '1';
 
         $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletCoinDataSource::class);
-        $eloquentWalletCoinDataSource->findWalletCoins($walletId)->willThrow(Exception::class);
+        $eloquentWalletCoinDataSource->findWalletById($walletId)->willThrow(Exception::class);
 
         $getWalletCryptocurrenciesService = new GetWalletCryptocurrenciesService($eloquentWalletCoinDataSource->reveal());
 
@@ -46,24 +48,64 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
      **/
     public function aCoinIsFoundForAGivenWalletId()
     {
-        $walletId = '1';
+        $wallet = Wallet::factory()->create()->first();
+        $walletId = $wallet->id;
+
+        $coin = Coin::factory()->create();
+        $wallet->coins()->attach($coin, ['amount' => 1, 'value_usd' => 1]);
+
+        $expectedResult = [];
+        foreach ($wallet->coins as $coin){
+            array_push($expectedResult, [
+                'coin_id' => $coin->id,
+                'name' => $coin->name,
+                'symbol' => $coin->symbol,
+                'amount' => $coin->pivot->amount,
+                'value_usd' => $coin->pivot->value_usd
+            ]);
+        }
 
         $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletCoinDataSource::class);
-        $eloquentWalletCoinDataSource->findWalletCoins($walletId)->shouldBeCalledOnce();
+        $eloquentWalletCoinDataSource->findWalletById($walletId)->shouldBeCalledOnce()->willReturn($wallet);
 
         $getWalletCryptocurrenciesService = new GetWalletCryptocurrenciesService($eloquentWalletCoinDataSource->reveal());
 
-        $coin = Coin::factory(Coin::class)->create()->first();
-        $walletCoin = WalletCoin::factory(WalletCoin::class)->create()->first();
-        $result= $getWalletCryptocurrenciesService->execute($walletId);
+        $result = $getWalletCryptocurrenciesService->execute($walletId);
 
-        $expectedResult = [
-            'coin_id' => $walletCoin->coin_id,
-            'name' => $coin->name,
-            'symbol' => $coin->symbol,
-            'amount' => $walletCoin->amount,
-            'value_usd' => $walletCoin->value_usd
-        ];
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @test
+     **/
+    public function twoCoinsAreFoundForAGivenWalletId()
+    {
+        $wallet = Wallet::factory()->create()->first();
+        $walletId = $wallet->id;
+
+        $coins = Coin::factory()->count(2)->create();
+        foreach ($coins as $coin){
+            $wallet->coins()->attach($coin, ['amount' => 1, 'value_usd' => 1]);
+        }
+
+        $expectedResult = [];
+        foreach ($wallet->coins as $coin){
+            array_push($expectedResult, [
+                    'coin_id' => $coin->id,
+                    'name' => $coin->name,
+                    'symbol' => $coin->symbol,
+                    'amount' => $coin->pivot->amount,
+                    'value_usd' => $coin->pivot->value_usd
+            ]);
+        }
+
+        $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletCoinDataSource::class);
+        $eloquentWalletCoinDataSource->findWalletById($walletId)->shouldBeCalledOnce()->willReturn($wallet);
+
+        $getWalletCryptocurrenciesService = new GetWalletCryptocurrenciesService($eloquentWalletCoinDataSource->reveal());
+
+        $result = $getWalletCryptocurrenciesService->execute($walletId);
+
         $this->assertEquals($expectedResult, $result);
     }
 }

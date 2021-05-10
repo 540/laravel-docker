@@ -17,19 +17,13 @@ class GetWalletCryptocurrenciesController extends Controller
         $this->getWalletCryptoCurrenciesService = $getWalletCryptoCurrenciesService;
     }
 
-    public function getWalletCryptocurrencies($user_id):JsonResponse{
+    public function getWalletCryptocurrencies($walletId):JsonResponse{
         try {
-            $this->getWalletCryptoCurrenciesService->execute($user_id);
-            return response()->json([
-                'coin_id' => 1,
-                'name' => 'Bitcoin',
-                'symbol' => 'BTC',
-                'amount' => 1,
-                'value_usd' => 1
-            ], Response::HTTP_OK);
+            $coins = $this->getWalletCryptoCurrenciesService->execute($walletId);
+            return response()->json($coins, Response::HTTP_OK);
         }catch (Exception $exception){
             return response()->json([
-                'error' => 'a wallet with the specified ID was not found.'
+                'error' => $exception->getMessage()
             ], Response::HTTP_NOT_FOUND);
         }
     }
