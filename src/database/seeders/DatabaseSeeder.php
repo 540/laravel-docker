@@ -18,14 +18,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $user = User::factory()->create();
-        $user->wallet()->save(Wallet::factory()->create());
+        $user->wallet()->save(Wallet::factory()->make());
 
         $wallet = Wallet::query()->first();
 
-        $coins = Coin::factory(Coin::class)->count(2)->create();
+        $coins = Coin::factory(Coin::class)->count(2)->make();
 
-        foreach($coins as $coin){
-            $wallet->coin()->attach($coin, ['amount' => 1, '']);
-        }
+        $wallet->coins()->saveMany($coins);
     }
 }

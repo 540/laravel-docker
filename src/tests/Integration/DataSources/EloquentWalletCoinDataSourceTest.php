@@ -3,6 +3,7 @@
 namespace Tests\Integration\DataSources;
 
 use App\DataSource\Database\EloquentWalletCoinDataSource;
+use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -29,14 +30,16 @@ class EloquentWalletCoinDataSourceTest extends TestCase
      **/
     public function walletIsFoundForAGivenWalletId()
     {
-        $wallet = Wallet::factory(Wallet::class)->create()->first();
+        $user = User::factory(User::class)->create()->first();
+
+        $wallet = Wallet::factory()->make();
+
+        $user->wallet()->save($wallet);
 
         $eloquentWalletCoinDataSource = new EloquentWalletCoinDataSource();
 
-        $result = $eloquentWalletCoinDataSource->findWalletById($wallet->id);
+        $result = $eloquentWalletCoinDataSource->findWalletById($user->wallet->id);
 
-        echo $result->id;
-
-        $this->assertEquals($wallet, $result);
+        $this->assertEquals(Wallet::query()->find($user->wallet->id), $result);
     }
 }

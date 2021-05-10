@@ -15,9 +15,15 @@ class CreateCoinsTable extends Migration
     {
         Schema::create('coins', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('wallet_id');
+            $table->string('coin_id');
             $table->string("name")->unique();
             $table->string("symbol")->unique();
+            $table->float('amount');
+            $table->float('value_usd');
             $table->timestamps();
+
+            $table->foreign('wallet_id')->references('id')->on('wallets')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

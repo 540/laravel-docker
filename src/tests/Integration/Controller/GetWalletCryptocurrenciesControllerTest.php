@@ -3,6 +3,7 @@
 namespace Tests\Integration\Controller;
 
 use App\Models\Coin;
+use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
@@ -17,8 +18,6 @@ class GetWalletCryptocurrenciesControllerTest extends TestCase
      */
     public function noCryptocurrenciesFoundGivenWrongWalletId()
     {
-        Wallet::factory(Wallet::class)->create();
-
         $response = $this->get('api/wallet/2');
 
         $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson(['error' => 'a wallet with the specified ID was not found.']);
@@ -29,10 +28,16 @@ class GetWalletCryptocurrenciesControllerTest extends TestCase
      */
     public function cryptocurrenciesAreGivenForASpecifiedWalletId()
     {
-        $wallet = Wallet::factory()->create()->first();
+        $user = User::factory()->create()->first();
+        $wallet = Wallet::factory()->make();
 
-        $coin = Coin::factory()->create();
-        $wallet->coins()->attach($coin, ['amount' => 1, 'value_usd' => 1]);
+        $user->wallet()->save($wallet);
+
+        $wallet = Wallet::query()->find($user->wallet->id)->first();
+
+        $coins = Coin::factory(Coin::class)->make();
+
+        $wallet->coins()->save($coins);
 
         $expectedJson = [];
         foreach ($wallet->coins as $coin){
@@ -40,8 +45,8 @@ class GetWalletCryptocurrenciesControllerTest extends TestCase
                 'coin_id' => $coin->id,
                 'name' => $coin->name,
                 'symbol' => $coin->symbol,
-                'amount' => $coin->pivot->amount,
-                'value_usd' => $coin->pivot->value_usd
+                'amount' => $coin->amount,
+                'value_usd' => $coin->value_usd
             ]);
         }
 

@@ -15,6 +15,6 @@ class User extends Model
     protected $fillable = ['id', 'name', 'email'];
 
     public function wallet(){
-        $this->hasOne(Wallet::class);
+        return $this->hasOne(Wallet::class);
     }
 }

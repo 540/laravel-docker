@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Wallet extends Model
 {
@@ -11,15 +13,13 @@ class Wallet extends Model
 
     protected $fillable = ['id', 'user_id'];
 
-    public function coins(){
-        return $this->belongsToMany(Coin::class,
-            'wallet_coins',
-            'wallet_id',
-            'coin_id',
-        )->withPivot(['amount'])->withPivot(['value_usd']);
+    public function coins()
+    {
+        return $this->hasMany(Coin::class);
     }
 
-    public function user(){
-        $this->belongsTo(User::class);
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

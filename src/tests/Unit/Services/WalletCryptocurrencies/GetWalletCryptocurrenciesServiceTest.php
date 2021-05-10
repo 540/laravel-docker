@@ -4,6 +4,7 @@ namespace Tests\Unit\Services\WalletCryptocurrencies;
 
 use App\DataSource\Database\EloquentWalletCoinDataSource;
 use App\Models\Coin;
+use App\Models\User;
 use App\Models\Wallet;
 use App\Services\WalletCryptocurrencies\GetWalletCryptocurrenciesService;
 use Exception;
@@ -46,11 +47,16 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
      **/
     public function aCoinIsFoundForAGivenWalletId()
     {
-        $wallet = Wallet::factory()->create()->first();
-        $walletId = $wallet->id;
+        $user = User::factory()->create()->first();
+        $wallet = Wallet::factory()->make();
 
-        $coin = Coin::factory()->create();
-        $wallet->coins()->attach($coin, ['amount' => 1, 'value_usd' => 1]);
+        $user->wallet()->save($wallet);
+
+        $wallet = Wallet::query()->find($user->wallet->id)->first();
+
+        $coins = Coin::factory(Coin::class)->make();
+
+        $wallet->coins()->save($coins);
 
         $expectedResult = [];
         foreach ($wallet->coins as $coin){
@@ -58,17 +64,17 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
                 'coin_id' => $coin->id,
                 'name' => $coin->name,
                 'symbol' => $coin->symbol,
-                'amount' => $coin->pivot->amount,
-                'value_usd' => $coin->pivot->value_usd
+                'amount' => $coin->amount,
+                'value_usd' => $coin->value_usd
             ]);
         }
 
         $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletCoinDataSource::class);
-        $eloquentWalletCoinDataSource->findWalletById($walletId)->shouldBeCalledOnce()->willReturn($wallet);
+        $eloquentWalletCoinDataSource->findWalletById($wallet->id)->shouldBeCalledOnce()->willReturn($wallet);
 
         $getWalletCryptocurrenciesService = new GetWalletCryptocurrenciesService($eloquentWalletCoinDataSource->reveal());
 
-        $result = $getWalletCryptocurrenciesService->execute($walletId);
+        $result = $getWalletCryptocurrenciesService->execute($wallet->id);
 
         $this->assertEquals($expectedResult, $result);
     }
@@ -78,31 +84,34 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
      **/
     public function twoCoinsAreFoundForAGivenWalletId()
     {
-        $wallet = Wallet::factory()->create()->first();
-        $walletId = $wallet->id;
+        $user = User::factory()->create()->first();
+        $wallet = Wallet::factory()->make();
 
-        $coins = Coin::factory()->count(2)->create();
-        foreach ($coins as $coin){
-            $wallet->coins()->attach($coin, ['amount' => 1, 'value_usd' => 1]);
-        }
+        $user->wallet()->save($wallet);
+
+        $wallet = Wallet::query()->find($user->wallet->id)->first();
+
+        $coins = Coin::factory(Coin::class)->count(2)->make();
+
+        $wallet->coins()->saveMany($coins);
 
         $expectedResult = [];
         foreach ($wallet->coins as $coin){
             array_push($expectedResult, [
-                    'coin_id' => $coin->id,
-                    'name' => $coin->name,
-                    'symbol' => $coin->symbol,
-                    'amount' => $coin->pivot->amount,
-                    'value_usd' => $coin->pivot->value_usd
+                'coin_id' => $coin->id,
+                'name' => $coin->name,
+                'symbol' => $coin->symbol,
+                'amount' => $coin->amount,
+                'value_usd' => $coin->value_usd
             ]);
         }
 
         $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletCoinDataSource::class);
-        $eloquentWalletCoinDataSource->findWalletById($walletId)->shouldBeCalledOnce()->willReturn($wallet);
+        $eloquentWalletCoinDataSource->findWalletById($wallet->id)->shouldBeCalledOnce()->willReturn($wallet);
 
         $getWalletCryptocurrenciesService = new GetWalletCryptocurrenciesService($eloquentWalletCoinDataSource->reveal());
 
-        $result = $getWalletCryptocurrenciesService->execute($walletId);
+        $result = $getWalletCryptocurrenciesService->execute($wallet->id);
 
         $this->assertEquals($expectedResult, $result);
     }

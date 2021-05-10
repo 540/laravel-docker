@@ -32,8 +32,8 @@ class GetWalletCryptocurrenciesService
                 'coin_id' => $coin->id,
                 'name' => $coin->name,
                 'symbol' => $coin->symbol,
-                'amount' => $coin->pivot->amount,
-                'value_usd' => $coin->pivot->value_usd
+                'amount' => $coin->amount,
+                'value_usd' => $coin->value_usd
             ]);
         }
 
