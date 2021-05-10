@@ -16,19 +16,6 @@ class SellCoinControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
-    /* public function noCoinFoundForGivenId()
-    {
-        Coin::factory(Coin::class)->create();
-
-        $response = $this->post('/api/coin/sell');
-
-        $response->assertStatus(Response::HTTP_BAD_REQUEST)
-            ->assertExactJson(['error' => 'Coin not found']);
-    } */
-
     private $sellCoinService;
     private SellCoinController $sellCoinController;
 
@@ -64,6 +51,19 @@ class SellCoinControllerTest extends TestCase
         ], Response::HTTP_NOT_FOUND);
 
         $this->assertEquals($expectedResponse, $response);
+    }
+
+    /**
+     * @test
+     */
+    public function coinFoundForGivenId()
+    {
+        Coin::factory(Coin::class)->create();
+
+        $response = $this->post('/api/coin/sell');
+
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)
+            ->assertExactJson(['error' => 'Coin not found']);
     }
 
     /**
