@@ -9,5 +9,10 @@ class Coin extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['coinId', 'name', 'symbol'];
+    protected $fillable = ['id', 'wallet_id', 'coin_id', 'name', 'symbol', 'amount', 'value_usd'];
+
+    public function wallets()
+    {
+        return $this->belongsTo(Wallet::class);
+    }
 }

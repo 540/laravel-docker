@@ -23,7 +23,7 @@ class SellCoinControllerTest extends TestCase
     {
         Coin::factory(Coin::class)->create();
 
-        $response = $this->post('/coin/sell');
+        $response = $this->post('/api/coin/sell');
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST)
             ->assertExactJson(['error' => 'Coin not found']);
@@ -49,7 +49,7 @@ class SellCoinControllerTest extends TestCase
         $coinId = "invalidCoinId";
         $walletId = "validWalletId";
         $amountUSD = 0;
-        $request = Request::create('/coin/sell', 'POST', [
+        $request = Request::create('/api/coin/sell', 'POST', [
             'coinId' => $coinId,
             'walletId' => $walletId,
             'amountUSD' => $amountUSD
@@ -75,7 +75,7 @@ class SellCoinControllerTest extends TestCase
         $coinIdField = "invalidCoinIdField";
         $walletId = "validWalletId";
         $amountUSD = 0;
-        $request = Request::create('/coin/sell', 'POST', [
+        $request = Request::create('/api/coin/sell', 'POST', [
             $coinIdField => 'coinId',
             'walletId' => $walletId,
             'amountUSD' => $amountUSD
