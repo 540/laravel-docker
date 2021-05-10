@@ -24,5 +24,6 @@ class SellCoinService
         {
             throw new Exception("Error");
         }
+        return $coin;
     }
 }

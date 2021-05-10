@@ -26,7 +26,7 @@ class OpenWalletControllerTest extends TestCase
     /**
      * @test
      **/
-    public function getsHttpNotFoundWhenAInvalidUserIdIsReceived ()
+    public function getsHttpNotFoundWhenAInvalidUserIdIsReceived()
     {
         $userId = "invalidUserId";
         $request = Request::create('/wallet/open', 'POST',[
@@ -47,7 +47,7 @@ class OpenWalletControllerTest extends TestCase
     /**
      * @test
      **/
-    public function getsHttpBadRequestWhenUserIdFieldIsNotFound ()
+    public function getsHttpBadRequestWhenUserIdFieldIsNotFound()
     {
         $userIdField = "invalidUserIdField";
         $request = Request::create('/wallet/open', 'POST',[
@@ -68,7 +68,7 @@ class OpenWalletControllerTest extends TestCase
     /**
      * @test
      **/
-    public function getsSuccessfulOperationWhenUserIdIsFound ()
+    public function getsSuccessfulOperationWhenUserIdIsFound()
     {
         $userId = "validUserId";
         $request = Request::create('/wallet/open', 'POST',[
@@ -82,7 +82,7 @@ class OpenWalletControllerTest extends TestCase
 
         $expectedResponse = response()->json([
             'walletId' => $walletId
-        ],Response::HTTP_OK);
+        ], Response::HTTP_OK);
 
         $this->assertEquals($expectedResponse, $response);
     }

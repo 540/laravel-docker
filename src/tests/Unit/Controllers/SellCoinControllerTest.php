@@ -42,7 +42,8 @@ class SellCoinControllerTest extends TestCase
 
     /**
      * @test
-     **/
+     * @throws Exception
+     */
     public function getsHttpNotFoundWhenInvalidCoinIdIsReceived()
     {
         $coinId = "invalidCoinId";
@@ -61,6 +62,33 @@ class SellCoinControllerTest extends TestCase
         $expectedResponse = response()->json([
             'error' => "Error while selling coins"
         ], Response::HTTP_NOT_FOUND);
+
+        $this->assertEquals($expectedResponse, $response);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function getsHttpBadRequestWhenCoinIdFieldIsNotFound()
+    {
+        $coinIdField = "invalidCoinIdField";
+        $walletId = "validWalletId";
+        $amountUSD = 0;
+        $request = Request::create('/coin/sell', 'POST', [
+            $coinIdField => 'coinId',
+            'walletId' => $walletId,
+            'amountUSD' => $amountUSD
+        ]);
+
+        $this->sellCoinService->execute($coinIdField, $walletId, $amountUSD)
+            ->willThrow(new Exception("Error"));
+
+        $response = $this->sellCoinController->sellCoin($request);
+
+        $expectedResponse = response()->json([
+            'error' => "Error while selling coins"
+        ], Response::HTTP_BAD_REQUEST);
 
         $this->assertEquals($expectedResponse, $response);
     }
