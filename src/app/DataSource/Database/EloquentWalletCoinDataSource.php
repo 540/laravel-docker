@@ -13,6 +13,6 @@ class EloquentWalletCoinDataSource
 
     public function findWalletById($walletId)
     {
-        return null;
+        return Wallet::query()->where('id', $walletId)->first();
     }
 }
