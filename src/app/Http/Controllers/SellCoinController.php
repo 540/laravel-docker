@@ -14,26 +14,22 @@ class SellCoinController extends BaseController
     private const ERRORS = [
         'ERROR_FIELD' => "error",
         'ERROR_MESSAGE' => "Error while selling coins",
-        'COIN_NOT_FOUND' => "coin not found"
+        'COIN_NOT_FOUND' => "Coin not found"
     ];
 
     private SellCoinService $sellCoinService;
 
-    public function __construct(SellCoinService $sellCoinService)
-    {
+    public function __construct(SellCoinService $sellCoinService) {
         $this->sellCoinService = $sellCoinService;
     }
 
-    public function sellCoin(Request $request): JsonResponse
-    {
-        if(!$request->has("coinId"))
-        {
+    public function sellCoin(Request $request): JsonResponse {
+        if(!$request->has("coinId")) {
             return response()->json([
-                self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
+                self::ERRORS['ERROR_FIELD'] => self::ERRORS['COIN_NOT_FOUND']
             ], Response::HTTP_BAD_REQUEST);
         }
-        try
-        {
+        try {
             $this->sellCoinService->execute(
                 $request->get("coinId"),
                 $request->get("walletId"),
@@ -43,8 +39,7 @@ class SellCoinController extends BaseController
                 // 200 - Successful operation
             ], Response::HTTP_OK);
         }
-        catch(Exception $exception)
-        {
+        catch(Exception $exception) {
             return response()->json([
                 self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
             ], Response::HTTP_NOT_FOUND);

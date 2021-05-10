@@ -1,18 +1,14 @@
 <?php
 
-
 namespace App\Services\EarlyAdopter;
 
-
-use App\Infraestructure\Database\ElocuentUserRepository;
-use App\Services\ServiceManager;
-use Egulias\EmailValidator\Exception\ExpectingAT;
+use App\Infraestructure\Database\EloquentUserRepository;
 
 class IsEarlyAdopterService
 {
     private $elocuentUserRepository;
 
-    public function __constructor(ElocuentUserRepository $elocuentUserDataSource){
+    public function __constructor(EloquentUserRepository $elocuentUserDataSource){
         $this->elocuentUserRepository = $elocuentUserDataSource;
     }
 

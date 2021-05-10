@@ -3,8 +3,10 @@
 namespace Tests\Unit\Controllers;
 
 use App\Http\Controllers\SellCoinController;
+use App\Models\Coin;
 use App\Services\SellCoinService\SellCoinService;
 use Exception;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Prophecy\Prophet;
@@ -12,6 +14,21 @@ use Tests\TestCase;
 
 class SellCoinControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
+    /**
+     * @test
+     */
+    /* public function noCoinFoundForGivenId()
+    {
+        Coin::factory(Coin::class)->create();
+
+        $response = $this->post('/coin/sell');
+
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)
+            ->assertExactJson(['error' => 'Coin not found']);
+    } */
+
     private $sellCoinService;
     private SellCoinController $sellCoinController;
 
@@ -36,6 +53,7 @@ class SellCoinControllerTest extends TestCase
             'walletId' => $walletId,
             'amountUSD' => $amountUSD
         ]);
+
         $this->sellCoinService->execute($coinId, $walletId, $amountUSD)
             ->willThrow(new Exception("Error"));
 

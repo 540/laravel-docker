@@ -16,7 +16,7 @@ class SellCoinServiceTest extends TestCase
     private $databaseManager;
     private SellCoinService $sellCoinService;
 
-    protected function setUp():void
+    protected function setUp(): void
     {
         parent::setUp();
         $prophet = new Prophet;

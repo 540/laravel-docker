@@ -14,15 +14,15 @@ class SellCoinService
         $this->databaseManager = $databaseManager;
     }
 
-    public function execute($coinId, $walletId, $amount_usd)
+    public function execute($coinId, $walletId, $amountUSD)
     {
-        //$coin = $this->databaseManager->set("coinId", $coinId);
+        $coin = $this->databaseManager->set("coinId", $coinId);
         //$coin = $this->databaseManager->set("walletId", $walletId);
         //$coin = $this->databaseManager->set("amountUSD", $amountUSD);
 
-        /*if($coin === null)
+        if($coin === null)
         {
             throw new Exception("Error");
-        }*/
+        }
     }
 }
