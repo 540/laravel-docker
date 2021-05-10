@@ -35,8 +35,8 @@ class EloquentWalletCoinDataSourceTest extends TestCase
 
         $result = $eloquentWalletCoinDataSource->findWalletById($wallet->id);
 
+        echo $result->id;
+
         $this->assertEquals($wallet, $result);
     }
-
-
 }

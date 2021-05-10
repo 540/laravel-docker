@@ -18,4 +18,8 @@ class Wallet extends Model
             'coin_id',
         )->withPivot(['amount'])->withPivot(['value_usd']);
     }
+
+    public function user(){
+        $this->belongsTo(User::class);
+    }
 }
