@@ -26,3 +26,5 @@ pyenv
 Vagrantfile 
 mysql/ib*
 *.cache
+mysql/laravel/*.frm
+mysql/laravel/*.ibd
