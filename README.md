@@ -11,6 +11,7 @@ The project must be mounted using docker:
   - Add "APP_KEY=" to new .env
   - Run: php artisan key:generate
   - Run: php artisan migrate
+  - Run: php artisan db:seed
 - From outside the machine:
   - Run: composer install
   - Run: cp git-hooks/pre-commit .git/hooks/pre-commit
