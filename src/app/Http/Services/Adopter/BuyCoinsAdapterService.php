@@ -12,10 +12,10 @@ class BuyCoinsAdapterService
     /**
      * @var WalletDataSource
      */
-    private $walletRepository;
+    private WalletDataSource $walletRepository;
 
     /**
-     * isEarlyAdopterService constructor.
+     * BuyCoinsAdapterService constructor.
      * @param WalletDataSource $walletDataSource
      */
     public function __construct(WalletDataSource $walletDataSource)
@@ -27,8 +27,6 @@ class BuyCoinsAdapterService
      * @param $idCoin
      * @param $idWallet
      * @param $amount
-     * @param $buyedBitcoins
-     * @param $coinPrice
      * @param $operation
      * @return string
      * @throws \Exception
@@ -47,28 +45,6 @@ class BuyCoinsAdapterService
             throw new \Exception('wallet not found');
         }
         return "Successful Operation";
-    }
-    /**
-     * @param $url
-     * @return bool|string
-     */
-    private function curl($url)
-    {
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_URL => $url,
-            CURLOPT_VERBOSE => false,
-            CURLOPT_USERAGENT => 'Coinlore PHP/API',
-            CURLOPT_POST => 0,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_TIMEOUT => 65
-        ));
-        $resp = curl_exec($curl);
-        curl_close($curl);
-
-        return $resp;
     }
 }
 

@@ -108,13 +108,17 @@ class WalletDataSource
 
     /**
      * @param $idWallet
-     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection|int
      */
-    public function findTypeCoinsbyIdWallet($idWallet): \Illuminate\Support\Collection
+    public function findTypeCoinsbyIdWallet($idWallet)
     {
-        return DB::table('transaction')->select('id_coin')
-            ->where('id_wallet',$idWallet)
-            ->distinct()
-            ->get();
+        $wallet = $this->findWallet($idWallet);
+        if($wallet == true) {
+            return DB::table('transaction')->select('id_coin')
+                ->where('id_wallet', $idWallet)
+                ->distinct()
+                ->get();
+        }
+        return -1;
     }
 }

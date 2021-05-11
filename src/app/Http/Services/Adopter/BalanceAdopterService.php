@@ -4,6 +4,7 @@
 namespace App\Http\Services\Adopter;
 
 
+use App\Infrastructure\ApiSource\ApiSource;
 use App\Infrastructure\Database\WalletDataSource;
 
 class BalanceAdopterService
@@ -11,7 +12,7 @@ class BalanceAdopterService
     /**
      * @var WalletDataSource
      */
-    private $walletRepository;
+    private WalletDataSource $walletRepository;
 
     /**
      * isEarlyAdopterService constructor.
@@ -30,8 +31,7 @@ class BalanceAdopterService
     public function execute($idWallet)
     {
         $typeCoins = $this->walletRepository->findTypeCoinsbyIdWallet($idWallet);
-
-        if ($typeCoins == null) {
+        if ($typeCoins == -1) {
             throw new \Exception('wallet not found');
         }
         return $typeCoins;
@@ -43,16 +43,19 @@ class BalanceAdopterService
      * @return int|mixed
      * @throws \Exception
      */
-    public function obtainBalance($idCoin, $idWallet){
-        $coinsBuyedAmount = $this->walletRepository->selectAmountBoughtCoins($idCoin,$idWallet);
-        $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
+    public function obtainBalance($idCoin, $idWallet)
+    {
+        $api = new ApiSource($idCoin);
+        $coinData = $api->apiConnection();
+        $coinPrice = $coinData[0]->price_usd;
 
-        if ($coinsBuyedAmount == null && $coinsSelledAmount == null) {
-            throw new \Exception('No operations. Wallet not found');
+        $coinsBoughtAmount = $this->walletRepository->selectAmountBoughtCoins($idCoin,$idWallet);
+        if($coinsBoughtAmount >=0)
+        {
+            $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
+            $coinsAmount = $coinsBoughtAmount-$coinsSelledAmount;
+            return $coinsAmount * $coinPrice;
         }
-
-        $coinsAmount = $coinsBuyedAmount-$coinsSelledAmount;
-
-        return $coinsAmount;
+        throw new \Exception ("wallet not found");
     }
 }
