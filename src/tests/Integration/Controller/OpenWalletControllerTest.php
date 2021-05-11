@@ -16,10 +16,9 @@ use Illuminate\Http\Response;
 use Tests\TestCase;
 use Prophecy\Prophet;
 
-class OpenWalletTest extends TestCase
+class OpenWalletControllerTest extends TestCase
 {
     use RefreshDatabase;
-    private OpenWalletController $openWalletController;
 
     /**
      * @test
@@ -27,16 +26,16 @@ class OpenWalletTest extends TestCase
     public function getsHttpNotFoundWhenAInvalidUserIdIsReceived ()
     {
         $userId = 'invalidUserId';
-        $this->openWalletController = new OpenWalletController(new OpenWalletService(new WalletDatabase()));
+//
+//        $request = Request::create('/wallet/open', 'POST',[
+//            'userId' => $userId
+//        ]);
 
+        $request = $this->call('POST', 'wallet/open', array(
+            'user_id' => $userId
+        ));
 
-        $request = Request::create('/wallet/open', 'POST',[
-            'userId' => $userId
-        ]);
-
-        $response = $this->openWalletController->openWallet($request);
-
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(404, $request->getStatusCode());
     }
 
     /**
