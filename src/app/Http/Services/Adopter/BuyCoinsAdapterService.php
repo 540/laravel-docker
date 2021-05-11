@@ -13,14 +13,20 @@ class BuyCoinsAdapterService
      * @var WalletDataSource
      */
     private WalletDataSource $walletRepository;
+    /**
+     * @var ApiSource
+     */
+    private ApiSource $apiData;
 
     /**
      * BuyCoinsAdapterService constructor.
      * @param WalletDataSource $walletDataSource
+     * @param ApiSource $apiData
      */
-    public function __construct(WalletDataSource $walletDataSource)
+    public function __construct(WalletDataSource $walletDataSource, ApiSource $apiData)
     {
         $this->walletRepository = $walletDataSource;
+        $this->apiData = $apiData;
     }
 
     /**
@@ -33,8 +39,10 @@ class BuyCoinsAdapterService
      */
     public function execute($idCoin, $idWallet, $amount, $operation): string
     {
-        $api = new ApiSource($idCoin);
-        $coinData = $api->apiConnection();
+        $coinData = $this->apiData->apiConnection($idCoin);
+        if ($coinData == 0) {
+            throw new \Exception('coin does not exist');
+        }
 
         $coinPrice = $coinData[0]->price_usd;
         $buyedCoins = $amount/$coinPrice;

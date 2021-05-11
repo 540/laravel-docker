@@ -13,14 +13,20 @@ class BalanceAdopterService
      * @var WalletDataSource
      */
     private WalletDataSource $walletRepository;
+    /**
+     * @var ApiSource
+     */
+    private ApiSource $apiData;
 
     /**
      * isEarlyAdopterService constructor.
      * @param WalletDataSource $walletDataSource
+     * @param ApiSource $apiData
      */
-    public function __construct(WalletDataSource $walletDataSource)
+    public function __construct(WalletDataSource $walletDataSource, ApiSource $apiData)
     {
         $this->walletRepository = $walletDataSource;
+        $this->apiData = $apiData;
     }
 
     /**
@@ -45,13 +51,12 @@ class BalanceAdopterService
      */
     public function obtainBalance($idCoin, $idWallet)
     {
-        $api = new ApiSource($idCoin);
-        $coinData = $api->apiConnection();
+        $coinData = $this->apiData->apiConnection($idCoin);
         $coinPrice = $coinData[0]->price_usd;
 
         $coinsBoughtAmount = $this->walletRepository->selectAmountBoughtCoins($idCoin,$idWallet);
-
         $coinsSelledAmount = $this->walletRepository->selectAmountSoldCoins($idCoin,$idWallet);
+
         $coinsAmount = $coinsBoughtAmount-$coinsSelledAmount;
         return $coinsAmount * $coinPrice;
 

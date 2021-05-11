@@ -90,7 +90,6 @@ class WalletDataSource
         }else{
             return -1;
         }
-
     }
 
     /**

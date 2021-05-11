@@ -7,24 +7,12 @@ namespace App\Infrastructure\ApiSource;
 class ApiSource
 {
     /**
-     * @var mixed
-     */
-    private $coinData;
-
-    /**
-     * ApiSource constructor.
-     */
-    public function __construct($idCoin)
-    {
-        $this->coinData = json_decode($this->curl("https://api.coinlore.net/api/ticker/?id=".$idCoin));
-    }
-
-    /**
+     * @param $idCoin
      * @return mixed
      */
-    public function apiConnection()
+    public function apiConnection($idCoin)
     {
-        return $this->coinData;
+        return json_decode($this->curl("https://api.coinlore.net/api/ticker/?id=".$idCoin));
     }
 
     /**
@@ -46,7 +34,6 @@ class ApiSource
         ));
         $resp = curl_exec($curl);
         curl_close($curl);
-
         return $resp;
     }
 }
