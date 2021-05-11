@@ -75,12 +75,16 @@ class WalletDataSource
      * @param $idWallet
      * @return int|mixed
      */
-    public function selectAmountBuyedCoins($idCoin, $idWallet): int
+    public function selectAmountBuyedCoins($idCoin, $idWallet)
     {
-        return DB::table('transaction')->where('id_coin',$idCoin)
-            ->where('id_wallet',$idWallet)
-            ->where('operation','buy')
-            ->sum('buyed_coins_amount');
+        $wallet = $this->findWallet($idWallet);
+        if($wallet != null) {
+            return DB::table('transaction')->where('id_coin', $idCoin)
+                ->where('id_wallet', $idWallet)
+                ->where('operation', 'buy')
+                ->sum('buyed_coins_amount');
+        }
+        return null;
     }
 
     /**
@@ -88,12 +92,16 @@ class WalletDataSource
     * @param $idWallet
     * @return int|mixed
     */
-    public function selectAmountSelledCoins($idCoin, $idWallet): int
+    public function selectAmountSelledCoins($idCoin, $idWallet)
     {
-        return DB::table('transaction')->where('id_coin',$idCoin)
-            ->where('id_wallet',$idWallet)
-            ->where('operation','sell')
-            ->sum('buyed_coins_amount');
+        $wallet = $this->findWallet($idWallet);
+        if($wallet != null) {
+            return DB::table('transaction')->where('id_coin', $idCoin)
+                ->where('id_wallet', $idWallet)
+                ->where('operation', 'sell')
+                ->sum('buyed_coins_amount');
+        }
+        return null;
     }
 
     /**

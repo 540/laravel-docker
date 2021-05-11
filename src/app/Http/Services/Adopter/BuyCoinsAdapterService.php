@@ -4,6 +4,7 @@
 namespace App\Http\Services\Adopter;
 
 
+use App\Infrastructure\ApiSource\ApiSource;
 use App\Infrastructure\Database\WalletDataSource;
 
 class BuyCoinsAdapterService
@@ -35,8 +36,8 @@ class BuyCoinsAdapterService
     public function execute($idCoin, $idWallet, $amount, $operation): string
     {
 
-        // Conectar a la API con la moneda requerida
-        $coinData = json_decode($this->curl("https://api.coinlore.net/api/ticker/?id=".$idCoin));
+        $api = new ApiSource($idCoin);
+        $coinData = $api->apiConnection();
         // Obtener precio de la moneda
         $coinPrice = $coinData[0]->price_usd;
         // Caulcular los bitcoins comprados

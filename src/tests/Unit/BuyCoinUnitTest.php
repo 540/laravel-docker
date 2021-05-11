@@ -61,7 +61,7 @@ class BuyCoinUnitTest extends TestCase
         $wallet->fill(['id_user' => $idUser, 'id_wallet' => "1"]);
         $this->walletDataSource->insertTransaction('10','2','50000','1','50000','buy')->shouldBeCalledOnce()->willReturn(null);
         $this->expectExceptionMessage("wallet not found");
-        $this->buyCoinsService->execute('90','2','50000','1','50000','buy');
+        $this->buyCoinsService->execute('90','2','50000','buy');
     }
 
 }

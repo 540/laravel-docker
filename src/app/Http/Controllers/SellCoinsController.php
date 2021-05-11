@@ -35,14 +35,9 @@ class SellCoinsController extends BaseController
         $idWallet = $request->input("wallet_id");
         $coinsAmount = $request->input("amount_coins");
 
-        $coinData = json_decode($this->curl("https://api.coinlore.net/api/ticker/?id=".$idCoin));
-
         $operation = "sell";
-        $coinPrice = $coinData[0]->price_usd;
-        $usdSellPrice = $coinsAmount*$coinPrice;
-
         try{
-            $buyCoinsResponse = $this->sellCoinsService->execute($idCoin, $idWallet, $coinsAmount, $usdSellPrice, $coinPrice, $operation);
+            $buyCoinsResponse = $this->sellCoinsService->execute($idCoin, $idWallet, $coinsAmount,  $operation);
         }catch (\Exception $ex){
             return response()->json([
                 'error' => $ex->getMessage()
@@ -55,26 +50,4 @@ class SellCoinsController extends BaseController
         ], Response::HTTP_OK);
     }
 
-    /**
-     * @param $url
-     * @return bool|string
-     */
-    private function curl($url)
-    {
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_URL => $url,
-            CURLOPT_VERBOSE => false,
-            CURLOPT_USERAGENT => 'Coinlore PHP/API',
-            CURLOPT_POST => 0,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_TIMEOUT => 65
-        ));
-        $resp = curl_exec($curl);
-        curl_close($curl);
-
-        return $resp;
-    }
 }

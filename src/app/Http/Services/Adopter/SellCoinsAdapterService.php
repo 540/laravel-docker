@@ -4,6 +4,7 @@
 namespace App\Http\Services\Adopter;
 
 
+use App\Infrastructure\ApiSource\ApiSource;
 use App\Infrastructure\Database\WalletDataSource;
 use function PHPUnit\Framework\throwException;
 
@@ -33,22 +34,35 @@ class SellCoinsAdapterService
      * @return string
      * @throws \Exception
      */
-    public function execute($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation): string
+    public function execute($idCoin, $idWallet, $amount, $operation): string
     {
+        $api = new ApiSource($idCoin);
+        $coinData = $api->apiConnection();
+        $coinPrice = $coinData[0]->price_usd;
+        $usdSellPrice = $amount*$coinPrice;
+
         // Comprobar si hay esa cantidad de monetas
         $coinsBuyedAmount = $this->walletRepository->selectAmountBuyedCoins($idCoin,$idWallet);
-        $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
-        $coinsAmount = $coinsBuyedAmount-$coinsSelledAmount;
+        if($coinsBuyedAmount != null)
+        {
+            $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
+            if($coinsSelledAmount != null)
+            {
+                $coinsAmount = $coinsBuyedAmount-$coinsSelledAmount;
 
-        if($coinsAmount < $amount){
-            throw new \Exception('not enough coins to sell');
-        }else{
-            $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet,$buyedBitcoins, $amount, $coinPrice, $operation);
+                if($coinsAmount < $amount){
+                    throw new \Exception('not enough coins to sell');
+                }else{
+                    $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet,$usdSellPrice, $amount, $coinPrice, $operation);
 
-            if ($wallet == null) {
-                throw new \Exception('wallet not found');
+                    if ($wallet == null) {
+                        throw new \Exception('wallet not found');
+                    }
+                }
+                return $wallet;
             }
         }
-        return $wallet;
+        throw new \Exception ("wallet not found");
+
     }
 }
