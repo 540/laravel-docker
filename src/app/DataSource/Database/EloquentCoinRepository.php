@@ -7,14 +7,15 @@ use Exception;
 
 class EloquentCoinRepository
 {
-    public function findCoinById(string $coinId)
+    public function findCoinById(string $coinId): Coin
     {
         $coin = Coin::query()->where('coin_id', $coinId)->first();
+
         if(is_null($coin))
         {
             throw new Exception('Coin not found');
         }
+
         return $coin;
     }
 }
-
