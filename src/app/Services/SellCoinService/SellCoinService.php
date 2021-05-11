@@ -16,13 +16,11 @@ class SellCoinService
 
     public function execute(string $coinId, string $walletId, float $amountUSD)
     {
-        $coin = $this->eloquentCoinRepository->findByCoinId($coinId);
-        //$coin = $this->databaseManager->set("walletId", $walletId);
-        //$coin = $this->databaseManager->set("amountUSD", $amountUSD);
-
-        if($coin === null)
-        {
-            throw new Exception("Error");
+        try {
+            $coin = $this->eloquentCoinRepository->findCoinById($coinId);
+        }
+        catch (Exception $e) {
+            throw $e;
         }
         return $coin;
     }

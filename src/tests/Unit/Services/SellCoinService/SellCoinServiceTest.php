@@ -2,41 +2,65 @@
 
 namespace Tests\Services\SellCoinService;
 
+use App\DataSource\Database\EloquentCoinRepository;
 use App\Infraestructure\Database\DatabaseManager;
 use App\Models\Coin;
-use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\SellCoinService\SellCoinService;
 use Exception;
-use Illuminate\Http\Request;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
 
 class SellCoinServiceTest extends TestCase
 {
-    private $databaseManager;
-    private SellCoinService $sellCoinService;
+    use RefreshDatabase;
+
+    private Prophet $prophet;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $prophet = new Prophet;
-        $this->databaseManager = $prophet->prophesize(DatabaseManager::class);
-        $this->sellCoinService = new SellCoinService($this->databaseManager->reveal());
+        $this->prophet = new Prophet;
+    }
+
+    /**
+     * @test
+     */
+    public function noCoinIdFound()
+    {
+        $coinId = "invalidCoinId";
+        $eloquentCoinRepository = $this->prophet->prophesize(EloquentCoinRepository::class);
+        $eloquentCoinRepository->findCoinById($coinId)->willThrow(Exception::class);
+        $sellCoinService = new SellCoinService($eloquentCoinRepository->reveal());
+
+        $this->expectException(Exception::class);
+
+        $sellCoinService->execute($coinId);
     }
 
     /**
      * @test
      * @throws Exception
      */
-    public function getsErrorWhenCoinDoesNotExist()
+    public function sellsCoinSuccessfullyWhenCoinIdIsCorrect()
     {
-        $coinId = "invalidCoinId";
-        $walletId = "validWalletId";
-        $amountUSD = 0;
+        $coin = Coin::factory()->create()->first();
+        $expectedCoin = [];
+        array_push($expectedCoin, [
+            'id' => $coin->id,
+            'wallet_id' => $coin->wallet_id,
+            'coin_id' => $coin->coind_id,
+            'name' => $coin->name,
+            'symbol' => $coin->symbol,
+            'amount' => $coin->amount,
+            'value_usd' => $coin->value_usd
+        ]);
 
-        $this->expectException(Exception::class);
-        $this->databaseManager->set("coinId", $coinId)->willThrow(new Exception("Error"));
+        $eloquentCoinRepository = $this->prophet->prophesize(EloquentCoinRepository::class);
+        $eloquentCoinRepository->findCoinById($coin->coinId)->shouldBeCalledOnce()->willReturn($coin);
+        $sellCoinService = new SellCoinService($eloquentCoinRepository->reveal());
+        $returnedCoin = $sellCoinService->execute($coin->coinId);
 
-        $this->sellCoinService->execute($coinId, $walletId, $amountUSD);
+        $this->assertEquals($expectedCoin, $returnedCoin);
     }
 }
