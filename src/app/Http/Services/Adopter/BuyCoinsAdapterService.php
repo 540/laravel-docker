@@ -40,12 +40,13 @@ class BuyCoinsAdapterService
         $buyedCoins = $amount/$coinPrice;
 
         $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet, $amount, $buyedCoins, $coinPrice, $operation);
-
         if ($wallet == null) {
             throw new \Exception('wallet not found');
         }
         return "Successful Operation";
     }
+
+
 }
 
 

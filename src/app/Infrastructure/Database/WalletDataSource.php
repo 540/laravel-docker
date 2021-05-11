@@ -62,7 +62,7 @@ class WalletDataSource
                 'operation'=>$operation
             ]);
         }
-        return null;
+        return -1;
     }
 
     /**
@@ -79,7 +79,7 @@ class WalletDataSource
      * @param $idWallet
      * @return int|mixed
      */
-    public function selectAmountBoughtCoins($idCoin, $idWallet)
+    public function selectAmountBoughtCoins($idCoin, $idWallet): int
     {
         $wallet = $this->findWallet($idWallet);
         if($wallet == true) {
@@ -98,7 +98,7 @@ class WalletDataSource
      * @param $idWallet
      * @return int|mixed|string
      */
-    public function selectAmountSelledCoins($idCoin, $idWallet)
+    public function selectAmountSoldCoins($idCoin, $idWallet)
     {
         $wallet = $this->findWallet($idWallet);
         if($wallet == true) {

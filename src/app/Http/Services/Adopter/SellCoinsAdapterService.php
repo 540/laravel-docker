@@ -28,8 +28,6 @@ class SellCoinsAdapterService
      * @param $idCoin
      * @param $idWallet
      * @param $amount
-     * @param $buyedBitcoins
-     * @param $coinPrice
      * @param $operation
      * @return string
      * @throws \Exception
@@ -45,13 +43,14 @@ class SellCoinsAdapterService
         $coinsBuyedAmount = $this->walletRepository->selectAmountBoughtCoins($idCoin,$idWallet);
         if($coinsBuyedAmount >=0)
         {
-            $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
+            $coinsSelledAmount = $this->walletRepository->selectAmountSoldCoins($idCoin,$idWallet);
 
             $coinsAmount = $coinsBuyedAmount-$coinsSelledAmount;
             if($coinsAmount < $amount){
                 throw new \Exception('not enough coins to sell');
             }else{
                 $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet,$usdSellPrice, $amount, $coinPrice, $operation);
+                echo $wallet;
                 if ($wallet == null) {
                     throw new \Exception('transaction error');
                 }

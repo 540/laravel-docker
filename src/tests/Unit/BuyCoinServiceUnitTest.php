@@ -53,14 +53,32 @@ class BuyCoinServiceUnitTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function insertedWalletIdDoesNotExist_BadRequestIsGiven()
     {
         $idUser = "2";
         $wallet= new Wallet();
         $wallet->fill(['id_user' => $idUser, 'id_wallet' => "1"]);
-        $this->walletDataSource->insertTransaction('10','2','50000','1','50000','buy')->shouldBeCalledOnce()->willReturn(null);
+
+        $this->walletDataSource->insertTransaction('10','2','50000','1','50000','buy')->shouldBeCalledOnce()->willReturn(-1);
         $this->expectExceptionMessage("wallet not found");
+        $this->buyCoinsService->execute('90','2','50000','buy');
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function insertedWalletIdExists_ExpectedResponse()
+    {
+        $idUser = "2";
+        $wallet= new Wallet();
+        $wallet->fill(['id_user' => $idUser, 'id_wallet' => "1"]);
+
+        $this->walletDataSource->insertTransaction('90','2','50000','1','50000','buy')->shouldBeCalledOnce()->willReturn(1);
+
+        $this->expectExceptionMessage("Successful Operation");
         $this->buyCoinsService->execute('90','2','50000','buy');
     }
 

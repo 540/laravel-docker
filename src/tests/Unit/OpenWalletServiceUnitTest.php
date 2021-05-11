@@ -33,19 +33,18 @@ class OpenWalletServiceUnitTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function insertedUserIsNull_BadRequestIsGiven()
     {
         $idUser = "";
-        try {
-            $this->openWalletService->execute($idUser);
-        }catch (\Exception $exception) {
-            $this->assertEquals("Bad request error",$exception->getMessage());
-        }
+        $this->expectExceptionMessage("Bad request error");
+        $this->openWalletService->execute($idUser);
     }
 
     /**
      * @test
+     * @throws \Exception
      */
     public function insertedUserIsOk_WalletIsCreated()
     {

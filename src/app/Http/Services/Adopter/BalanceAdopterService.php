@@ -51,7 +51,7 @@ class BalanceAdopterService
 
         $coinsBoughtAmount = $this->walletRepository->selectAmountBoughtCoins($idCoin,$idWallet);
 
-        $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
+        $coinsSelledAmount = $this->walletRepository->selectAmountSoldCoins($idCoin,$idWallet);
         $coinsAmount = $coinsBoughtAmount-$coinsSelledAmount;
         return $coinsAmount * $coinPrice;
 
