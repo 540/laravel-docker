@@ -119,6 +119,6 @@ class WalletDataSource
                 ->distinct()
                 ->get();
         }
-        return -1;
+        return null;
     }
 }

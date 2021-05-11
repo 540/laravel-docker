@@ -31,7 +31,7 @@ class BalanceAdopterService
     public function execute($idWallet)
     {
         $typeCoins = $this->walletRepository->findTypeCoinsbyIdWallet($idWallet);
-        if ($typeCoins == -1) {
+        if ($typeCoins == null) {
             throw new \Exception('wallet not found');
         }
         return $typeCoins;
