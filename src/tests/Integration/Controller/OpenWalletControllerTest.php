@@ -1,10 +1,11 @@
 <?php
 
-namespace Tests\Feature\Wallet;
+namespace Tests\Integration\Controller;
 
 use App\Http\Controllers\OpenWalletController;
 use App\Infraestructure\Database\WalletDatabase;
 use App\Models\User;
+use App\Models\Wallet;
 use App\Services\OpenWalletService\OpenWalletService;
 use App\Services\ServiceManager;
 use Database\Factories\UserFactory;
@@ -26,16 +27,12 @@ class OpenWalletControllerTest extends TestCase
     public function getsHttpNotFoundWhenAInvalidUserIdIsReceived ()
     {
         $userId = 'invalidUserId';
-//
-//        $request = Request::create('/wallet/open', 'POST',[
-//            'userId' => $userId
-//        ]);
 
-        $request = $this->call('POST', 'wallet/open', array(
+        $response = $this->postJson('api/wallet/open', [
             'user_id' => $userId
-        ));
+        ]);
 
-        $this->assertEquals(404, $request->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     /**
@@ -43,15 +40,11 @@ class OpenWalletControllerTest extends TestCase
      **/
     public function getsHttpBadRequestWhenUserIdFieldIsNotFound ()
     {
-        $userId = "unknow";
+        $userId = 'invalidUserId';
 
-        $this->openWalletController = new OpenWalletController(new OpenWalletService(new WalletDatabase()));
-
-        $request = Request::create('/wallet/open', 'POST',[
+        $response = $this->postJson('api/wallet/open', [
             'user' => $userId
         ]);
-
-        $response = $this->openWalletController->openWallet($request);
 
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -61,16 +54,12 @@ class OpenWalletControllerTest extends TestCase
      **/
     public function getsSuccessfulOperationWhenUserIdIsFound ()
     {
-        $userId = "1";
-        $this->openWalletController = new OpenWalletController(new OpenWalletService(new WalletDatabase()));
 
-        User::factory(User::class)->create();
+        $user = User::factory(User::class)->create()->first();
 
-        $request = Request::create('/wallet/open', 'POST',[
-            'userId' => $userId
+        $response = $this->postJson('api/wallet/open', [
+            'user_id' => $user->id
         ]);
-
-        $response = $this->openWalletController->openWallet($request);
 
         $this->assertEquals(200, $response->getStatusCode());
     }

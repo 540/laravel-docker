@@ -35,7 +35,7 @@ Route::get(
 
 Route::post(
     '/wallet/open',
-    'OpenWalletController@openWallet'
+    [OpenWalletController::class, 'openWallet']
 );
 
 Route::get(

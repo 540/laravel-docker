@@ -15,8 +15,8 @@ use PhpParser\Node\Scalar\String_;
 class OpenWalletController extends BaseController
 {
     private const ERRORS = [
-        'USER_NOT_FOUND_ERROR' => "user not found",
-        'USER_ID_FIELD_NOT_FOUND_ERROR' => "user id field not found",
+        'USER_NOT_FOUND_ERROR' => "A user with the specified ID was not found.",
+        'BAD_REQUEST_ERROR' => "bad request error",
         'ERROR_FIELD' => "error",
         'ERROR_MESSAGE' => "Error while creating the wallet"
     ];
@@ -29,19 +29,19 @@ class OpenWalletController extends BaseController
 
     public function openWallet(Request $request): JsonResponse
     {
-        if ($request->has("userId") === false) {
+        if ($request->has("user_id") === false) {
             return response()->json([
-                self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
+                self::ERRORS['ERROR_FIELD'] => self::ERRORS['BAD_REQUEST_ERROR']
             ],Response::HTTP_BAD_REQUEST);
         }
         try {
-            $walletId = $this->openWalletService->execute($request->get("userId"));
+            $walletId = $this->openWalletService->execute($request->get("user_id"));
             return response()->json([
-                'walletId' => $walletId
+                'wallet_id' => $walletId
             ],Response::HTTP_OK);
         } catch (Exception $exception) {
             return response()->json([
-                self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
+                self::ERRORS['ERROR_FIELD'] => self::ERRORS['USER_NOT_FOUND_ERROR']
             ],Response::HTTP_NOT_FOUND);
         }
     }

@@ -4,28 +4,25 @@
 namespace App\Services\OpenWalletService;
 
 
-use App\Infraestructure\Database\DatabaseManager;
-use App\Services\ServiceManager;
+use App\DataSource\Database\EloquentWalletDataSource;
 use Exception;
-use Illuminate\Http\Request;
-use Symfony\Component\VarDumper\Cloner\Data;
-use function PHPUnit\Framework\throwException;
 
 class OpenWalletService
 {
-    private DatabaseManager $databaseManager;
-    public function __construct(DatabaseManager $databaseManager)
+    private EloquentWalletDataSource $eloquentWalletDataSource;
+
+    public function __construct(EloquentWalletDataSource $eloquentWalletDataSource)
     {
-        $this->databaseManager = $databaseManager;
+        $this->eloquentWalletDataSource = $eloquentWalletDataSource;
     }
 
     public function execute($userId): string
     {
-        $wallet = $this->databaseManager->set("id",$userId);
+        $wallet = $this->eloquentWalletDataSource->createWalletByUserId($userId);
         if($wallet == null){
-            throw new Exception("Error");
+            throw new Exception("Error asdlkfjlskjdf");
         }
-        return $wallet->getId();
+        return $wallet->id;
     }
 
 }

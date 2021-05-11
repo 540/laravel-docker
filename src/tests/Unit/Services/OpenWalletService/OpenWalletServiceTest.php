@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Services\OpenWalletService;
 
+use App\DataSource\Database\EloquentWalletDataSource;
 use App\Http\Controllers\OpenWalletController;
 use App\Infraestructure\Database\DatabaseManager;
 use App\Models\Wallet;
 use App\Services\OpenWalletService\OpenWalletService;
-use App\Services\ServiceManager;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,15 +15,12 @@ use Prophecy\Prophet;
 
 class OpenWalletServiceTest extends TestCase
 {
-    private $databaseManager;
-    private OpenWalletService $openWalletService;
+    private Prophet $prophet;
 
     protected function setUp():void
     {
         parent::setUp();
-        $prophet = new Prophet;
-        $this->databaseManager = $prophet->prophesize(DatabaseManager::class);
-        $this->openWalletService = new OpenWalletService($this->databaseManager->reveal());
+        $this->prophet = new Prophet;
     }
 
     /**
@@ -33,17 +30,16 @@ class OpenWalletServiceTest extends TestCase
      */
     public function getsErrorWhenAUserDoesNotExist ()
     {
-        $userId = "invalidUserId";
-        $request = Request::create('/wallet/open', 'POST',[
-            'userId' => $userId
-        ]);
+        $userId = 'invalid_id';
+
+        $eloquentWalletDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
+        $eloquentWalletDataSource->createWalletByUserId($userId)->shouldBeCalledOnce()->willReturn(null);
+
+        $openWalletService = new OpenWalletService($eloquentWalletDataSource->reveal());
 
         $this->expectException(Exception::class);
 
-        $this->databaseManager->set("userId", $userId)->willThrow(new Exception("Error"));
-
-        $this->openWalletService->execute($userId);
-
+        $openWalletService->execute($userId);
     }
 
     /**
@@ -53,18 +49,20 @@ class OpenWalletServiceTest extends TestCase
      */
     public function getsSuccessfulOperationWhenUserIdIsFound ()
     {
-        $userId = "validUserId";
-        $request = Request::create('/wallet/open', 'POST',[
-            'userId' => $userId
-        ]);
+        $userId = 1;
+        $wallet = new Wallet();
 
-        $walletId = "validWalletId";
-        $wallet = new Wallet($userId, $walletId);
-        $this->databaseManager->set("userId", $userId)->willReturn($wallet);
+        $wallet->id = 1;
+        $wallet->user_id = $userId;
 
-        $response = $this->openWalletService->execute($userId);
+        $eloquentWalletDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
+        $eloquentWalletDataSource->createWalletByUserId($userId)->shouldBeCalledOnce()->willReturn($wallet);
 
-        $this->assertEquals($walletId, $response);
+        $openWalletService = new OpenWalletService($eloquentWalletDataSource->reveal());
+
+        $result = $openWalletService->execute($userId);
+
+        $this->assertEquals($wallet->id, $result);
     }
 
 }

@@ -8,7 +8,7 @@ use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class EloquentWalletCoinDataSourceTest extends TestCase
+class EloquentWalletDataSourceTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -41,5 +41,38 @@ class EloquentWalletCoinDataSourceTest extends TestCase
         $result = $eloquentWalletCoinDataSource->findWalletById($user->wallet->id);
 
         $this->assertEquals(Wallet::query()->find($user->wallet->id), $result);
+    }
+
+    /**
+     * @test
+     **/
+    public function walletIsNotCreatedForGivenWalletId()
+    {
+        $eloquentWalletDataSource = new EloquentWalletDataSource();
+
+        $userId = 'invalidUserId';
+        $result = $eloquentWalletDataSource->createWalletByUserId($userId);
+
+        $this->assertNull($result);
+    }
+
+    /**
+     * @test
+     **/
+    public function walletIsCreatedForAGivenWalletId()
+    {
+        $user = User::factory(User::class)->create()->first();
+
+        $wallet = new Wallet();
+
+        $wallet->id = 1;
+        $wallet->user_id = $user->id;
+
+        $eloquentWalletCoinDataSource = new EloquentWalletDataSource();
+
+        $result = $eloquentWalletCoinDataSource->createWalletByUserId($user->id);
+
+        $this->assertEquals($wallet->id, $result->id);
+        $this->assertEquals($wallet->user_id, $result->user_id);
     }
 }
