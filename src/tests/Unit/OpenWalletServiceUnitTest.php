@@ -8,7 +8,7 @@ use App\Models\Wallet;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
 
-class OpenWalletUnitTest extends TestCase
+class OpenWalletServiceUnitTest extends TestCase
 {
     /**
      * @var OpenWalletService|WalletDataSource|\Prophecy\Prophecy\ObjectProphecy

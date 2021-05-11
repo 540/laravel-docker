@@ -9,7 +9,7 @@ use App\Models\Wallet;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
 
-class SellCoinUnitTest extends TestCase
+class SellCoinServiceUnitTest extends TestCase
 {
     /**
      * @var SellCoinsAdapterService
