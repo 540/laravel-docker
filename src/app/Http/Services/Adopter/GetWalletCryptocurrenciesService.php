@@ -2,6 +2,7 @@
 namespace App\Http\Services\Adopter;
 
 use App\Infrastructure\Database\WalletDataSource;
+use App\Models\Cryptocurrencies;
 
 /**
  * Class GetWalletCryptocurrenciesService

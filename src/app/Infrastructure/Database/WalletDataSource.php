@@ -33,7 +33,11 @@ class WalletDataSource
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
      */
     public function findWalletDataByWalletId($idWallet){
-        return DB::table('transaction')->where('id_wallet',$idWallet)->get();
+        $wallet = $this->findWallet($idWallet);
+        if($wallet == true) {
+            return DB::table('transaction')->where('id_wallet', $idWallet)->get();
+        }
+        return null;
     }
 
     /**

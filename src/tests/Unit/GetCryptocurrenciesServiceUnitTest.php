@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Http\Services\Adopter\GetWalletCryptocurrenciesService;
 use App\Infrastructure\Database\WalletDataSource;
+use App\Models\Cryptocurrencies;
 use App\Models\Wallet;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
@@ -16,7 +17,7 @@ class GetCryptocurrenciesServiceUnitTest extends TestCase
     private GetWalletCryptocurrenciesService $getWalletCryptocurrenciesService;
 
     /**
-     * @var OpenWalletService|WalletDataSource|\Prophecy\Prophecy\ObjectProphecy
+     * @var WalletDataSource|\Prophecy\Prophecy\ObjectProphecy
      */
     private $walletDataSource;
 
@@ -34,12 +35,14 @@ class GetCryptocurrenciesServiceUnitTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
-    public function insertedWalletIdDoesNotExist_BadRequestIsGiven()
+    public function insertedNotExistingWalletId_WalletNotFoundResponse()
     {
         $idUser = "2";
         $wallet= new Wallet();
         $wallet->fill(['id_user' => $idUser, 'id_wallet' => "1"]);
+
         $this->walletDataSource->findWalletDataByWalletId('2')->shouldBeCalledOnce()->willReturn(null);
         $this->expectExceptionMessage("wallet not found");
         $this->getWalletCryptocurrenciesService->execute('2');
@@ -48,26 +51,40 @@ class GetCryptocurrenciesServiceUnitTest extends TestCase
     /**
      * @test
      */
-    public function insertedWalletIdDoesExist_ExpectedOutputGiven()
+    public function insertedExistingWalletId_NoTransactionsMade_EmptyResponse()
     {
         $idUser = "2";
         $wallet= new Wallet();
         $wallet->fill(['id_user' => $idUser, 'id_wallet' => "2"]);
-        $expectedOutput = '{
-            "id_transaction": 2,
-            "id_coin": "90",
-            "usd_buyed_amount": "50",
-            "buyed_coins_amount": "0.00089988848581884",
-            "buyed_coins_usd_price": "55562.44",
-            "operation": "buy",
-            "created_at": null,
-            "updated_at": null,
-            "id_wallet": 2
-        }';
+
+        $this->walletDataSource->findWalletDataByWalletId('2')->shouldBeCalledOnce()->willReturn("[]");
+        $response = $this->getWalletCryptocurrenciesService->execute('2');
+
+        $this->assertEquals("[]",$response);
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function insertedExistingWalletId_TransactionsMade_ExpectedResponse()
+    {
+        $expectedOutput = new Cryptocurrencies();
+        $expectedOutput->fill([
+            "id_transaction"=> 2,
+            "id_coin"=> "90",
+            "usd_buyed_amount"=> "50",
+            "buyed_coins_amount"=> "0.00089988848581884",
+            "buyed_coins_usd_price"=> "55562.44",
+            "operation"=> "buy",
+            "created_at"=> null,
+            "updated_at"=> null,
+            "id_wallet"=> 2]);
 
         $this->walletDataSource->findWalletDataByWalletId('2')->shouldBeCalledOnce()->willReturn($expectedOutput);
-        $this->expectExceptionMessage("wallet not found");
-        $this->getWalletCryptocurrenciesService->execute('2');
+        $cryptoCurrencies = $this->getWalletCryptocurrenciesService->execute('2');
+
+        $this->assertEquals($expectedOutput,$cryptoCurrencies);
     }
 
 }

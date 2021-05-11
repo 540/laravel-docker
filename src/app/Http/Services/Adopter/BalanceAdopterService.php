@@ -25,7 +25,7 @@ class BalanceAdopterService
 
     /**
      * @param $idWallet
-     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection|int
      * @throws \Exception
      */
     public function execute($idWallet)
@@ -50,12 +50,10 @@ class BalanceAdopterService
         $coinPrice = $coinData[0]->price_usd;
 
         $coinsBoughtAmount = $this->walletRepository->selectAmountBoughtCoins($idCoin,$idWallet);
-        if($coinsBoughtAmount >=0)
-        {
-            $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
-            $coinsAmount = $coinsBoughtAmount-$coinsSelledAmount;
-            return $coinsAmount * $coinPrice;
-        }
-        throw new \Exception ("wallet not found");
+
+        $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
+        $coinsAmount = $coinsBoughtAmount-$coinsSelledAmount;
+        return $coinsAmount * $coinPrice;
+
     }
 }
