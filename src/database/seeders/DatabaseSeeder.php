@@ -15,6 +15,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+        DB::table('users')->insert([
+            'user_id' => 'test-user',
+        ]);
+
         DB::table('wallets')->insert([
             'wallet_id' => 'test-wallet',
             'user_id' => 'test-user',

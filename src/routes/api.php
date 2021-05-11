@@ -30,7 +30,7 @@ Route::get(
     WalletController::class
 );
 
-Route::get(//de iker
+Route::get( //DEMO IKER
     'user/{email}',
     IsEarlyAdopterUserController::class
 );
