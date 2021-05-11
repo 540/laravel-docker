@@ -44,19 +44,31 @@ class WalletDataSource
      * @param $operation
      * @return string
      */
-    public function insertTransaction($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation): string
+    public function insertTransaction($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation)
     {
-        DB::table('transaction')->insert([
-            'id_wallet' => $idWallet,
-            'id_coin' => $idCoin,
-            'usd_buyed_amount' => $amount,
-            'buyed_coins_amount' => $buyedBitcoins,
-            'buyed_coins_usd_price'=>$coinPrice,
-            'operation'=>$operation
-        ]);
-
-        return "Successful Operation";
+        $wallet = $this->findWallet($idWallet);
+        if($wallet != null){
+            return DB::table('transaction')->insert([
+                'id_wallet' => $idWallet,
+                'id_coin' => $idCoin,
+                'usd_buyed_amount' => $amount,
+                'buyed_coins_amount' => $buyedBitcoins,
+                'buyed_coins_usd_price'=>$coinPrice,
+                'operation'=>$operation
+            ]);
+        }
+        return null;
     }
+
+    /**
+     * @param $idWallet
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    private function findWallet($idWallet)
+    {
+        return DB::table('transaction')->where('id_wallet',$idWallet)->first();
+    }
+
 
     /**
      * @param $idCoin
