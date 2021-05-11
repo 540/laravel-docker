@@ -2,7 +2,7 @@
 
 namespace Tests\Integration\DataSources;
 
-use App\DataSource\Database\EloquentWalletCoinDataSource;
+use App\DataSource\Database\EloquentWalletDataSource;
 use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +17,7 @@ class EloquentWalletCoinDataSourceTest extends TestCase
      **/
     public function noWalletFoundForGivenWalletId()
     {
-        $eloquentWalletCoinDataSource = new EloquentWalletCoinDataSource();
+        $eloquentWalletCoinDataSource = new EloquentWalletDataSource();
 
         $walletId = 'invalidWalletId';
         $result = $eloquentWalletCoinDataSource->findWalletById($walletId);
@@ -36,7 +36,7 @@ class EloquentWalletCoinDataSourceTest extends TestCase
 
         $user->wallet()->save($wallet);
 
-        $eloquentWalletCoinDataSource = new EloquentWalletCoinDataSource();
+        $eloquentWalletCoinDataSource = new EloquentWalletDataSource();
 
         $result = $eloquentWalletCoinDataSource->findWalletById($user->wallet->id);
 

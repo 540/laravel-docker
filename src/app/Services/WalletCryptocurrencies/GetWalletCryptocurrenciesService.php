@@ -4,15 +4,15 @@
 namespace App\Services\WalletCryptocurrencies;
 
 
-use App\DataSource\Database\EloquentWalletCoinDataSource;
+use App\DataSource\Database\EloquentWalletDataSource;
 use Exception;
 use function PHPUnit\Framework\isNull;
 
 class GetWalletCryptocurrenciesService
 {
-    private EloquentWalletCoinDataSource $eloquentWalletDataSource;
+    private EloquentWalletDataSource $eloquentWalletDataSource;
 
-    public function __construct(EloquentWalletCoinDataSource $eloquentWalletCoinDataSource)
+    public function __construct(EloquentWalletDataSource $eloquentWalletCoinDataSource)
     {
         $this->eloquentWalletDataSource = $eloquentWalletCoinDataSource;
     }

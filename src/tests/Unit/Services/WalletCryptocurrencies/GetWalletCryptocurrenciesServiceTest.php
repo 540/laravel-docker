@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services\WalletCryptocurrencies;
 
-use App\DataSource\Database\EloquentWalletCoinDataSource;
+use App\DataSource\Database\EloquentWalletDataSource;
 use App\Models\Coin;
 use App\Models\User;
 use App\Models\Wallet;
@@ -32,7 +32,7 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
     {
         $walletId = '1';
 
-        $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletCoinDataSource::class);
+        $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
         $eloquentWalletCoinDataSource->findWalletById($walletId)->willThrow(Exception::class);
 
         $getWalletCryptocurrenciesService = new GetWalletCryptocurrenciesService($eloquentWalletCoinDataSource->reveal());
@@ -69,7 +69,7 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
             ]);
         }
 
-        $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletCoinDataSource::class);
+        $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
         $eloquentWalletCoinDataSource->findWalletById($wallet->id)->shouldBeCalledOnce()->willReturn($wallet);
 
         $getWalletCryptocurrenciesService = new GetWalletCryptocurrenciesService($eloquentWalletCoinDataSource->reveal());
@@ -106,7 +106,7 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
             ]);
         }
 
-        $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletCoinDataSource::class);
+        $eloquentWalletCoinDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
         $eloquentWalletCoinDataSource->findWalletById($wallet->id)->shouldBeCalledOnce()->willReturn($wallet);
 
         $getWalletCryptocurrenciesService = new GetWalletCryptocurrenciesService($eloquentWalletCoinDataSource->reveal());

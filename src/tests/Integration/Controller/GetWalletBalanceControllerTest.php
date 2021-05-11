@@ -18,7 +18,7 @@ class GetWalletBalanceControllerTest extends TestCase
      */
     public function noCryptocurrenciesFoundGivenWrongWalletId()
     {
-        $response = $this->get('api/wallet/2/balance');
+        $response = $this->get('api/wallet/1/balance');
 
         $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson(['error' => 'a wallet with the specified ID was not found.']);
     }

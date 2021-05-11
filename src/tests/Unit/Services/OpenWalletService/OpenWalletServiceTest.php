@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Services\OpenWalletService;
+namespace Tests\Unit\Services\OpenWalletService;
 
 use App\Http\Controllers\OpenWalletController;
 use App\Infraestructure\Database\DatabaseManager;
