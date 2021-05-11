@@ -14,15 +14,15 @@ class SellCoinsController extends BaseController
     /**
      * @var SellCoinsAdapterService
      */
-    private $sellCoinsService;
+    private SellCoinsAdapterService $sellCoinsService;
 
     /**
      * SellCoinsController constructor.
-     * @param SellCoinsAdapterService $buyCoinsService
+     * @param SellCoinsAdapterService $sellCoinsService
      */
-    public function __construct(SellCoinsAdapterService $buyCoinsService)
+    public function __construct(SellCoinsAdapterService $sellCoinsService)
     {
-        $this->sellCoinsService = $buyCoinsService;
+        $this->sellCoinsService = $sellCoinsService;
     }
 
     /**

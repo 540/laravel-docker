@@ -38,31 +38,26 @@ class SellCoinsAdapterService
     {
         $api = new ApiSource($idCoin);
         $coinData = $api->apiConnection();
+
         $coinPrice = $coinData[0]->price_usd;
         $usdSellPrice = $amount*$coinPrice;
 
-        // Comprobar si hay esa cantidad de monetas
-        $coinsBuyedAmount = $this->walletRepository->selectAmountBuyedCoins($idCoin,$idWallet);
-        if($coinsBuyedAmount != null)
+        $coinsBuyedAmount = $this->walletRepository->selectAmountBoughtCoins($idCoin,$idWallet);
+        if($coinsBuyedAmount >=0)
         {
             $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
-            if($coinsSelledAmount != null)
-            {
-                $coinsAmount = $coinsBuyedAmount-$coinsSelledAmount;
 
-                if($coinsAmount < $amount){
-                    throw new \Exception('not enough coins to sell');
-                }else{
-                    $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet,$usdSellPrice, $amount, $coinPrice, $operation);
-
-                    if ($wallet == null) {
-                        throw new \Exception('wallet not found');
-                    }
+            $coinsAmount = $coinsBuyedAmount-$coinsSelledAmount;
+            if($coinsAmount < $amount){
+                throw new \Exception('not enough coins to sell');
+            }else{
+                $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet,$usdSellPrice, $amount, $coinPrice, $operation);
+                if ($wallet == null) {
+                    throw new \Exception('transaction error');
                 }
-                return $wallet;
             }
+            return "successful operation";
         }
         throw new \Exception ("wallet not found");
-
     }
 }

@@ -35,12 +35,10 @@ class BuyCoinsAdapterService
      */
     public function execute($idCoin, $idWallet, $amount, $operation): string
     {
-
         $api = new ApiSource($idCoin);
         $coinData = $api->apiConnection();
-        // Obtener precio de la moneda
+
         $coinPrice = $coinData[0]->price_usd;
-        // Caulcular los bitcoins comprados
         $buyedCoins = $amount/$coinPrice;
 
         $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet, $amount, $buyedCoins, $coinPrice, $operation);

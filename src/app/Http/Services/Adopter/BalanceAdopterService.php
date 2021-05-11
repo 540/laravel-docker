@@ -44,7 +44,7 @@ class BalanceAdopterService
      * @throws \Exception
      */
     public function obtainBalance($idCoin, $idWallet){
-        $coinsBuyedAmount = $this->walletRepository->selectAmountBuyedCoins($idCoin,$idWallet);
+        $coinsBuyedAmount = $this->walletRepository->selectAmountBoughtCoins($idCoin,$idWallet);
         $coinsSelledAmount = $this->walletRepository->selectAmountSelledCoins($idCoin,$idWallet);
 
         if ($coinsBuyedAmount == null && $coinsSelledAmount == null) {

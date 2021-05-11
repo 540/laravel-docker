@@ -5,6 +5,7 @@ namespace App\Infrastructure\Database;
 
 
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\isEmpty;
 
 class WalletDataSource
 {
@@ -44,10 +45,10 @@ class WalletDataSource
      * @param $operation
      * @return string
      */
-    public function insertTransaction($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation)
+    public function insertTransaction($idCoin, $idWallet, $amount, $buyedBitcoins, $coinPrice, $operation): ?string
     {
         $wallet = $this->findWallet($idWallet);
-        if($wallet != null){
+        if($wallet == true){
             return DB::table('transaction')->insert([
                 'id_wallet' => $idWallet,
                 'id_coin' => $idCoin,
@@ -62,46 +63,47 @@ class WalletDataSource
 
     /**
      * @param $idWallet
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
+     * @return bool
      */
     private function findWallet($idWallet)
     {
-        return DB::table('transaction')->where('id_wallet',$idWallet)->first();
+        return DB::table('wallet')->where('id',$idWallet)->exists();
     }
-
 
     /**
      * @param $idCoin
      * @param $idWallet
      * @return int|mixed
      */
-    public function selectAmountBuyedCoins($idCoin, $idWallet)
+    public function selectAmountBoughtCoins($idCoin, $idWallet)
     {
         $wallet = $this->findWallet($idWallet);
-        if($wallet != null) {
+        if($wallet == true) {
             return DB::table('transaction')->where('id_coin', $idCoin)
                 ->where('id_wallet', $idWallet)
                 ->where('operation', 'buy')
                 ->sum('buyed_coins_amount');
+        }else{
+            return -1;
         }
-        return null;
+
     }
 
     /**
-    * @param $idCoin
-    * @param $idWallet
-    * @return int|mixed
-    */
+     * @param $idCoin
+     * @param $idWallet
+     * @return int|mixed|string
+     */
     public function selectAmountSelledCoins($idCoin, $idWallet)
     {
         $wallet = $this->findWallet($idWallet);
-        if($wallet != null) {
+        if($wallet == true) {
             return DB::table('transaction')->where('id_coin', $idCoin)
                 ->where('id_wallet', $idWallet)
                 ->where('operation', 'sell')
                 ->sum('buyed_coins_amount');
         }
-        return null;
+        return -1;
     }
 
     /**

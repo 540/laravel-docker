@@ -18,7 +18,7 @@ class BuyCoinsController extends BaseController
     /**
      * @var BuyCoinsAdapterService
      */
-    private $buyCoinsService;
+    private BuyCoinsAdapterService $buyCoinsService;
 
     /**
      * BuyCoinsController constructor.
@@ -31,8 +31,7 @@ class BuyCoinsController extends BaseController
 
     /**
      * @param Request $request
-     * @return string
-     * @throws \Exception
+     * @return JsonResponse
      */
     public function __invoke(Request $request): JsonResponse
     {
