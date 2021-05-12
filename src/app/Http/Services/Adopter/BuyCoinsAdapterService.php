@@ -47,7 +47,7 @@ var_dump($coinPrice);
         $buyedCoins = $amount/$coinPrice;
 
         $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet, $amount, $buyedCoins, $coinPrice, $operation);
-        if ($wallet == null) {
+        if ($wallet == -1) {
             throw new \Exception('wallet not found');
         }
         return "Successful Operation";

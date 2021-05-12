@@ -18,7 +18,7 @@ class Wallet extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id_wallet',
+        'id',
         'id_user'
     ];
 }
