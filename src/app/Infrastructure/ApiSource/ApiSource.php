@@ -10,9 +10,10 @@ class ApiSource
      * @param $idCoin
      * @return mixed
      */
-    public function apiConnection($idCoin)
+    public function apiGetPrice($idCoin)
     {
-        return json_decode($this->curl("https://api.coinlore.net/api/ticker/?id=".$idCoin));
+        $coinData = json_decode($this->curl("https://api.coinlore.net/api/ticker/?id=".$idCoin));
+        return $coinData[0]->price_usd;
     }
 
     /**

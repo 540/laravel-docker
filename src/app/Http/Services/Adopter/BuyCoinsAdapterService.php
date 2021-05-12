@@ -39,12 +39,11 @@ class BuyCoinsAdapterService
      */
     public function execute($idCoin, $idWallet, $amount, $operation): string
     {
-        $coinData = $this->apiData->apiConnection($idCoin);
-        if ($coinData == 0) {
+        $coinPrice = $this->apiData->apiGetPrice($idCoin);
+        if ($coinPrice == 0) {
             throw new \Exception('coin does not exist');
         }
-
-        $coinPrice = $coinData[0]->price_usd;
+var_dump($coinPrice);
         $buyedCoins = $amount/$coinPrice;
 
         $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet, $amount, $buyedCoins, $coinPrice, $operation);

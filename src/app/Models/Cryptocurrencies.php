@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Cryptocurrencies extends Authenticatable
+class Cryptocurrencies
 {
     use HasFactory, Notifiable;
 
@@ -25,6 +25,7 @@ class Cryptocurrencies extends Authenticatable
         "operation",
         "created_at",
         "updated_at",
-        "id_wallet"
+        "id_wallet",
+        "price_usd"
     ];
 }

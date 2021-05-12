@@ -40,12 +40,11 @@ class SellCoinsAdapterService
      */
     public function execute($idCoin, $idWallet, $amount, $operation): string
     {
-        $coinData = $this->apiData->apiConnection($idCoin);
-        if ($coinData == 0) {
+        $coinPrice = $this->apiData->apiGetPrice($idCoin);
+        if ($coinPrice == 0) {
             throw new \Exception('coin does not exist');
         }
 
-        $coinPrice = $coinData[0]->price_usd;
         $usdSellPrice = $amount*$coinPrice;
 
         $coinsBuyedAmount = $this->walletRepository->selectAmountBoughtCoins($idCoin,$idWallet);
@@ -58,7 +57,7 @@ class SellCoinsAdapterService
                 throw new \Exception('not enough coins to sell');
             }else{
                 $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet,$usdSellPrice, $amount, $coinPrice, $operation);
-                echo $wallet;
+                var_dump($wallet);
                 if ($wallet == null) {
                     throw new \Exception('transaction error');
                 }

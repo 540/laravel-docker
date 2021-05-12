@@ -51,8 +51,7 @@ class BalanceAdopterService
      */
     public function obtainBalance($idCoin, $idWallet)
     {
-        $coinData = $this->apiData->apiConnection($idCoin);
-        $coinPrice = $coinData[0]->price_usd;
+        $coinPrice = $this->apiData->apiGetPrice($idCoin);
 
         $coinsBoughtAmount = $this->walletRepository->selectAmountBoughtCoins($idCoin,$idWallet);
         $coinsSelledAmount = $this->walletRepository->selectAmountSoldCoins($idCoin,$idWallet);

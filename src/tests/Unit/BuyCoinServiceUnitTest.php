@@ -52,7 +52,7 @@ class BuyCoinServiceUnitTest extends TestCase
         $wallet= new Wallet();
         $wallet->fill(['id_user' => $idUser, 'id_wallet' => "1"]);
 
-        $this->apiDataSource->apiConnection("12345")->willReturn(0);
+        $this->apiDataSource->apiGetPrice("12345")->willReturn(0);
         $this->walletDataSource->insertTransaction('90','2','50000','1','50000','buy')->shouldBeCalledOnce()->willReturn(null);
 
         $this->expectExceptionMessage("coin does not exist");
@@ -83,27 +83,10 @@ class BuyCoinServiceUnitTest extends TestCase
         $idUser = "2";
         $wallet= new Wallet();
         $wallet->fill(['id_user' => $idUser, 'id_wallet' => "1"]);
-        $currency = new Cryptocurrencies();
-        $spected = $currency->fill([
-            "id"=>"90",
-            "symbol"=>"BTC",
-            "name"=>"Bitcoin",
-            "nameid"=>"bitcoin",
-            "rank"=>1,
-            "price_usd"=>"56555.91",
-            "percent_change_24h"=>"-2.01",
-            "percent_change_1h"=>"0.13",
-            "percent_change_7d"=>"0.31",
-            "market_cap_usd"=>"1055472018549.00",
-            "volume24"=>"93618535433.66",
-            "volume24_native"=>"1655327.09",
-            "csupply"=>"18662452.00",
-            "price_btc"=>"1.00",
-            "tsupply"=>"18662452",
-            "msupply"=>"21000000"]);
 
         $this->walletDataSource->insertTransaction('90','2','50000','1','50000','buy')->shouldBeCalledOnce()->willReturn(1);
-        $this->apiDataSource->apiConnection("90")->shouldBeCalledOnce()->willReturn($spected);
+        $this->apiDataSource->apiGetPrice("90")->shouldBeCalledOnce()->willReturn(50000);
+
         $response = $this->buyCoinsService->execute('90','2','50000','buy');
 
         $this->assertEquals("Successful Operation", $response);
