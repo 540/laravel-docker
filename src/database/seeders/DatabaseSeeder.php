@@ -26,20 +26,20 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('coins')->insert([
-            'coin_id' => 'bitcoin',
+            'coin_id' => '90',
             'name' => 'Bitcoin',
             'symbol' => 'BTC',
         ]);
 
         DB::table('coins')->insert([
-            'coin_id' => 'ethereum',
+            'coin_id' => '80',
             'name' => 'Ethereum',
             'symbol' => 'ETH',
         ]);
 
         DB::table('walletscoins')->insert([
             'wallet_id' => 'test-wallet',
-            'coin_id' => 'bitcoin',
+            'coin_id' => '90',
             'amount' => 0,
         ]);
     }

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\Wallet\WalletService;
+use App\Services\Wallet\WalletService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\DB;
 
 class WalletController extends BaseController
 {
@@ -40,21 +39,18 @@ class WalletController extends BaseController
             if ($exception->getMessage() === "Wallet not found") {
                 return response()->json(
                     [
-                        'status' => 'W
-                        allet with the specified ID was not found', 'message' => $exception->getMessage()
+                        'status' => 'Wallet with the specified ID was not found', 'message' => $exception->getMessage()
                     ],
                     Response::HTTP_NOT_FOUND
                 );
             }
             return response()->json(
                 [
-                    'status' => 'Bad Request Error', 'message' => "Database is not available!"
+                    'status' => 'Bad Request Error', 'message' => $exception->getMessage()
                 ],
                 Response::HTTP_BAD_REQUEST
             );
         }
-        return response()->json([
-            $wallet
-        ], Response::HTTP_OK);
+        return response()->json($wallet, Response::HTTP_OK);
     }
 }
