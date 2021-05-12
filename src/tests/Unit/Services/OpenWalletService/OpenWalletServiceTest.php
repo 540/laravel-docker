@@ -4,7 +4,7 @@ namespace Tests\Unit\Services\OpenWalletService;
 
 use App\DataSource\Database\EloquentWalletDataSource;
 use App\Models\Wallet;
-use App\Services\OpenWalletService\OpenWalletService;
+use App\Services\OpenWallet\OpenWalletService;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;

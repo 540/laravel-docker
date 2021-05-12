@@ -2,6 +2,8 @@
 
 namespace Tests\Integration\Controller;
 
+use App\DataSource\API\CoinDataSource;
+use App\DataSource\API\FakeCoinDataSource;
 use App\Models\Coin;
 use App\Models\User;
 use App\Models\Wallet;
@@ -18,6 +20,8 @@ class GetWalletBalanceControllerTest extends TestCase
      */
     public function noCryptocurrenciesFoundGivenWrongWalletId()
     {
+        $this->app->bind(CoinDataSource::class, FakeCoinDataSource::class);
+
         $response = $this->get('api/wallet/1/balance');
 
         $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson(['error' => 'a wallet with the specified ID was not found.']);
@@ -28,13 +32,9 @@ class GetWalletBalanceControllerTest extends TestCase
      */
     public function balanceIsGivenForASpecifiedWalletId()
     {
-        $user = User::factory(User::class)->create();
+        $this->app->bind(CoinDataSource::class, FakeCoinDataSource::class);
 
-        $wallet = Wallet::factory(Wallet::class)->make();
-
-        $user->wallet()->save($wallet);
-
-        $wallet = Wallet::query()->find($user->wallet->id);
+        $wallet = Wallet::factory(Wallet::class)->create()->first();
 
         $coin = Coin::factory(Coin::class)->make();
 

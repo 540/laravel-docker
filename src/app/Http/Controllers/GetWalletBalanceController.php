@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Wallet;
 use App\Services\WalletBalance\GetWalletBalanceService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Http;
 
 class GetWalletBalanceController extends Controller
 {
@@ -28,7 +26,7 @@ class GetWalletBalanceController extends Controller
             ], Response::HTTP_OK);
         }catch (Exception $exception){
             return response()->json([
-                'error' => 'a wallet with the specified ID was not found.'
+                'error' => $exception->getMessage()
             ], Response::HTTP_NOT_FOUND);
         }
     }

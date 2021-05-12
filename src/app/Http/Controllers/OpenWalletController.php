@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\OpenWalletService\OpenWalletService;
-use App\Services\ServiceManager;
+use App\Services\OpenWallet\OpenWalletService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Scalar\String_;
 
 class OpenWalletController extends BaseController
 {

@@ -7,7 +7,7 @@ namespace App\DataSource\API;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
-class EloquentCoinDataSource
+class EloquentCoinDataSource implements CoinDataSource
 {
 
     public function findCoinById($coinId)

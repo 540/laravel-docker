@@ -3,7 +3,7 @@
 namespace Tests\Unit\Controllers;
 
 use App\Http\Controllers\OpenWalletController;
-use App\Services\OpenWalletService\OpenWalletService;
+use App\Services\OpenWallet\OpenWalletService;
 use App\Services\ServiceManager;
 use Exception;
 use Illuminate\Http\Response;

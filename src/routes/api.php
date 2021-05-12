@@ -1,5 +1,7 @@
 <?php
 
+use App\DataSource\API\CoinDataSource;
+use App\DataSource\API\EloquentCoinDataSource;
 use App\Http\Controllers\GetUserController;
 use App\Http\Controllers\GetWalletBalanceController;
 use App\Http\Controllers\GetWalletCryptocurrenciesController;
@@ -22,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
+
+app()->bind(CoinDataSource::class, EloquentCoinDataSource::class);
 
 Route::get(
     '/status',
