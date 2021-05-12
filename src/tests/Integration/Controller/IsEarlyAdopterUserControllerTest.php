@@ -2,7 +2,7 @@
 
 namespace Tests\Integration\Controller;
 
-use App\Models\User;
+use App\Models\User540;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Tests\TestCase;
@@ -16,7 +16,7 @@ class IsEarlyAdopterUserControllerTest extends TestCase
      */
     public function noUserFoundForGivenEmail()
     {
-        User::factory(User::class)->create();
+        User540::factory(User540::class)->create();
 
         $response = $this->get('/api/user/another@email.com');
 
@@ -28,7 +28,7 @@ class IsEarlyAdopterUserControllerTest extends TestCase
      */
     public function userIsEarlyAdopter()
     {
-        User::factory(User::class)->create();
+        User540::factory(User540::class)->create();
 
         $response = $this->get('/api/user/email@email.com');
 

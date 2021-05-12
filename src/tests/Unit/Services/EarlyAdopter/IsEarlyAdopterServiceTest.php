@@ -3,7 +3,7 @@
 namespace Tests\Unit\Services\EarlyAdopter;
 
 use App\DataSource\Database\EloquentUserDataSource;
-use App\Models\User;
+use App\Models\User540;
 use App\Services\EarlyAdopter\IsEarlyAdopterService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
@@ -38,7 +38,7 @@ class IsEarlyAdopterServiceTest extends TestCase
     public function userIsNotEarlyAdopter()
     {
         $email = 'not_early_adopter@email.com';
-        $user = new User();
+        $user = new User540();
         $user->fill(['id' => 9999, 'email' => $email]);
 
         $this->eloquentUserDataSource->findByEmail($email)->shouldBeCalledOnce()->willReturn($user);
@@ -54,7 +54,7 @@ class IsEarlyAdopterServiceTest extends TestCase
     public function userIsAnEarlyAdopter()
     {
         $email = 'not_early_adopter@email.com';
-        $user = new User();
+        $user = new User540();
         $user->fill(['id' => 1, 'email' => $email]);
 
         $this->eloquentUserDataSource->findByEmail($email)->shouldBeCalledOnce()->willReturn($user);

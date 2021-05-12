@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\User540;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserFactory extends Factory
+class User540Factory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
@@ -22,7 +22,9 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => 'factory-user'
+            'id' => 1,
+            'name' => 'user_name',
+            'email' => 'email@email.com'
         ];
     }
 }
