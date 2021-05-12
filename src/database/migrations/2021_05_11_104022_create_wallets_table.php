@@ -17,6 +17,8 @@ class CreateWalletsTable extends Migration
             $table->string('wallet_id')->primary();
             $table->string('user_id');
             $table->float('balance_usd');
+
+            $table->foreign('user_id')->references('user_id')->on('users');
         });
     }
 
