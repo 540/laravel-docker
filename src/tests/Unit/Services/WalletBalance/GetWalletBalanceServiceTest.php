@@ -48,13 +48,7 @@ class GetWalletBalanceServiceTest extends TestCase
      **/
     public function noCoinIsFoundForAGivenCoinId()
     {
-        $user = User::factory(User::class)->create()->first();
-
-        $wallet = Wallet::factory(Wallet::class)->make();
-
-        $user->wallet()->save($wallet);
-
-        $wallet = Wallet::query()->find($user->wallet->id)->first();
+        $wallet = Wallet::factory(Wallet::class)->create()->first();
 
         $coin = Coin::factory(Coin::class)->make();
 
@@ -80,13 +74,7 @@ class GetWalletBalanceServiceTest extends TestCase
      **/
     public function BalanceIsProvidedForAGivenWalletId()
     {
-        $user = User::factory()->create()->first();
-
-        $wallet = Wallet::factory()->make();
-
-        $user->wallet()->save($wallet);
-
-        $wallet = Wallet::query()->find($user->wallet->id)->first();
+        $wallet = Wallet::factory()->create()->first();
 
         $coins = Coin::factory(Coin::class)->count(2)->make();
 

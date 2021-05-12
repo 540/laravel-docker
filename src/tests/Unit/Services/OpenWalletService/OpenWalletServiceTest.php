@@ -3,13 +3,9 @@
 namespace Tests\Unit\Services\OpenWalletService;
 
 use App\DataSource\Database\EloquentWalletDataSource;
-use App\Http\Controllers\OpenWalletController;
-use App\Infraestructure\Database\DatabaseManager;
 use App\Models\Wallet;
 use App\Services\OpenWalletService\OpenWalletService;
 use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
 
@@ -28,7 +24,7 @@ class OpenWalletServiceTest extends TestCase
      *
      * @throws Exception
      */
-    public function getsErrorWhenAUserDoesNotExist ()
+    public function getsErrorWhenUserIdIsInvalid ()
     {
         $userId = 'invalid_id';
 
@@ -47,9 +43,9 @@ class OpenWalletServiceTest extends TestCase
      *
      * @throws Exception
      */
-    public function getsSuccessfulOperationWhenUserIdIsFound ()
+    public function getsSuccessfulOperationWhenUserIdIsValid ()
     {
-        $userId = 1;
+        $userId = 'validUserId';
         $wallet = new Wallet();
 
         $wallet->id = 1;

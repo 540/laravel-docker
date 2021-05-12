@@ -2,20 +2,9 @@
 
 namespace Tests\Integration\Controller;
 
-use App\Http\Controllers\OpenWalletController;
-use App\Infraestructure\Database\WalletDatabase;
-use App\Models\User;
 use App\Models\Wallet;
-use App\Services\OpenWalletService\OpenWalletService;
-use App\Services\ServiceManager;
-use Database\Factories\UserFactory;
-use Database\Fakers\FakeUserManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Tests\TestCase;
-use Prophecy\Prophet;
 
 class OpenWalletControllerTest extends TestCase
 {
@@ -24,9 +13,11 @@ class OpenWalletControllerTest extends TestCase
     /**
      * @test
      **/
-    public function getsHttpNotFoundWhenAInvalidUserIdIsReceived ()
+    public function noWalletIsCreatedWhenExistingUserIdIsReceived ()
     {
-        $userId = 'invalidUserId';
+        Wallet::factory()->create();
+
+        $userId = 'existingUserId';
 
         $response = $this->postJson('api/wallet/open', [
             'user_id' => $userId
@@ -38,7 +29,7 @@ class OpenWalletControllerTest extends TestCase
     /**
      * @test
      **/
-    public function getsHttpBadRequestWhenUserIdFieldIsNotFound ()
+    public function noWalletIsCreatedWhenBadRequestIsReceived ()
     {
         $userId = 'invalidUserId';
 
@@ -55,10 +46,10 @@ class OpenWalletControllerTest extends TestCase
     public function getsSuccessfulOperationWhenUserIdIsFound ()
     {
 
-        $user = User::factory(User::class)->create()->first();
+        $userId = 'validUserId';
 
         $response = $this->postJson('api/wallet/open', [
-            'user_id' => $user->id
+            'user_id' => $userId
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());

@@ -4,13 +4,18 @@
 namespace App\DataSource\API;
 
 
+use Exception;
 use Illuminate\Support\Facades\Http;
 
 class EloquentCoinDataSource
 {
 
-    public function findCoinById($coin_id)
+    public function findCoinById($coinId)
     {
-        return Http::get( 'https://api.coinlore.net/api/ticker/?id=' . $coin_id)[0];
+        try{
+            return Http::get( 'https://api.coinlore.net/api/ticker/?id=' . $coinId)[0];
+        }catch (Exception $exception){
+            return null;
+        }
     }
 }

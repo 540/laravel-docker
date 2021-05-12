@@ -3,9 +3,10 @@
 
 namespace App\DataSource\Database;
 
-
-use App\Models\User;
 use App\Models\Wallet;
+use Egulias\EmailValidator\Warning\LabelTooLong;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class EloquentWalletDataSource
 {
@@ -17,11 +18,13 @@ class EloquentWalletDataSource
 
     public function createWalletByUserId($userId)
     {
-        $user = User::query()->find($userId);
-        if($user == null){
+        $wallet = new Wallet();
+        $wallet->user_id = $userId;
+        try {
+            $wallet->save();
+            return $wallet;
+        }catch (Exception $exception){
             return null;
         }
-        $user->first()->wallet()->save(new Wallet());
-        return $user->wallet;
     }
 }
