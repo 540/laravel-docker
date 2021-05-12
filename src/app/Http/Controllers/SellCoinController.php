@@ -17,6 +17,11 @@ class SellCoinController extends BaseController
         'COIN_NOT_FOUND' => "Coin not found"
     ];
 
+    private const SUCCESS = [
+        'SUCCESS_FIELD' => "success",
+        'SUCCESS_MESSAGE' => "Successful operation"
+    ];
+
     private SellCoinService $sellCoinService;
 
     public function __construct(SellCoinService $sellCoinService) {
@@ -36,7 +41,7 @@ class SellCoinController extends BaseController
                 $request->get("amountUSD")
             );
             return response()->json([
-                // 200 - Successful operation
+                self::SUCCESS['SUCCESS_FIELD'] => self::SUCCESS['SUCCESS_MESSAGE']
             ], Response::HTTP_OK);
         }
         catch(Exception $exception) {

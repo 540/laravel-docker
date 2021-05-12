@@ -7,7 +7,7 @@ use Exception;
 
 class EloquentCoinRepository
 {
-    public function findCoinById(string $coinId): Coin
+    public function findCoinById(string $coinId)
     {
         $coin = Coin::query()->where('coin_id', $coinId)->first();
 

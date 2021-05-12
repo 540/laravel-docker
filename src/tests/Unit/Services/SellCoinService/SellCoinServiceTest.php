@@ -3,12 +3,13 @@
 namespace Tests\Services\SellCoinService;
 
 use App\DataSource\Database\EloquentCoinRepository;
-use App\Infraestructure\Database\DatabaseManager;
 use App\Models\Coin;
+use App\Models\User;
+use App\Models\Wallet;
 use App\Services\SellCoinService\SellCoinService;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 use Prophecy\Prophet;
 
 class SellCoinServiceTest extends TestCase
@@ -46,11 +47,13 @@ class SellCoinServiceTest extends TestCase
      */
     public function coinIsFoundIfCoinIdIsCorrect()
     {
+        $user = User::factory()->create()->first();
+        $wallet = Wallet::factory()->create()->first();
         $coin = Coin::factory()->create()->first();
         $expectedCoin = [];
         array_push($expectedCoin, [
             'wallet_id' => $coin->wallet_id,
-            'coin_id' => $coin->coind_id,
+            'coin_id' => $coin->coin_id,
             'name' => $coin->name,
             'symbol' => $coin->symbol,
             'amount' => $coin->amount,
@@ -58,10 +61,20 @@ class SellCoinServiceTest extends TestCase
         ]);
 
         $eloquentCoinRepository = $this->prophet->prophesize(EloquentCoinRepository::class);
-        $eloquentCoinRepository->findCoinById($coin->coinId)->shouldBeCalledOnce()->willReturn($coin);
+        $eloquentCoinRepository->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn($coin);
         $sellCoinService = new SellCoinService($eloquentCoinRepository->reveal());
-        $returnedCoin = $sellCoinService->execute($coin->coinId, $coin->walletId, 0);
+        $returnedCoin = $sellCoinService->execute($coin->coin_id, $coin->wallet_id, 0);
 
-        $this->assertEquals($expectedCoin, $returnedCoin);
+        $this->assertEquals($coin->coin_id, $returnedCoin->coin_id);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function sellsCoinIfCoinIsFound()
+    {
+        // previous test + amountUSD logic
+        //asserts that coin is sold
     }
 }

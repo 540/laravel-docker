@@ -3,7 +3,6 @@
 namespace App\Services\SellCoinService;
 
 use App\DataSource\Database\EloquentCoinRepository;
-use App\Models\Coin;
 use Exception;
 
 class SellCoinService
@@ -15,16 +14,14 @@ class SellCoinService
         $this->eloquentCoinRepository = $eloquentCoinRepository;
     }
 
-    public function execute(string $coinId, string $walletId, float $amountUSD): Coin
+    public function execute(string $coinId, int $walletId, float $amountUSD)
     {
-        $coin = $this->eloquentCoinRepository->findCoinById($coinId);
-
-        if(is_null($coin)) {
+        try {
+            $coin = $this->eloquentCoinRepository->findCoinById($coinId);
+            // here goes the logic
+            return $coin;
+        } catch (Exception $e) {
             throw new Exception("Error");
         }
-
-        // here goes the logic
-
-        return $coin;
     }
 }

@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Coin;
+use App\Models\Wallet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class CoinFactory extends Factory
+class WalletFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Coin::class;
+    protected $model = Wallet::class;
 
     /**
      * Define the model's default state.
@@ -23,12 +23,7 @@ class CoinFactory extends Factory
     {
         return [
             'id' => 1,
-            'wallet_id' => 1,
-            'coin_id' => 'coin_id',
-            'name' => 'user_name',
-            'symbol' => 'coinSymbol',
-            'amount' => 1,
-            'value_usd' => 1
+            'user_id' => 1,
         ];
     }
 }
