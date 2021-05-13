@@ -11,6 +11,7 @@ class WalletService
 {
     /**
      * @var EloquentWalletDataSource
+     * @var EloquentUserDataSource
      * @var CoinLoreDataSource
      */
     private EloquentWalletDataSource $eloquentWalletRepository;
@@ -30,7 +31,7 @@ class WalletService
     ) {
         $this->eloquentWalletRepository = $eloquentWalletRepository;
         $this->coinLoreRepository = $coinLoreRepository;
-        $this->eloquentUserDataSource = $eloquentUserRepository;
+        $this->eloquentUserRepository = $eloquentUserRepository;
     }
 
     /**
@@ -90,7 +91,7 @@ class WalletService
      */
     public function executeOpen(string $user_id): string
     {
-        if (!$this->eloquentUserDataSource->thereIsUserById($user_id)) {
+        if (!$this->eloquentUserRepository->thereIsUserById($user_id)) {
             throw new Exception('User not found');
         }
 
