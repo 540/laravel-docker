@@ -11,8 +11,7 @@ class EloquentCoinRepository
     {
         $coin = Coin::query()->where('coin_id', $coinId)->first();
 
-        if(is_null($coin))
-        {
+        if (is_null($coin)) {
             throw new Exception('Coin not found');
         }
 

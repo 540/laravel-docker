@@ -47,8 +47,6 @@ class SellCoinServiceTest extends TestCase
      */
     public function coinIsFoundIfCoinIdIsCorrect()
     {
-        $user = User::factory()->create()->first();
-        $wallet = Wallet::factory()->create()->first();
         $coin = Coin::factory()->create()->first();
         $expectedCoin = [];
         array_push($expectedCoin, [
@@ -74,7 +72,27 @@ class SellCoinServiceTest extends TestCase
      */
     public function sellsCoinIfCoinIsFound()
     {
-        // previous test + amountUSD logic
-        //asserts that coin is sold
+        $user = User::factory()->create()->first();
+        $wallet = Wallet::factory()->create()->first();
+        $coin = Coin::factory()->create()->first();
+        $expectedCoin = [];
+        array_push($expectedCoin, [
+            'wallet_id' => $coin->wallet_id,
+            'coin_id' => $coin->coin_id,
+            'name' => $coin->name,
+            'symbol' => $coin->symbol,
+            'amount' => $coin->amount,
+            'value_usd' => $coin->value_usd
+        ]);
+
+        // Calculate $amountUSD
+        // Link $coin with $user and $wallet
+
+        $eloquentCoinRepository = $this->prophet->prophesize(EloquentCoinRepository::class);
+        $eloquentCoinRepository->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn($coin);
+        $sellCoinService = new SellCoinService($eloquentCoinRepository->reveal());
+        $returnedCoin = $sellCoinService->execute($coin->coin_id, $coin->wallet_id, 0);
+
+        // Assert that coin is sold
     }
 }

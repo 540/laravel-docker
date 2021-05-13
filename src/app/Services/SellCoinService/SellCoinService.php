@@ -18,7 +18,9 @@ class SellCoinService
     {
         try {
             $coin = $this->eloquentCoinRepository->findCoinById($coinId);
-            // here goes the logic
+            // Find the coin in the given wallet
+            $wallet
+            // Update database selling $amountUSD coins
             return $coin;
         } catch (Exception $e) {
             throw new Exception("Error");
