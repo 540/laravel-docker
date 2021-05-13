@@ -54,5 +54,31 @@ class EloquentWalletDataSource
 
         return ($result != null);
     }
+
+    /**
+     * @param $user_id
+     * @return string
+     */
+    public function openWalletByUserId($user_id): string
+    {
+        $wallets = DB::table('wallets')
+            ->select('wallet_id')
+            ->where('wallet_id', 'LIKE', 'wallet-%')
+            ->orderBy('wallet_id', 'desc')
+            ->get()
+            ->toArray();
+
+        if (count($wallets) == 0 || $wallets == null) {
+            $wallet_id = 'wallet-000000001';
+        } else {
+            $wallet_id = $wallets[0]->wallet_id;
+            $wallet_id++;
+        }
+
+        DB::table('wallets')
+            ->insert(['wallet_id' => $wallet_id, 'user_id' => $user_id, 'balance_usd' => 0]);
+
+        return $wallet_id;
+    }
 }
 

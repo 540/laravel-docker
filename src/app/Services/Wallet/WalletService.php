@@ -2,6 +2,7 @@
 
 namespace App\Services\Wallet;
 
+use App\DataSource\Database\EloquentUserDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
 use App\DataSource\External\CoinLoreDataSource;
 use Exception;
@@ -13,19 +14,23 @@ class WalletService
      * @var CoinLoreDataSource
      */
     private EloquentWalletDataSource $eloquentWalletRepository;
+    private EloquentUserDataSource $eloquentUserRepository;
     private CoinLoreDataSource $coinLoreRepository;
 
     /**
      * WalletService constructor.
      * @param EloquentWalletDataSource $eloquentWalletRepository
+     * @param EloquentUserDataSource $eloquentUserRepository
      * @param CoinLoreDataSource $coinLoreRepository
      */
     public function __construct(
         EloquentWalletDataSource $eloquentWalletRepository,
+        EloquentUserDataSource $eloquentUserRepository,
         CoinLoreDataSource $coinLoreRepository
     ) {
         $this->eloquentWalletRepository = $eloquentWalletRepository;
         $this->coinLoreRepository = $coinLoreRepository;
+        $this->eloquentUserDataSource = $eloquentUserRepository;
     }
 
     /**
@@ -36,7 +41,6 @@ class WalletService
     public function execute(string $wallet_id): ?array
     {
         $wallet = $this->eloquentWalletRepository->findById($wallet_id);
-
         if (is_null($wallet)) {
             throw new Exception('Wallet not found');
         }
@@ -77,5 +81,19 @@ class WalletService
         }
 
         return $balanceUsd;
+    }
+
+    /**
+     * @param string $user_id
+     * @return string
+     * @throws Exception
+     */
+    public function executeOpen(string $user_id): string
+    {
+        if (!$this->eloquentUserDataSource->thereIsUserById($user_id)) {
+            throw new Exception('User not found');
+        }
+
+        return $this->eloquentWalletRepository->openWalletByUserId($user_id);
     }
 }

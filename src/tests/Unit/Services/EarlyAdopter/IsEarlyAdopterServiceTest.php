@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services\EarlyAdopter;
 
-use App\DataSource\Database\EloquentUserDataSource;
+use App\DataSource\Database\EloquentUser540DataSource;
 use App\Models\User540;
 use App\Services\EarlyAdopter\IsEarlyAdopterService;
 use PHPUnit\Framework\TestCase;
@@ -11,7 +11,7 @@ use Prophecy\Prophet;
 class IsEarlyAdopterServiceTest extends TestCase
 {
     /**
-     * @var EloquentUserDataSource
+     * @var EloquentUser540DataSource
      */
     private $eloquentUserDataSource;
 
@@ -27,7 +27,7 @@ class IsEarlyAdopterServiceTest extends TestCase
     {
         parent::setUp();
         $prophet = new Prophet();
-        $this->eloquentUserDataSource = $prophet->prophesize(EloquentUserDataSource::class);
+        $this->eloquentUserDataSource = $prophet->prophesize(EloquentUser540DataSource::class);
 
         $this->isEarlyAdopterService = new IsEarlyAdopterService($this->eloquentUserDataSource->reveal());
     }

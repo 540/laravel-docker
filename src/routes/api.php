@@ -37,6 +37,11 @@ Route::get(
 );
 
 Route::post(
+    '/wallet/open',
+    [WalletController::class, 'open']
+);
+
+Route::post(
     '/coin/buy',
     [CoinController::class, 'buy']
 );
