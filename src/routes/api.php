@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CoinController;
 use App\Http\Controllers\IsEarlyAdopterUserController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\WalletController;
@@ -28,6 +29,16 @@ Route::get(
 Route::get(
     '/wallet/{wallet_id}',
     WalletController::class
+);
+
+Route::post(
+    '/coin/buy',
+    [CoinController::class, 'buy']
+);
+
+Route::post(
+    '/coin/sell',
+    [CoinController::class, 'sell']
 );
 
 Route::get( //DEMO IKER

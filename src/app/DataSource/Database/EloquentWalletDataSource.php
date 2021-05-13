@@ -19,5 +19,19 @@ class EloquentWalletDataSource
                     ->select('coins.coin_id', 'name', 'symbol', 'amount')->where('wallets.wallet_id',$wallet_id)
                     ->get();
     }
+
+    /**
+     * @param $wallet_id
+     * @return bool
+     */
+    public function thereIsWalletById($wallet_id): bool
+    {
+        $result = DB::table('wallets')
+            ->select('wallet_id')
+            ->where('wallet_id', $wallet_id)
+            ->get();
+
+        return ($result != null);
+    }
 }
 
