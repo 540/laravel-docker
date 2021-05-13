@@ -37,7 +37,7 @@ class WalletService
     {
         $wallet = $this->eloquentWalletRepository->findById($wallet_id);
 
-        if (is_null($wallet) || count($wallet) == 0) {
+        if (is_null($wallet)) {
             throw new Exception('Wallet not found');
         }
 
@@ -56,5 +56,26 @@ class WalletService
         }
 
         return $wallet;
+    }
+
+    /**
+     * @param string $wallet_id
+     * @return float
+     * @throws Exception
+     */
+    public function executeBalance(string $wallet_id): float
+    {
+        try {
+            $wallet = $this->execute($wallet_id);
+        } catch (Exception $exception) {
+            throw $exception;
+        }
+
+        $balanceUsd = $this->eloquentWalletRepository->getBalanceUsdById($wallet_id);
+        for ($i = 0; $i < count($wallet); $i++) {
+            $balanceUsd += $wallet[$i]['value_usd'];
+        }
+
+        return $balanceUsd;
     }
 }

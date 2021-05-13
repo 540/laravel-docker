@@ -51,4 +51,37 @@ class WalletController extends BaseController
         }
         return response()->json($wallet, Response::HTTP_OK);
     }
+
+    /**
+     * @param string $wallet_id
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function balance(string $wallet_id): JsonResponse
+    {
+        try {
+            $balanceUsd = $this->walletService->executeBalance($wallet_id);
+        } catch (Exception $exception) {
+            if ($exception->getMessage() === "Wallet not found") {
+                return response()->json(
+                    [
+                        'status' => 'Wallet with the specified ID was not found', 'message' => $exception->getMessage()
+                    ],
+                    Response::HTTP_NOT_FOUND
+                );
+            }
+            return response()->json(
+                [
+                    'status' => 'Bad Request Error', 'message' => $exception->getMessage()
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+        return response()->json(
+            [
+                'balance_usd' => $balanceUsd
+            ],
+            Response::HTTP_OK
+        );
+    }
 }

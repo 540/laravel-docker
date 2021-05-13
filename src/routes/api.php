@@ -31,6 +31,11 @@ Route::get(
     WalletController::class
 );
 
+Route::get(
+    '/wallet/{wallet_id}/balance',
+    [WalletController::class, 'balance']
+);
+
 Route::post(
     '/coin/buy',
     [CoinController::class, 'buy']
