@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\Unit\Services\EarlyAdopter;
+namespace Tests\Unit\Services\Wallet;
 
+use App\DataSource\Database\EloquentUserDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
 use App\DataSource\External\CoinLoreDataSource;
 use App\Services\Wallet\WalletService;
@@ -13,9 +14,11 @@ class WalletServiceTest extends TestCase
 {
     /**
      * @var EloquentWalletDataSource
+     * @var EloquentUserDataSource
      * @var CoinLoreDataSource
      */
     private $eloquentWalletDataSource;
+    private $eloquentUserDataSource;
     private $coinLoreDataSource;
 
     /**
@@ -31,10 +34,12 @@ class WalletServiceTest extends TestCase
         parent::setUp();
         $prophet = new Prophet();
         $this->eloquentWalletDataSource = $prophet->prophesize(EloquentWalletDataSource::class);
+        $this->eloquentUserDataSource = $prophet->prophesize(EloquentUserDataSource::class);
         $this->coinLoreDataSource = $prophet->prophesize(CoinLoreDataSource::class);
 
         $this->walletService = new WalletService(
             $this->eloquentWalletDataSource->reveal(),
+            $this->eloquentUserDataSource->reveal(),
             $this->coinLoreDataSource->reveal()
         );
     }
