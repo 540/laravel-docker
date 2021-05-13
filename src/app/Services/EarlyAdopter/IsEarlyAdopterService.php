@@ -2,21 +2,21 @@
 
 namespace App\Services\EarlyAdopter;
 
-use App\DataSource\Database\EloquentUserDataSource;
+use App\DataSource\Database\EloquentUser540DataSource;
 use Exception;
 
 class IsEarlyAdopterService
 {
     /**
-     * @var EloquentUserDataSource
+     * @var EloquentUser540DataSource
      */
     private $eloquentUserDataSource;
 
     /**
      * IsEarlyAdopterService constructor.
-     * @param EloquentUserDataSource $eloquentUserDataSource
+     * @param EloquentUser540DataSource $eloquentUserDataSource
      */
-    public function __construct(EloquentUserDataSource $eloquentUserDataSource)
+    public function __construct(EloquentUser540DataSource $eloquentUserDataSource)
     {
         $this->eloquentUserDataSource = $eloquentUserDataSource;
     }

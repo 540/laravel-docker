@@ -2,7 +2,7 @@
 
 namespace Tests\Integration\DataSources;
 
-use App\DataSource\Database\EloquentUserDataSource;
+use App\DataSource\Database\EloquentUser540DataSource;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,7 +18,7 @@ class EloquentWalletDataSourceTest extends TestCase
     public function findsUserByEmail()
     {
         User::factory(User::class)->create();
-        $eloquentUserDataSource = new EloquentUserDataSource();
+        $eloquentUserDataSource = new EloquentUser540DataSource();
 
         $user = $eloquentUserDataSource->findByEmail('email@email.com');
 
@@ -30,7 +30,7 @@ class EloquentWalletDataSourceTest extends TestCase
      */
     public function noUserIsFoundForTheGivenEmailI()
     {
-        $eloquentUserDataSource = new EloquentUserDataSource();
+        $eloquentUserDataSource = new EloquentUser540DataSource();
 
         $this->expectException(Exception::class);
 
@@ -43,7 +43,7 @@ class EloquentWalletDataSourceTest extends TestCase
     public function noUserIsFoundForTheGivenEmailII()
     {
         User::factory(User::class)->create();
-        $eloquentUserDataSource = new EloquentUserDataSource();
+        $eloquentUserDataSource = new EloquentUser540DataSource();
 
         try {
             $eloquentUserDataSource->findByEmail('not_known@email.com');
