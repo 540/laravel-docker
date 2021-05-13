@@ -18,9 +18,27 @@ class EloquentWalletDataSource
                     ->join('walletscoins', 'wallets.wallet_id', '=', 'walletscoins.wallet_id')
                     ->join('coins', 'walletscoins.coin_id', '=', 'coins.coin_id')
                     ->select('coins.coin_id', 'name', 'symbol', 'amount')
-                    ->where('wallets.wallet_id',$wallet_id)
+                    ->where('wallets.wallet_id', $wallet_id)
                     ->get()
                     ->toArray();
+    }
+
+    /**
+     * @param $wallet_id
+     * @return float|null
+     */
+    public function getBalanceUsdById($wallet_id): ?float
+    {
+        $result = DB::table('wallets')
+            ->select('wallet_id', 'user_id', 'balance_usd')
+            ->where('wallet_id', $wallet_id)
+            ->first();
+
+        if ($result == null) {
+            return null;
+        }
+
+        return $result->balance_usd;
     }
 
     /**
