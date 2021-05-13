@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class EloquentWalletDataSource
 {
-
     public function findWalletById($walletId)
     {
         $wallet = Wallet::query()->where('id', $walletId)->first();

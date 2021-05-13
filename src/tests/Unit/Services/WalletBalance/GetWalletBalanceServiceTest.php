@@ -5,7 +5,6 @@ namespace Tests\Unit\Services\WalletBalance;
 use App\DataSource\API\EloquentCoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
 use App\Models\Coin;
-use App\Models\User;
 use App\Models\Wallet;
 use App\Services\WalletBalance\GetWalletBalanceService;
 use Exception;

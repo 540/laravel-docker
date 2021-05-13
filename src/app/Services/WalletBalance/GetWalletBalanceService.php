@@ -20,9 +20,6 @@ class GetWalletBalanceService
     public function execute($walletId):float
     {
         $wallet = $this->eloquentWalletDataSource->findWalletById($walletId);
-        if($wallet == null){
-            throw new Exception('a wallet with the specified ID was not found.');
-        }
 
         $pastPrice = 0;
         $actualPrice = 0;
