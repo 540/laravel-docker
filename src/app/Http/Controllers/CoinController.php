@@ -35,6 +35,9 @@ class CoinController extends BaseController
             if (($coinId && $walletId && $amountUsd) == null) {
                 throw new Exception('Insufficient arguments in the POST');
             }
+            if ($amountUsd < 0.01) {
+                throw new Exception('Insufficient amount to buy');
+            }
 
             $this->coinService->executeBuy($coinId, $walletId, $amountUsd);
         } catch (Exception $exception) {
@@ -57,6 +60,9 @@ class CoinController extends BaseController
             $amountUsd = $request->amount_usd;
             if (($coinId && $walletId && $amountUsd) == null) {
                 throw new Exception('Insufficient arguments in the POST');
+            }
+            if ($amountUsd < 0.01) {
+                throw new Exception('Insufficient amount to sell');
             }
 
             $this->coinService->executeSell($coinId, $walletId, $amountUsd);

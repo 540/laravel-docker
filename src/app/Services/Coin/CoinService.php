@@ -58,7 +58,10 @@ class CoinService
         if ($price == null) {
             throw new Exception('External API failure');
         }
-        return $amountUsd / $price;
+
+        return round($amountUsd / $price, 8); // Unidad minima del Bitcoin (Satoshi)
+                                                            // 1 BTC = 100.000.000 Sats
+                                                            // 0,00000001 BTC = 1 Sats
     }
 
     /**
@@ -72,6 +75,9 @@ class CoinService
     {
         try {
             $amount = $this->calculateCoinsAmount($coinId, $walletId, $amountUsd);
+            if ($amount == 0) {
+                throw new Exception('Insufficient amount to buy');
+            }
         } catch (Exception $exception) {
             throw $exception;
         }
@@ -90,6 +96,9 @@ class CoinService
     {
         try {
             $amount = $this->calculateCoinsAmount($coinId, $walletId, $amountUsd);
+            if ($amount == 0) {
+                throw new Exception('Insufficient amount to sell');
+            }
         } catch (Exception $exception) {
             throw $exception;
         }

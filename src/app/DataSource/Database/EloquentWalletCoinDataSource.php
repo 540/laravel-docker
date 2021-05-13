@@ -33,21 +33,15 @@ class EloquentWalletCoinDataSource
     {
         $oldAmount = $this->getCoinsAmountById($coin_id, $wallet_id);
 
-        if ($oldAmount !== null) {
+        if ($oldAmount === null) {
             DB::table('walletscoins')
-                ->where('coin_id', $coin_id)
-                ->where('wallet_id', $wallet_id)
-                ->update(['amount' => $oldAmount + $amount]);
-
-            DB::table('wallets')
-                ->where('wallet_id', $wallet_id)
-                ->decrement('balance_usd', $amount_usd);
-
-            return;
+                ->insert(['coin_id' => $coin_id, 'wallet_id' => $wallet_id, 'amount' => 0]);
         }
 
         DB::table('walletscoins')
-            ->insert(['coin_id' => $coin_id, 'wallet_id' => $wallet_id, 'amount' =>  $amount]);
+            ->where('coin_id', $coin_id)
+            ->where('wallet_id', $wallet_id)
+            ->increment('amount', $amount);
 
         DB::table('wallets')
             ->where('wallet_id', $wallet_id)
@@ -66,10 +60,17 @@ class EloquentWalletCoinDataSource
         $oldAmount = $this->getCoinsAmountById($coin_id, $wallet_id);
 
         if ($oldAmount !== null && $oldAmount >= $amount) {
-            DB::table('walletscoins')
-                ->where('coin_id', $coin_id)
-                ->where('wallet_id', $wallet_id)
-                ->update(['amount' => $oldAmount - $amount]);
+            if ($oldAmount == $amount) {
+                DB::table('walletscoins')
+                    ->where('coin_id', $coin_id)
+                    ->where('wallet_id', $wallet_id)
+                    ->delete();
+            } else {
+                DB::table('walletscoins')
+                    ->where('coin_id', $coin_id)
+                    ->where('wallet_id', $wallet_id)
+                    ->decrement('amount', $amount);
+            }
 
             DB::table('wallets')
                 ->where('wallet_id', $wallet_id)
