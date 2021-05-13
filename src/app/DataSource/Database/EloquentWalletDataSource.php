@@ -18,11 +18,8 @@ class EloquentWalletDataSource
 
     public function createWalletByUserId($userId)
     {
-        $wallet = new Wallet();
-        $wallet->user_id = $userId;
         try {
-            $wallet->save();
-            return $wallet;
+            return DB::table('wallets')->insertGetId(['user_id' => $userId]);
         }catch (Exception $exception){
             return null;
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Errors\Errors;
 use App\Services\OpenWallet\OpenWalletService;
 use Exception;
 use Illuminate\Http\Request;
@@ -11,36 +12,32 @@ use Illuminate\Routing\Controller as BaseController;
 
 class OpenWalletController extends BaseController
 {
-    private const ERRORS = [
-        'USER_NOT_FOUND_ERROR' => "A user with the specified ID was not found.",
-        'BAD_REQUEST_ERROR' => "bad request error",
-        'ERROR_FIELD' => "error",
-        'ERROR_MESSAGE' => "Error while creating the wallet"
-    ];
-
     private OpenWalletService $openWalletService;
 
-    public function __construct(OpenWalletService $serviceManager){
+    public function __construct(OpenWalletService $serviceManager)
+    {
         $this->openWalletService = $serviceManager;
     }
 
     public function openWallet(Request $request): JsonResponse
     {
-        if ($request->has("user_id") === false) {
+        if ($request->has("user_id") === false)
+        {
             return response()->json([
-                self::ERRORS['ERROR_FIELD'] => self::ERRORS['BAD_REQUEST_ERROR']
+                Errors::ERROR_FIELD => Errors::BAD_REQUEST
             ],Response::HTTP_BAD_REQUEST);
         }
-        try {
+        try
+        {
             $walletId = $this->openWalletService->execute($request->get("user_id"));
             return response()->json([
                 'wallet_id' => $walletId
             ],Response::HTTP_OK);
-        } catch (Exception $exception) {
+        } catch (Exception $exception)
+        {
             return response()->json([
-                self::ERRORS['ERROR_FIELD'] => self::ERRORS['USER_NOT_FOUND_ERROR']
+                Errors::ERROR_FIELD => $exception->getMessage()
             ],Response::HTTP_NOT_FOUND);
         }
     }
-
 }

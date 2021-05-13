@@ -1,11 +1,9 @@
 <?php
 
-namespace Tests\Integration\DataSources;
+namespace Tests\Integration\DataSources\Database;
 
 use App\DataSource\Database\EloquentWalletDataSource;
-use App\Models\User;
 use App\Models\Wallet;
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -58,7 +56,7 @@ class EloquentWalletDataSourceTest extends TestCase
     /**
      * @test
      **/
-    public function walletIsCreatedForAGivenWalletId()
+    public function walletIsCreatedForAGivenValidUserId()
     {
         $userId = 'validUserId';
         $walletId = 1;
@@ -67,7 +65,6 @@ class EloquentWalletDataSourceTest extends TestCase
 
         $result = $eloquentWalletCoinDataSource->createWalletByUserId($userId);
 
-        $this->assertEquals($walletId, $result->id);
-        $this->assertEquals($userId, $result->user_id);
+        $this->assertEquals($walletId, $result);
     }
 }

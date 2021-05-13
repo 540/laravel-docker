@@ -3,7 +3,6 @@
 namespace Tests\Unit\Services\OpenWalletService;
 
 use App\DataSource\Database\EloquentWalletDataSource;
-use App\Models\Wallet;
 use App\Services\OpenWallet\OpenWalletService;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -46,19 +45,16 @@ class OpenWalletServiceTest extends TestCase
     public function getsSuccessfulOperationWhenUserIdIsValid ()
     {
         $userId = 'validUserId';
-        $wallet = new Wallet();
-
-        $wallet->id = 1;
-        $wallet->user_id = $userId;
+        $walletId = 1;
 
         $eloquentWalletDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
-        $eloquentWalletDataSource->createWalletByUserId($userId)->shouldBeCalledOnce()->willReturn($wallet);
+        $eloquentWalletDataSource->createWalletByUserId($userId)->shouldBeCalledOnce()->willReturn($walletId);
 
         $openWalletService = new OpenWalletService($eloquentWalletDataSource->reveal());
 
         $result = $openWalletService->execute($userId);
 
-        $this->assertEquals($wallet->id, $result);
+        $this->assertEquals($walletId, $result);
     }
 
 }
