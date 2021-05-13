@@ -3,8 +3,8 @@
 namespace Tests\Integration\DataSources\Database;
 
 use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\WalletNotFoundException;
 use App\Models\Wallet;
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,12 +15,12 @@ class EloquentWalletDataSourceTest extends TestCase
     /**
      * @test
      **/
-    public function noWalletFoundForGivenWalletId()
+    public function walletIsNotFoundGivenAnInvalidWalletId()
     {
         $eloquentWalletCoinDataSource = new EloquentWalletDataSource();
         $walletId = 'invalidWalletId';
 
-        $this->expectException(Exception::class);
+        $this->expectException(WalletNotFoundException::class);
 
         $eloquentWalletCoinDataSource->findWalletById($walletId);
     }
@@ -28,7 +28,7 @@ class EloquentWalletDataSourceTest extends TestCase
     /**
      * @test
      **/
-    public function walletIsFoundForAGivenWalletId()
+    public function walletIsFoundGivenAnValidWalletId()
     {
         $wallet = Wallet::factory()->create()->first();
 
@@ -42,7 +42,7 @@ class EloquentWalletDataSourceTest extends TestCase
     /**
      * @test
      **/
-    public function walletIsNotCreatedForGivenWalletId()
+    public function walletIsNotCreatedGivenAnExistentUserId()
     {
         Wallet::factory()->create();
 
@@ -57,9 +57,9 @@ class EloquentWalletDataSourceTest extends TestCase
     /**
      * @test
      **/
-    public function walletIsCreatedForAGivenValidUserId()
+    public function walletIsCreatedGivenANonExistentUserId()
     {
-        $userId = 'validUserId';
+        $userId = 'nonExistentUserId';
         $walletId = 1;
 
         $eloquentWalletCoinDataSource = new EloquentWalletDataSource();

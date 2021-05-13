@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Errors\Errors;
 use App\Services\WalletCryptocurrencies\GetWalletCryptocurrenciesService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +24,7 @@ class GetWalletCryptocurrenciesController extends Controller
             return response()->json($coins, Response::HTTP_OK);
         }catch (Exception $exception){
             return response()->json([
-                'error' => $exception->getMessage()
+                Errors::ERROR_FIELD => $exception->getMessage()
             ], Response::HTTP_NOT_FOUND);
         }
     }

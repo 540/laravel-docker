@@ -1,9 +1,8 @@
 <?php
 
-
 namespace App\DataSource\Database;
 
-use App\Errors\Errors;
+use App\Exceptions\WalletNotFoundException;
 use App\Models\Wallet;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +14,7 @@ class EloquentWalletDataSource
         $wallet = Wallet::query()->where('id', $walletId)->first();
         if($wallet == null)
         {
-            throw new Exception(Errors::WALLET_NOT_FOUND);
+            throw new WalletNotFoundException();
         }
         return $wallet;
     }

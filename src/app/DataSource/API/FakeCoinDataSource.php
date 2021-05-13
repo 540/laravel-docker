@@ -1,19 +1,15 @@
 <?php
 
-
 namespace App\DataSource\API;
 
-
-use Exception;
-use Illuminate\Support\Facades\Http;
+use App\Exceptions\WrongCoinIdException;
 
 class FakeCoinDataSource implements CoinDataSource
 {
-
     public function findCoinById($coinId)
     {
         if($coinId === 'invalidCoinId'){
-            return null;
+            throw new WrongCoinIdException();
         }
         return [
             'coin_id' => $coinId,

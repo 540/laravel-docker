@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\OpenWalletService;
 
 use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\WalletAlreadyExistsForUserException;
 use App\Services\OpenWallet\OpenWalletService;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +33,7 @@ class OpenWalletServiceTest extends TestCase
 
         $openWalletService = new OpenWalletService($eloquentWalletDataSource->reveal());
 
-        $this->expectException(Exception::class);
+        $this->expectException(WalletAlreadyExistsForUserException::class);
 
         $openWalletService->execute($userId);
     }

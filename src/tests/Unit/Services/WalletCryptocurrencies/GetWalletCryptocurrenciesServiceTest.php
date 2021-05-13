@@ -24,7 +24,6 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
         $this->prophet = new Prophet();
     }
 
-
     /**
      * @test
      **/
@@ -47,12 +46,7 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
      **/
     public function aCoinIsFoundForAGivenWalletId()
     {
-        $user = User::factory()->create()->first();
-        $wallet = Wallet::factory()->make();
-
-        $user->wallet()->save($wallet);
-
-        $wallet = Wallet::query()->find($user->wallet->id)->first();
+        $wallet = Wallet::factory()->create()->first();
 
         $coins = Coin::factory(Coin::class)->make();
 
@@ -84,12 +78,7 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
      **/
     public function twoCoinsAreFoundForAGivenWalletId()
     {
-        $user = User::factory()->create()->first();
-        $wallet = Wallet::factory()->make();
-
-        $user->wallet()->save($wallet);
-
-        $wallet = Wallet::query()->find($user->wallet->id)->first();
+        $wallet = Wallet::factory()->create()->first();
 
         $coins = Coin::factory(Coin::class)->count(2)->make();
 

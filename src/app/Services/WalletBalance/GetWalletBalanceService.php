@@ -4,7 +4,6 @@ namespace App\Services\WalletBalance;
 
 use App\DataSource\API\CoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
-use Exception;
 
 class GetWalletBalanceService
 {
@@ -27,10 +26,6 @@ class GetWalletBalanceService
         foreach ($wallet->coins as $coin){
             $pastPrice += $coin->amount * $coin->value_usd;
             $actualCoin = $this->coinDataSource->findCoinById($coin->coin_id);
-            if($actualCoin == null){
-                throw new Exception('a coin with the specified ID was no found.');
-            }
-            //;
             $actualPrice += $coin->amount * $actualCoin['price_usd'];
         }
 

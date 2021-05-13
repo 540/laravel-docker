@@ -21,9 +21,6 @@ class GetWalletCryptocurrenciesService
     public function execute($walletId): array
     {
         $wallet = $this->eloquentWalletDataSource->findWalletById($walletId);
-        if($wallet == null){
-            throw new Exception('a wallet with the specified ID was not found.');
-        }
 
         $coins = [];
 
