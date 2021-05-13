@@ -3,8 +3,8 @@
 
 namespace App\DataSource\Database;
 
+use App\Errors\Errors;
 use App\Models\Wallet;
-use Egulias\EmailValidator\Warning\LabelTooLong;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +13,12 @@ class EloquentWalletDataSource
 
     public function findWalletById($walletId)
     {
-        return Wallet::query()->where('id', $walletId)->first();
+        $wallet = Wallet::query()->where('id', $walletId)->first();
+        if($wallet == null)
+        {
+            throw new Exception(Errors::WALLET_NOT_FOUND);
+        }
+        return $wallet;
     }
 
     public function createWalletByUserId($userId)

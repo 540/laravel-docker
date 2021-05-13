@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services\WalletBalance;
-
 
 use App\DataSource\API\CoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;

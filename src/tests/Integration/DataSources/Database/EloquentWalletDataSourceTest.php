@@ -4,6 +4,7 @@ namespace Tests\Integration\DataSources\Database;
 
 use App\DataSource\Database\EloquentWalletDataSource;
 use App\Models\Wallet;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,11 +18,11 @@ class EloquentWalletDataSourceTest extends TestCase
     public function noWalletFoundForGivenWalletId()
     {
         $eloquentWalletCoinDataSource = new EloquentWalletDataSource();
-
         $walletId = 'invalidWalletId';
-        $result = $eloquentWalletCoinDataSource->findWalletById($walletId);
 
-        $this->assertNull($result);
+        $this->expectException(Exception::class);
+
+        $eloquentWalletCoinDataSource->findWalletById($walletId);
     }
 
     /**
