@@ -20,40 +20,41 @@ class WalletService
      * @param EloquentWalletDataSource $eloquentWalletRepository
      * @param CoinLoreDataSource $coinLoreRepository
      */
-    public function __construct(EloquentWalletDataSource $eloquentWalletRepository, CoinLoreDataSource $coinLoreRepository)
-    {
+    public function __construct(
+        EloquentWalletDataSource $eloquentWalletRepository,
+        CoinLoreDataSource $coinLoreRepository
+    ) {
         $this->eloquentWalletRepository = $eloquentWalletRepository;
         $this->coinLoreRepository = $coinLoreRepository;
     }
 
     /**
      * @param string $wallet_id
-     * @return array
+     * @return array|null
      * @throws Exception
      */
-    public function execute(string $wallet_id)
+    public function execute(string $wallet_id): ?array
     {
-        // Hacer una consulta
-        $wallet = $this->eloquentWalletRepository->findById($wallet_id); // Se puede acceder a los atributos de $wallet
+        $wallet = $this->eloquentWalletRepository->findById($wallet_id);
 
-        // Si no devuelve nada
-        if ($wallet == null) {
+        if (is_null($wallet) || count($wallet) == 0) {
             throw new Exception('Wallet not found');
         }
 
-        $walletArray = $wallet->toArray();
-
-        for ($i = 0; $i < count($walletArray); $i++) {
-            $coinId = $walletArray[$i]->coin_id;
-            $amount = $walletArray[$i]->amount;
+        for ($i = 0; $i < count($wallet); $i++) {
+            $coinId = $wallet[$i]->coin_id;
+            $amount = $wallet[$i]->amount;
 
             $price = $this->coinLoreRepository->findUsdPriceByCoinId($coinId);
+            if (is_null($price)) {
+                throw new Exception('External API failure');
+            }
 
             $valueUsd = $amount * $price;
-            $walletData = json_decode(json_encode($walletArray[$i]), true);
-            $walletArray[$i] = array_merge($walletData, array("value_usd" => $valueUsd));
+            $walletData = json_decode(json_encode($wallet[$i]), true);
+            $wallet[$i] = array_merge($walletData, array("value_usd" => $valueUsd));
         }
 
-        return $walletArray;
+        return $wallet;
     }
 }

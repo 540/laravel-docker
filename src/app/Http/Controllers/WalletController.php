@@ -27,8 +27,6 @@ class WalletController extends BaseController
     /**
      * @param string $wallet_id
      * @return JsonResponse
-     *
-     * Para obtener los parámetros de url, los pasamos en esta función como parámetro
      * @throws Exception
      */
     public function __invoke(string $wallet_id): JsonResponse

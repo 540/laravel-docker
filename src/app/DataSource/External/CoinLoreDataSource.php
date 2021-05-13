@@ -8,9 +8,9 @@ class CoinLoreDataSource
 {
     /**
      * @param $coinId
-     * @return string
+     * @return string|null
      */
-    public function findUsdPriceByCoinId($coinId): string
+    public function findUsdPriceByCoinId($coinId): ?string
     {
         $response = Http::get('https://api.coinlore.net/api/ticker/?id=' . $coinId);
         return json_decode($response->body())[0]->price_usd;

@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\WalletCoin;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserFactory extends Factory
+class WalletCoinFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = WalletCoin::class;
 
     /**
      * Define the model's default state.
@@ -22,7 +22,9 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => 'factory-user'
+            'wallet_id' => 'factory-wallet',
+            'coin_id' => '2',
+            'amount' => 2
         ];
     }
 }
