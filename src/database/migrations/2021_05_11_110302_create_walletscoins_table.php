@@ -16,7 +16,7 @@ class CreateWalletscoinsTable extends Migration
         Schema::create('walletscoins', function (Blueprint $table) {
             $table->string('wallet_id');
             $table->string('coin_id');
-            $table->float('amount');
+            $table->double('amount', 32, 8);
 
             $table->primary(['wallet_id', 'coin_id']);
             $table->foreign('wallet_id')->references('wallet_id')->on('wallets');

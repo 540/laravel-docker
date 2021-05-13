@@ -16,7 +16,7 @@ class CreateWalletsTable extends Migration
         Schema::create('wallets', function (Blueprint $table) {
             $table->string('wallet_id')->primary();
             $table->string('user_id');
-            $table->float('balance_usd');
+            $table->double('balance_usd', 32, 2);
 
             $table->foreign('user_id')->references('user_id')->on('users');
         });
