@@ -26,10 +26,9 @@ class EloquentWalletDataSourceTest extends TestCase
      **/
     public function walletIsNotFoundGivenAnInvalidWalletId()
     {
-        $walletId = 'invalidWalletId';
-
         $this->expectException(WalletNotFoundException::class);
 
+        $walletId = 'invalidWalletId';
         $this->eloquentWalletDataSource->findWalletById($walletId);
     }
 
@@ -52,10 +51,9 @@ class EloquentWalletDataSourceTest extends TestCase
     {
         Wallet::factory()->create();
 
-        $userId = 'existentUserId';
-
         $this->expectException(WalletAlreadyExistsForUserException::class);
 
+        $userId = 'existentUserId';
         $this->eloquentWalletDataSource->createWalletByUserId($userId);
     }
 
@@ -65,10 +63,10 @@ class EloquentWalletDataSourceTest extends TestCase
     public function walletIsCreatedGivenANonExistentUserId()
     {
         $userId = 'nonExistentUserId';
-        $expectedWalletId = 1;
 
         $result = $this->eloquentWalletDataSource->createWalletByUserId($userId);
 
+        $expectedWalletId = 1;
         $this->assertEquals($expectedWalletId, $result);
     }
 }
