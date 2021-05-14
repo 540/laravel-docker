@@ -83,7 +83,7 @@ class WalletServiceTest extends TestCase
     /**
      * @test
      */
-    public function getWalletDatabaseCoinLoreAPIFails()
+    public function getWalletExternalAPIFails()
     {
         $walletId = 'test-wallet';
         $coinId = '90';
@@ -211,7 +211,7 @@ class WalletServiceTest extends TestCase
     /**
      * @test
      */
-    public function getWalletBalanceDatabaseCoinLoreAPIFails()
+    public function getWalletBalanceExternalAPIFails()
     {
         $walletId = 'test-wallet';
         $coinId = '90';

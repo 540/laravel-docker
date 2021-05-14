@@ -54,7 +54,7 @@ class CoinServiceTest extends TestCase
     /**
      * @test
      */
-    public function buyCoinDoesNotExist()
+    public function postCoinBuyCoinNotFound()
     {
         $coinId = 'error-coin';
         $walletId = 'test-wallet';
@@ -93,7 +93,7 @@ class CoinServiceTest extends TestCase
     /**
      * @test
      */
-    public function buyWalletDoesNotExist()
+    public function postCoinBuyWalletNotFound()
     {
         $coinId = '90';
         $walletId = 'error-wallet';
@@ -132,7 +132,7 @@ class CoinServiceTest extends TestCase
     /**
      * @test
      */
-    public function buyDatabaseCoinLoreAPIDoesNotWork()
+    public function postCoinBuyExternalAPIFails()
     {
         $coinId = '90';
         $walletId = 'test-wallet';
@@ -171,7 +171,7 @@ class CoinServiceTest extends TestCase
     /**
      * @test
      */
-    public function buyWorking()
+    public function postCoinBuyWorking()
     {
         $coinId = '90';
         $walletId = 'test-wallet';
@@ -210,7 +210,7 @@ class CoinServiceTest extends TestCase
     /**
      * @test
      */
-    public function sellCoinDoesNotExist()
+    public function postCoinSellCoinDoesNotExist()
     {
         $coinId = 'error-coin';
         $walletId = 'test-wallet';
@@ -249,7 +249,7 @@ class CoinServiceTest extends TestCase
     /**
      * @test
      */
-    public function sellWalletDoesNotExist()
+    public function postCoinSellWalletDoesNotExist()
     {
         $coinId = '90';
         $walletId = 'error-wallet';
@@ -288,7 +288,7 @@ class CoinServiceTest extends TestCase
     /**
      * @test
      */
-    public function sellDatabaseCoinLoreAPIDoesNotWork()
+    public function postCoinSellExternalAPIFails()
     {
         $coinId = '90';
         $walletId = 'test-wallet';
@@ -327,7 +327,7 @@ class CoinServiceTest extends TestCase
     /**
      * @test
      */
-    public function sellWorking()
+    public function postCoinSellWorking()
     {
         $coinId = '90';
         $walletId = 'test-wallet';
