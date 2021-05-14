@@ -4,7 +4,9 @@
 namespace App\Infrastructure\ApiSource;
 
 
-class ApiSource
+use App\Infrastructure\ApiSourceInterface\ApiSourceInterface;
+
+class ApiSource implements ApiSourceInterface
 {
     /**
      * @param $idCoin

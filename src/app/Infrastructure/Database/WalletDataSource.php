@@ -10,6 +10,14 @@ use function PHPUnit\Framework\isEmpty;
 class WalletDataSource
 {
     /**
+     * WalletDataSource constructor.
+     */
+    public function __construct()
+    {
+    }
+
+
+    /**
      * @param $id
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
      */
