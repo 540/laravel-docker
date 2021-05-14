@@ -7,7 +7,7 @@ use Mockery\Exception;
 
 class EloquentWalletCoinDataSource
 {
-    public function getCoinsAmountById($coin_id, $wallet_id)
+    public function getAmountByIds($coin_id, $wallet_id)
     {
         $result = DB::table('walletscoins')
             ->select('coin_id', 'wallet_id', 'amount')
@@ -31,7 +31,7 @@ class EloquentWalletCoinDataSource
      */
     public function buyCoins($coin_id, $wallet_id, $amount, $amount_usd): void
     {
-        $oldAmount = $this->getCoinsAmountById($coin_id, $wallet_id);
+        $oldAmount = $this->getAmountByIds($coin_id, $wallet_id);
 
         if ($oldAmount === null) {
             DB::table('walletscoins')
@@ -57,7 +57,7 @@ class EloquentWalletCoinDataSource
      */
     public function sellCoins($coin_id, $wallet_id, $amount, $amount_usd): void
     {
-        $oldAmount = $this->getCoinsAmountById($coin_id, $wallet_id);
+        $oldAmount = $this->getAmountByIds($coin_id, $wallet_id);
 
         if ($oldAmount !== null && $oldAmount >= $amount) {
             if ($oldAmount == $amount) {

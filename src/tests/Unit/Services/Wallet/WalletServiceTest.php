@@ -49,22 +49,27 @@ class WalletServiceTest extends TestCase
     /**
      * @test
      */
-    public function getWalletDoesNotExist()
+    public function getWalletWalletNotFound()
     {
         $walletId = 'error-wallet';
         $coinId = '90';
-        $expectedDatabaseReturn = null;
-        $expectedExternalReturn = "5000";
+        $expectedExistsByWalletIdDatabaseWalletReturn = false;
+        $expectedGetCoinsDataByWalletIdDatabaseWalletReturn = null;
+        $expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn = "5000";
         $expectedResult = "Wallet not found";
 
         $this->eloquentWalletDataSource
-            ->findById($walletId)
+            ->existsByWalletId($walletId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedDatabaseReturn);
+            ->willReturn($expectedExistsByWalletIdDatabaseWalletReturn);
+        $this->eloquentWalletDataSource
+            ->getCoinsDataByWalletId($walletId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetCoinsDataByWalletIdDatabaseWalletReturn);
         $this->coinLoreDataSource
-            ->findUsdPriceByCoinId($coinId)
+            ->getUsdPriceByCoinId($coinId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedExternalReturn);
+            ->willReturn($expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn);
 
         try {
             $this->walletService->execute($walletId);
@@ -78,11 +83,12 @@ class WalletServiceTest extends TestCase
     /**
      * @test
      */
-    public function getWalletExistsButExternalAPIFails()
+    public function getWalletDatabaseCoinLoreAPIFails()
     {
         $walletId = 'test-wallet';
         $coinId = '90';
-        $expectedDatabaseReturn = array(
+        $expectedExistsByWalletIdDatabaseWalletReturn = true;
+        $expectedGetCoinsDataByWalletIdDatabaseWalletReturn = array(
             (object)[
                 "coin_id" => $coinId,
                 "name" => "Bitcoin",
@@ -90,17 +96,21 @@ class WalletServiceTest extends TestCase
                 "amount" => 2
             ]
         );
-        $expectedExternalReturn = null;
+        $expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn = null;
         $expectedResult = "External API failure";
 
         $this->eloquentWalletDataSource
-            ->findById($walletId)
+            ->existsByWalletId($walletId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedDatabaseReturn);
+            ->willReturn($expectedExistsByWalletIdDatabaseWalletReturn);
+        $this->eloquentWalletDataSource
+            ->getCoinsDataByWalletId($walletId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetCoinsDataByWalletIdDatabaseWalletReturn);
         $this->coinLoreDataSource
-            ->findUsdPriceByCoinId($coinId)
+            ->getUsdPriceByCoinId($coinId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedExternalReturn);
+            ->willReturn($expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn);
 
         try {
             $this->walletService->execute($walletId);
@@ -114,11 +124,12 @@ class WalletServiceTest extends TestCase
     /**
      * @test
      */
-    public function getWalletExists()
+    public function getWalletWorking()
     {
         $walletId = 'test-wallet';
         $coinId = '90';
-        $expectedDatabaseReturn = array(
+        $expectedExistsByWalletIdDatabaseWalletReturn = true;
+        $expectedGetCoinsDataByWalletIdDatabaseWalletReturn = array(
             (object)[
                 "coin_id" => $coinId,
                 "name" => "Bitcoin",
@@ -126,7 +137,7 @@ class WalletServiceTest extends TestCase
                 "amount" => 2
             ]
         );
-        $expectedExternalReturn = "5000";
+        $expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn = "5000";
         $expectedResult = array(array(
             "coin_id" => $coinId,
             "name" => "Bitcoin",
@@ -136,13 +147,17 @@ class WalletServiceTest extends TestCase
         ));
 
         $this->eloquentWalletDataSource
-            ->findById($walletId)
+            ->existsByWalletId($walletId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedDatabaseReturn);
+            ->willReturn($expectedExistsByWalletIdDatabaseWalletReturn);
+        $this->eloquentWalletDataSource
+            ->getCoinsDataByWalletId($walletId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetCoinsDataByWalletIdDatabaseWalletReturn);
         $this->coinLoreDataSource
-            ->findUsdPriceByCoinId($coinId)
+            ->getUsdPriceByCoinId($coinId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedExternalReturn);
+            ->willReturn($expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn);
 
         try {
             $result = $this->walletService->execute($walletId);
@@ -157,27 +172,32 @@ class WalletServiceTest extends TestCase
     /**
      * @test
      */
-    public function getWalletBalanceWalletDoesNotExist()
+    public function getWalletBalanceWalletNotFound()
     {
         $walletId = 'error-wallet';
         $coinId = '90';
-        $expectedWallletFindByIdDatabaseReturn = null;
-        $expectedExternalReturn = "5000";
-        $expectedWalletBalanceByIdDatabaseReturn = -2000;
+        $expectedExistsByWalletIdDatabaseWalletReturn = false;
+        $expectedGetCoinsDataByWalletIdDatabaseWalletReturn = null;
+        $expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn = "5000";
+        $expectedGetBalanceByIdDatabaseWalletReturn = -2000;
         $expectedResult = "Wallet not found";
 
         $this->eloquentWalletDataSource
-            ->findById($walletId)
+            ->existsByWalletId($walletId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedWallletFindByIdDatabaseReturn);
-        $this->coinLoreDataSource
-            ->findUsdPriceByCoinId($coinId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedExternalReturn);
+            ->willReturn($expectedExistsByWalletIdDatabaseWalletReturn);
         $this->eloquentWalletDataSource
-            ->getBalanceUsdById($walletId)
+            ->getCoinsDataByWalletId($walletId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedWalletBalanceByIdDatabaseReturn);
+            ->willReturn($expectedGetCoinsDataByWalletIdDatabaseWalletReturn);
+        $this->coinLoreDataSource
+            ->getUsdPriceByCoinId($coinId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn);
+        $this->eloquentWalletDataSource
+            ->getBalanceUsdByWalletId($walletId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetBalanceByIdDatabaseWalletReturn);
 
         try {
             $this->walletService->executeBalance($walletId);
@@ -191,11 +211,12 @@ class WalletServiceTest extends TestCase
     /**
      * @test
      */
-    public function getWalletBalanceExternalAPIFails()
+    public function getWalletBalanceDatabaseCoinLoreAPIFails()
     {
         $walletId = 'test-wallet';
         $coinId = '90';
-        $expectedWallletFindByIdDatabaseReturn = array(
+        $expectedExistsByWalletIdDatabaseWalletReturn = true;
+        $expectedGetCoinsDataByWalletIdDatabaseWalletReturn = array(
             (object)[
                 "coin_id" => $coinId,
                 "name" => "Bitcoin",
@@ -203,20 +224,24 @@ class WalletServiceTest extends TestCase
                 "amount" => 2
             ]
         );
-        $expectedExternalReturn = null;
+        $expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn = null;
         $expectedWalletBalanceByIdDatabaseReturn = -2000;
         $expectedResult = "External API failure";
 
         $this->eloquentWalletDataSource
-            ->findById($walletId)
+            ->existsByWalletId($walletId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedWallletFindByIdDatabaseReturn);
-        $this->coinLoreDataSource
-            ->findUsdPriceByCoinId($coinId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedExternalReturn);
+            ->willReturn($expectedExistsByWalletIdDatabaseWalletReturn);
         $this->eloquentWalletDataSource
-            ->getBalanceUsdById($walletId)
+            ->getCoinsDataByWalletId($walletId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetCoinsDataByWalletIdDatabaseWalletReturn);
+        $this->coinLoreDataSource
+            ->getUsdPriceByCoinId($coinId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn);
+        $this->eloquentWalletDataSource
+            ->getBalanceUsdByWalletId($walletId)
             ->shouldBeCalledOnce()
             ->willReturn($expectedWalletBalanceByIdDatabaseReturn);
 
@@ -236,7 +261,8 @@ class WalletServiceTest extends TestCase
     {
         $walletId = 'test-wallet';
         $coinId = '90';
-        $expectedWallletFindByIdDatabaseReturn = array(
+        $expectedExistsByWalletIdDatabaseWalletReturn = true;
+        $expectedGetCoinsDataByWalletIdDatabaseWalletReturn = array(
             (object)[
                 "coin_id" => $coinId,
                 "name" => "Bitcoin",
@@ -244,22 +270,26 @@ class WalletServiceTest extends TestCase
                 "amount" => 2
             ]
         );
-        $expectedExternalReturn = '5000';
-        $expectedWalletBalanceByIdDatabaseReturn = null;
+        $expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn = '5000';
+        $expectedGetBalanceByIdDatabaseWalletReturn = null;
         $expectedResult = "Wallet balance not found";
 
         $this->eloquentWalletDataSource
-            ->findById($walletId)
+            ->existsByWalletId($walletId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedWallletFindByIdDatabaseReturn);
-        $this->coinLoreDataSource
-            ->findUsdPriceByCoinId($coinId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedExternalReturn);
+            ->willReturn($expectedExistsByWalletIdDatabaseWalletReturn);
         $this->eloquentWalletDataSource
-            ->getBalanceUsdById($walletId)
+            ->getCoinsDataByWalletId($walletId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedWalletBalanceByIdDatabaseReturn);
+            ->willReturn($expectedGetCoinsDataByWalletIdDatabaseWalletReturn);
+        $this->coinLoreDataSource
+            ->getUsdPriceByCoinId($coinId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn);
+        $this->eloquentWalletDataSource
+            ->getBalanceUsdByWalletId($walletId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetBalanceByIdDatabaseWalletReturn);
 
         try {
             $this->walletService->executeBalance($walletId);
@@ -277,7 +307,8 @@ class WalletServiceTest extends TestCase
     {
         $walletId = 'error-wallet';
         $coinId = '90';
-        $expectedWallletFindByIdDatabaseReturn = array(
+        $expectedExistsByWalletIdDatabaseWalletReturn = true;
+        $expectedGetCoinsDataByWalletIdDatabaseWalletReturn = array(
             (object)[
                 "coin_id" => $coinId,
                 "name" => "Bitcoin",
@@ -285,22 +316,26 @@ class WalletServiceTest extends TestCase
                 "amount" => 2
             ]
         );
-        $expectedExternalReturn = '5000';
-        $expectedWalletBalanceByIdDatabaseReturn = -2000;
+        $expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn = '5000';
+        $expectedGetBalanceByIdDatabaseWalletReturn = -2000;
         $expectedResult = 8000;
 
         $this->eloquentWalletDataSource
-            ->findById($walletId)
+            ->existsByWalletId($walletId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedWallletFindByIdDatabaseReturn);
-        $this->coinLoreDataSource
-            ->findUsdPriceByCoinId($coinId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedExternalReturn);
+            ->willReturn($expectedExistsByWalletIdDatabaseWalletReturn);
         $this->eloquentWalletDataSource
-            ->getBalanceUsdById($walletId)
+            ->getCoinsDataByWalletId($walletId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedWalletBalanceByIdDatabaseReturn);
+            ->willReturn($expectedGetCoinsDataByWalletIdDatabaseWalletReturn);
+        $this->coinLoreDataSource
+            ->getUsdPriceByCoinId($coinId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetUsdPriceByCoinIdDatabaseCoinLoreReturn);
+        $this->eloquentWalletDataSource
+            ->getBalanceUsdByWalletId($walletId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedGetBalanceByIdDatabaseWalletReturn);
 
         try {
             $result = $this->walletService->executeBalance($walletId);
@@ -315,21 +350,21 @@ class WalletServiceTest extends TestCase
     /**
      * @test
      */
-    public function postWalletOpenUserDoesNotExist()
+    public function postWalletOpenUserNotFound()
     {
         $userId = 'error-user';
-        $expectedThereIsUserByIdDatabaseReturn = false;
-        $expectedOpenWalletByUserIdDatabaseReturn = 'wallet-000000001';
+        $expectedExistsByUserIdDatabaseUserReturn = false;
+        $expectedCreateWalletByUserIdDatabaseWalletReturn = 'wallet-000000001';
         $expectedResult = "User not found";
 
         $this->eloquentUserDataSource
-            ->thereIsUserById($userId)
+            ->existsByUserId($userId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedThereIsUserByIdDatabaseReturn);
+            ->willReturn($expectedExistsByUserIdDatabaseUserReturn);
         $this->eloquentWalletDataSource
-            ->openWalletByUserId($userId)
+            ->createWalletByUserId($userId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedOpenWalletByUserIdDatabaseReturn);
+            ->willReturn($expectedCreateWalletByUserIdDatabaseWalletReturn);
 
         try {
             $this->walletService->executeOpen($userId);
@@ -346,18 +381,18 @@ class WalletServiceTest extends TestCase
     public function postWalletOpenWorking()
     {
         $userId = 'test-user';
-        $expectedThereIsUserByIdDatabaseReturn = true;
-        $expectedOpenWalletByUserIdDatabaseReturn = 'wallet-000000001';
+        $expectedExistsByUserIdDatabaseUserReturn = true;
+        $expectedCreateWalletByUserIdDatabaseWalletReturn = 'wallet-000000001';
         $expectedResult = "wallet-000000001";
 
         $this->eloquentUserDataSource
-            ->thereIsUserById($userId)
+            ->existsByUserId($userId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedThereIsUserByIdDatabaseReturn);
+            ->willReturn($expectedExistsByUserIdDatabaseUserReturn);
         $this->eloquentWalletDataSource
-            ->openWalletByUserId($userId)
+            ->createWalletByUserId($userId)
             ->shouldBeCalledOnce()
-            ->willReturn($expectedOpenWalletByUserIdDatabaseReturn);
+            ->willReturn($expectedCreateWalletByUserIdDatabaseWalletReturn);
 
         try {
             $result = $this->walletService->executeOpen($userId);
