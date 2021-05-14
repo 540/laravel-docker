@@ -37,7 +37,7 @@ class OpenWalletController extends BaseController
         {
             return response()->json([
                 Errors::ERROR_FIELD => $exception->getMessage()
-            ],Response::HTTP_NOT_FOUND);
+            ],Response::HTTP_NOT_ACCEPTABLE);
         }
     }
 }

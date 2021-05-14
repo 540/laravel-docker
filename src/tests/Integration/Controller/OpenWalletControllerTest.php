@@ -2,8 +2,10 @@
 
 namespace Tests\Integration\Controller;
 
+use App\Errors\Errors;
 use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class OpenWalletControllerTest extends TestCase
@@ -13,45 +15,41 @@ class OpenWalletControllerTest extends TestCase
     /**
      * @test
      **/
-    public function noWalletIsCreatedWhenExistingUserIdIsReceived ()
+    public function noWalletIsCreatedGivenAnExistentUserId ()
     {
         Wallet::factory()->create();
 
-        $userId = 'existingUserId';
-
+        $userId = 'existentUserId';
         $response = $this->postJson('api/wallet/open', [
             'user_id' => $userId
         ]);
 
-        $this->assertEquals(404, $response->getStatusCode());
+        $response->assertStatus(Response::HTTP_NOT_ACCEPTABLE)->assertExactJson([Errors::ERROR_FIELD => Errors::WALLET_ALREADY_EXISTS_FOR_THIS_USER]);
     }
 
     /**
      * @test
      **/
-    public function noWalletIsCreatedWhenBadRequestIsReceived ()
+    public function noWalletIsCreatedGivenABadRequest()
     {
         $userId = 'invalidUserId';
-
         $response = $this->postJson('api/wallet/open', [
             'user' => $userId
         ]);
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertExactJson([Errors::ERROR_FIELD => Errors::BAD_REQUEST]);
     }
 
     /**
      * @test
      **/
-    public function getsSuccessfulOperationWhenUserIdIsFound ()
+    public function walletIsCreatedGivenAValidUserId()
     {
-
         $userId = 'validUserId';
-
         $response = $this->postJson('api/wallet/open', [
             'user_id' => $userId
         ]);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $response->assertStatus(Response::HTTP_OK)->assertExactJson(['wallet_id' => '1']);
     }
 }
