@@ -19,16 +19,35 @@ class GetWalletBalanceService
     public function execute($walletId):float
     {
         $wallet = $this->eloquentWalletDataSource->findWalletById($walletId);
+        return $this->getCoinsBalance($wallet->coins);
+    }
 
-        $pastPrice = 0;
-        $actualPrice = 0;
-
-        foreach ($wallet->coins as $coin){
-            $pastPrice += $coin->amount * $coin->value_usd;
-            $actualCoin = $this->coinDataSource->findCoinById($coin->coin_id);
-            $actualPrice += $coin->amount * $actualCoin['price_usd'];
+    private function getCoinsBalance($coins):float
+    {
+        $balance = 0;
+        foreach ($coins as $coin)
+        {
+            $balance += $this->getCoinBalance($coin);
         }
+        return $balance;
+    }
 
-        return $actualPrice - $pastPrice;
+    private function getCoinBalance($coin):float
+    {
+        $pastCoinPrice = $this->getCoinPrice($coin->amount, $coin->value_usd);
+        $currentCoinValueUsd = $this->getCurrentCoinValueUsd($coin->coin_id);
+        $actualCoinPrice = $this->getCoinPrice($coin->amount, $currentCoinValueUsd);
+
+        return $actualCoinPrice - $pastCoinPrice;
+    }
+
+    private function getCoinPrice(float $amount, float $valueUsd):float
+    {
+        return $amount * $valueUsd;
+    }
+
+    private function getCurrentCoinValueUsd($coinId):float
+    {
+        return $this->coinDataSource->findCoinById($coinId)['price_usd'];
     }
 }
