@@ -84,7 +84,7 @@ class WalletService
             $balanceUsd += $wallet[$i]['value_usd'];
         }
 
-        return $balanceUsd;
+        return round($balanceUsd, 2);
     }
 
     /**
