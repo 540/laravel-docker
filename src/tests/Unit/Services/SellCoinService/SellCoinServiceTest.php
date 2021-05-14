@@ -4,8 +4,6 @@ namespace Tests\Services\SellCoinService;
 
 use App\DataSource\Database\EloquentCoinRepository;
 use App\Models\Coin;
-use App\Models\User;
-use App\Models\Wallet;
 use App\Services\SellCoinService\SellCoinService;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -61,7 +59,7 @@ class SellCoinServiceTest extends TestCase
         $eloquentCoinRepository = $this->prophet->prophesize(EloquentCoinRepository::class);
         $eloquentCoinRepository->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn($coin);
         $sellCoinService = new SellCoinService($eloquentCoinRepository->reveal());
-        $returnedCoin = $sellCoinService->execute($coin->coin_id, $coin->wallet_id, 0);
+        $returnedCoin = $sellCoinService->execute($coin->coin_id, $coin->wallet_id, 1);
 
         $this->assertEquals($coin->coin_id, $returnedCoin->coin_id);
     }

@@ -21,7 +21,7 @@ class SellCoinControllerTest extends TestCase
 
     protected function setUp():void
     {
-        parent::setUp();
+        //parent::setUp();
         $prophet = new Prophet;
         $this->sellCoinService = $prophet->prophesize(SellCoinService::class);
         $this->sellCoinController = new SellCoinController($this->sellCoinService->reveal());
@@ -34,7 +34,7 @@ class SellCoinControllerTest extends TestCase
     public function getsHttpNotFoundWhenInvalidCoinIdIsReceived()
     {
         $coinId = "invalidCoinId";
-        $walletId = "validWalletId";
+        $walletId = 1;
         $amountUSD = 0;
         $request = Request::create('/api/coin/sell', 'POST', [
             'coinId' => $coinId,
@@ -62,8 +62,8 @@ class SellCoinControllerTest extends TestCase
 
         $response = $this->post('/api/coin/sell');
 
-        $response->assertStatus(Response::HTTP_BAD_REQUEST)
-            ->assertExactJson(['error' => 'Coin not found']);
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertExactJson(['error' => 'Successful operation']);
     }
 
     /**

@@ -27,7 +27,7 @@ class CoinFactory extends Factory
             'coin_id' => 'coin_id',
             'name' => 'user_name',
             'symbol' => 'coinSymbol',
-            'amount' => 1,
+            'amount' => 2,
             'value_usd' => 1
         ];
     }

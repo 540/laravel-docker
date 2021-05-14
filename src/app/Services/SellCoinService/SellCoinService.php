@@ -18,11 +18,18 @@ class SellCoinService
     {
         try {
             $coin = $this->eloquentCoinRepository->findCoinById($coinId);
-            $sellingCoinResult = $this->eloquentCoinRepository
-                ->sellCoinOperation($coin, $walletId, $amountUSD);
+            $previousTotalCoinValueUSD = $coin->amount * $coin->valueUSD;
+            if($previousTotalCoinValueUSD > $amountUSD) {
+                $newTotalCoinValueUSD = $previousTotalCoinValueUSD - $amountUSD;
+                $newCoinAmount = $newTotalCoinValueUSD / $coin->valueUSD;
+                $this->eloquentCoinRepository->sellCoinOperation($coin, $walletId, $newCoinAmount);
+            }
+            elseif($previousTotalCoinValueUSD === $amountUSD) {
+                $this->eloquentCoinRepository->deleteCoin($coin->id);
+            }
             return $coin;
         }
-        catch (Exception $e) {
+        catch(Exception $e) {
             throw new Exception("Error");
         }
     }
