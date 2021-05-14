@@ -36,14 +36,13 @@ class SellCoinController extends BaseController
             ], Response::HTTP_BAD_REQUEST);
         }
         try {
-            $this->sellCoinService->execute(
-                $request->get("coinId"),
-                $request->get("walletId"),
-                $request->get("amountUSD")
-            );
-            return response()->json([
-                self::RESPONSE_CODE['SUCCESS_CODE'] => self::RESPONSE_MSG['SUCCESS_MESSAGE']
-            ], Response::HTTP_OK);
+            if(!is_null($this->sellCoinService->execute($request->get("coinId"),
+                $request->get("walletId"), $request->get("amountUSD")))) {
+                return response()->json([
+                    self::RESPONSE_CODE['SUCCESS_CODE'] => self::RESPONSE_MSG['SUCCESS_MESSAGE']
+                ], Response::HTTP_OK);
+            }
+            throw new Exception;
         }
         catch(Exception $exception) {
             return response()->json([

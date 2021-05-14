@@ -26,7 +26,7 @@ class OpenWalletController extends BaseController
 
     public function openWallet(Request $request): JsonResponse
     {
-        if($request->has("userId") === false)
+        if(!$request->has("userId"))
         {
             return response()->json([
                 self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
