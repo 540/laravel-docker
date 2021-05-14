@@ -5,9 +5,6 @@ namespace App\Services\OpenWallet;
 
 
 use App\DataSource\Database\EloquentWalletDataSource;
-use App\Errors\Errors;
-use App\Exceptions\WalletAlreadyExistsForUserException;
-use Exception;
 
 class OpenWalletService
 {
@@ -20,11 +17,7 @@ class OpenWalletService
 
     public function execute($userId): string
     {
-        $walletId = $this->eloquentWalletDataSource->createWalletByUserId($userId);
-        if($walletId == null){
-            throw new WalletAlreadyExistsForUserException();
-        }
-        return $walletId;
+        return $this->eloquentWalletDataSource->createWalletByUserId($userId);
     }
 
 }

@@ -11,12 +11,15 @@ use Prophecy\Prophet;
 
 class OpenWalletServiceTest extends TestCase
 {
-    private Prophet $prophet;
+    private $eloquentWalletDataSource;
+    private OpenWalletService $openWalletService;
 
     protected function setUp():void
     {
         parent::setUp();
-        $this->prophet = new Prophet;
+        $prophet = new Prophet;
+        $this->eloquentWalletDataSource = $prophet->prophesize(EloquentWalletDataSource::class);
+        $this->openWalletService = new OpenWalletService($this->eloquentWalletDataSource->reveal());
     }
 
     /**
@@ -24,18 +27,15 @@ class OpenWalletServiceTest extends TestCase
      *
      * @throws Exception
      */
-    public function getsErrorWhenUserIdIsInvalid ()
+    public function walletIsNotOpenedGivenAnInvalidUserId ()
     {
         $userId = 'invalid_id';
 
-        $eloquentWalletDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
-        $eloquentWalletDataSource->createWalletByUserId($userId)->shouldBeCalledOnce()->willReturn(null);
-
-        $openWalletService = new OpenWalletService($eloquentWalletDataSource->reveal());
+        $this->eloquentWalletDataSource->createWalletByUserId($userId)->shouldBeCalledOnce()->willThrow(WalletAlreadyExistsForUserException::class);
 
         $this->expectException(WalletAlreadyExistsForUserException::class);
 
-        $openWalletService->execute($userId);
+        $this->openWalletService->execute($userId);
     }
 
     /**
@@ -43,17 +43,14 @@ class OpenWalletServiceTest extends TestCase
      *
      * @throws Exception
      */
-    public function getsSuccessfulOperationWhenUserIdIsValid ()
+    public function walletIsOpenedGivenAValidUserId ()
     {
         $userId = 'validUserId';
         $walletId = 1;
 
-        $eloquentWalletDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
-        $eloquentWalletDataSource->createWalletByUserId($userId)->shouldBeCalledOnce()->willReturn($walletId);
+        $this->eloquentWalletDataSource->createWalletByUserId($userId)->shouldBeCalledOnce()->willReturn($walletId);
 
-        $openWalletService = new OpenWalletService($eloquentWalletDataSource->reveal());
-
-        $result = $openWalletService->execute($userId);
+        $result = $this->openWalletService->execute($userId);
 
         $this->assertEquals($walletId, $result);
     }
