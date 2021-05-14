@@ -77,6 +77,9 @@ class WalletService
         }
 
         $balanceUsd = $this->eloquentWalletRepository->getBalanceUsdById($wallet_id);
+        if (is_null($balanceUsd)) {
+            throw new Exception('Wallet balance not found');
+        }
         for ($i = 0; $i < count($wallet); $i++) {
             $balanceUsd += $wallet[$i]['value_usd'];
         }
