@@ -47,14 +47,14 @@ class CoinService
      */
     private function calculateCoinsAmount(string $coinId, string $walletId, float $amountUsd): float
     {
-        if (!$this->eloquentCoinRepository->thereIsCoinById($coinId)) {
+        if (!$this->eloquentCoinRepository->existsByCoinId($coinId)) {
             throw new Exception('Coin not found');
         }
-        if (!$this->eloquentWalletRepository->thereIsWalletById($walletId)) {
+        if (!$this->eloquentWalletRepository->existsByWalletId($walletId)) {
             throw new Exception('Wallet not found');
         }
 
-        $price = $this->coinLoreRepository->findUsdPriceByCoinId($coinId);
+        $price = $this->coinLoreRepository->getUsdPriceByCoinId($coinId);
         if ($price == null) {
             throw new Exception('External API failure');
         }

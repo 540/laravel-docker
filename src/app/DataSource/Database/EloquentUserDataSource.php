@@ -10,7 +10,7 @@ class EloquentUserDataSource
      * @param $user_id
      * @return bool
      */
-    public function thereIsUserById($user_id): bool
+    public function existsByUserId($user_id): bool
     {
         $result = DB::table('users')
             ->select('user_id')

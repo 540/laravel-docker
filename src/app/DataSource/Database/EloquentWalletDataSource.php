@@ -12,7 +12,7 @@ class EloquentWalletDataSource
      * @return array|null
      * @throws Exception
      */
-    public function findById($wallet_id): ?array
+    public function getCoinsDataByWalletId($wallet_id): ?array
     {
         return DB::table('wallets')
                     ->join('walletscoins', 'wallets.wallet_id', '=', 'walletscoins.wallet_id')
@@ -27,7 +27,7 @@ class EloquentWalletDataSource
      * @param $wallet_id
      * @return float|null
      */
-    public function getBalanceUsdById($wallet_id): ?float
+    public function getBalanceUsdByWalletId($wallet_id): ?float
     {
         $result = DB::table('wallets')
             ->select('wallet_id', 'user_id', 'balance_usd')
@@ -45,12 +45,12 @@ class EloquentWalletDataSource
      * @param $wallet_id
      * @return bool
      */
-    public function thereIsWalletById($wallet_id): bool
+    public function existsByWalletId($wallet_id): bool
     {
         $result = DB::table('wallets')
             ->select('wallet_id')
             ->where('wallet_id', $wallet_id)
-            ->get();
+            ->first();
 
         return ($result != null);
     }
@@ -59,7 +59,7 @@ class EloquentWalletDataSource
      * @param $user_id
      * @return string
      */
-    public function openWalletByUserId($user_id): string
+    public function createWalletByUserId($user_id): string
     {
         $wallets = DB::table('wallets')
             ->select('wallet_id')

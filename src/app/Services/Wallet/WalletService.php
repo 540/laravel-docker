@@ -41,7 +41,11 @@ class WalletService
      */
     public function execute(string $wallet_id): ?array
     {
-        $wallet = $this->eloquentWalletRepository->findById($wallet_id);
+        if (!$this->eloquentWalletRepository->existsByWalletId($wallet_id)) {
+            throw new Exception('Wallet not found');
+        }
+
+        $wallet = $this->eloquentWalletRepository->getCoinsDataByWalletId($wallet_id);
         if (is_null($wallet)) {
             throw new Exception('Wallet not found');
         }
@@ -50,7 +54,7 @@ class WalletService
             $coinId = $wallet[$i]->coin_id;
             $amount = $wallet[$i]->amount;
 
-            $price = $this->coinLoreRepository->findUsdPriceByCoinId($coinId);
+            $price = $this->coinLoreRepository->getUsdPriceByCoinId($coinId);
             if (is_null($price)) {
                 throw new Exception('External API failure');
             }
@@ -76,7 +80,7 @@ class WalletService
             throw $exception;
         }
 
-        $balanceUsd = $this->eloquentWalletRepository->getBalanceUsdById($wallet_id);
+        $balanceUsd = $this->eloquentWalletRepository->getBalanceUsdByWalletId($wallet_id);
         if (is_null($balanceUsd)) {
             throw new Exception('Wallet balance not found');
         }
@@ -94,10 +98,10 @@ class WalletService
      */
     public function executeOpen(string $user_id): string
     {
-        if (!$this->eloquentUserRepository->thereIsUserById($user_id)) {
+        if (!$this->eloquentUserRepository->existsByUserId($user_id)) {
             throw new Exception('User not found');
         }
 
-        return $this->eloquentWalletRepository->openWalletByUserId($user_id);
+        return $this->eloquentWalletRepository->createWalletByUserId($user_id);
     }
 }
