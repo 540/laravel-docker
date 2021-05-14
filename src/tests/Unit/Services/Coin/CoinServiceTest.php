@@ -49,6 +49,8 @@ class CoinServiceTest extends TestCase
         );
     }
 
+    // POST COIN BUY TESTS
+
     /**
      * @test
      */
@@ -81,45 +83,6 @@ class CoinServiceTest extends TestCase
 
         try {
             $this->coinService->executeBuy($coinId, $walletId, $amountUsd);
-        } catch (Exception $exception) {
-            $this->assertEquals($expectedResult, $exception->getMessage());
-            return;
-        }
-        $this->fail();
-    }
-
-    /**
-     * @test
-     */
-    public function sellCoinDoesNotExist()
-    {
-        $coinId = 'error-coin';
-        $walletId = 'test-wallet';
-        $amountUsd = 5000;
-        $amount = 1;
-        $expectedCoinDatabaseReturn = false;
-        $expectedWalletDatabaseReturn = true;
-        $expectedExternalReturn = 5000;
-        $expectedResult = "Coin not found";
-
-        $this->eloquentCoinDataSource
-            ->thereIsCoinById($coinId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedCoinDatabaseReturn);
-        $this->eloquentWalletDataSource
-            ->thereIsWalletById($walletId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedWalletDatabaseReturn);
-        $this->eloquentWalletCoinDataSource
-            ->sellCoins($coinId, $walletId, $amount, $amountUsd)
-            ->shouldBeCalledOnce();
-        $this->coinLoreDataSource
-            ->findUsdPriceByCoinId($coinId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedExternalReturn);
-
-        try {
-            $this->coinService->executeSell($coinId, $walletId, $amountUsd);
         } catch (Exception $exception) {
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
@@ -169,45 +132,6 @@ class CoinServiceTest extends TestCase
     /**
      * @test
      */
-    public function sellWalletDoesNotExist()
-    {
-        $coinId = '90';
-        $walletId = 'error-wallet';
-        $amountUsd = 5000;
-        $amount = 1;
-        $expectedCoinDatabaseReturn = true;
-        $expectedWalletDatabaseReturn = false;
-        $expectedExternalReturn = 5000;
-        $expectedResult = "Wallet not found";
-
-        $this->eloquentCoinDataSource
-            ->thereIsCoinById($coinId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedCoinDatabaseReturn);
-        $this->eloquentWalletDataSource
-            ->thereIsWalletById($walletId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedWalletDatabaseReturn);
-        $this->eloquentWalletCoinDataSource
-            ->sellCoins($coinId, $walletId, $amount, $amountUsd)
-            ->shouldBeCalledOnce();
-        $this->coinLoreDataSource
-            ->findUsdPriceByCoinId($coinId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedExternalReturn);
-
-        try {
-            $this->coinService->executeSell($coinId, $walletId, $amountUsd);
-        } catch (Exception $exception) {
-            $this->assertEquals($expectedResult, $exception->getMessage());
-            return;
-        }
-        $this->fail();
-    }
-
-    /**
-     * @test
-     */
     public function buyExternalAPIDoesNotWork()
     {
         $coinId = '90';
@@ -237,6 +161,123 @@ class CoinServiceTest extends TestCase
 
         try {
             $this->coinService->executeBuy($coinId, $walletId, $amountUsd);
+        } catch (Exception $exception) {
+            $this->assertEquals($expectedResult, $exception->getMessage());
+            return;
+        }
+        $this->fail();
+    }
+
+    /**
+     * @test
+     */
+    public function buyWorking()
+    {
+        $coinId = '90';
+        $walletId = 'test-wallet';
+        $amountUsd = 5000;
+        $amount = 1;
+        $expectedCoinDatabaseReturn = true;
+        $expectedWalletDatabaseReturn = true;
+        $expectedExternalReturn = 5000;
+
+        $this->eloquentCoinDataSource
+            ->thereIsCoinById($coinId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedCoinDatabaseReturn);
+        $this->eloquentWalletDataSource
+            ->thereIsWalletById($walletId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedWalletDatabaseReturn);
+        $this->eloquentWalletCoinDataSource
+            ->buyCoins($coinId, $walletId, $amount, $amountUsd)
+            ->shouldBeCalledOnce();
+        $this->coinLoreDataSource
+            ->findUsdPriceByCoinId($coinId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedExternalReturn);
+
+        try {
+            $this->coinService->executeBuy($coinId, $walletId, $amountUsd);
+        } catch (Exception $exception) {
+            $this->fail("Failure by exception catch! - " . $exception->getMessage());
+        }
+        $this->assertTrue(true);
+    }
+
+    // POST COIN SELL TESTS
+
+    /**
+     * @test
+     */
+    public function sellCoinDoesNotExist()
+    {
+        $coinId = 'error-coin';
+        $walletId = 'test-wallet';
+        $amountUsd = 5000;
+        $amount = 1;
+        $expectedCoinDatabaseReturn = false;
+        $expectedWalletDatabaseReturn = true;
+        $expectedExternalReturn = 5000;
+        $expectedResult = "Coin not found";
+
+        $this->eloquentCoinDataSource
+            ->thereIsCoinById($coinId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedCoinDatabaseReturn);
+        $this->eloquentWalletDataSource
+            ->thereIsWalletById($walletId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedWalletDatabaseReturn);
+        $this->eloquentWalletCoinDataSource
+            ->sellCoins($coinId, $walletId, $amount, $amountUsd)
+            ->shouldBeCalledOnce();
+        $this->coinLoreDataSource
+            ->findUsdPriceByCoinId($coinId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedExternalReturn);
+
+        try {
+            $this->coinService->executeSell($coinId, $walletId, $amountUsd);
+        } catch (Exception $exception) {
+            $this->assertEquals($expectedResult, $exception->getMessage());
+            return;
+        }
+        $this->fail();
+    }
+
+    /**
+     * @test
+     */
+    public function sellWalletDoesNotExist()
+    {
+        $coinId = '90';
+        $walletId = 'error-wallet';
+        $amountUsd = 5000;
+        $amount = 1;
+        $expectedCoinDatabaseReturn = true;
+        $expectedWalletDatabaseReturn = false;
+        $expectedExternalReturn = 5000;
+        $expectedResult = "Wallet not found";
+
+        $this->eloquentCoinDataSource
+            ->thereIsCoinById($coinId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedCoinDatabaseReturn);
+        $this->eloquentWalletDataSource
+            ->thereIsWalletById($walletId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedWalletDatabaseReturn);
+        $this->eloquentWalletCoinDataSource
+            ->sellCoins($coinId, $walletId, $amount, $amountUsd)
+            ->shouldBeCalledOnce();
+        $this->coinLoreDataSource
+            ->findUsdPriceByCoinId($coinId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedExternalReturn);
+
+        try {
+            $this->coinService->executeSell($coinId, $walletId, $amountUsd);
         } catch (Exception $exception) {
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
@@ -281,43 +322,6 @@ class CoinServiceTest extends TestCase
             return;
         }
         $this->fail();
-    }
-
-    /**
-     * @test
-     */
-    public function buyWorking()
-    {
-        $coinId = '90';
-        $walletId = 'test-wallet';
-        $amountUsd = 5000;
-        $amount = 1;
-        $expectedCoinDatabaseReturn = true;
-        $expectedWalletDatabaseReturn = true;
-        $expectedExternalReturn = 5000;
-
-        $this->eloquentCoinDataSource
-            ->thereIsCoinById($coinId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedCoinDatabaseReturn);
-        $this->eloquentWalletDataSource
-            ->thereIsWalletById($walletId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedWalletDatabaseReturn);
-        $this->eloquentWalletCoinDataSource
-            ->buyCoins($coinId, $walletId, $amount, $amountUsd)
-            ->shouldBeCalledOnce();
-        $this->coinLoreDataSource
-            ->findUsdPriceByCoinId($coinId)
-            ->shouldBeCalledOnce()
-            ->willReturn($expectedExternalReturn);
-
-        try {
-            $this->coinService->executeBuy($coinId, $walletId, $amountUsd);
-        } catch (Exception $exception) {
-            $this->fail("Failure by exception catch! - " . $exception->getMessage());
-        }
-        $this->assertTrue(true);
     }
 
     /**
