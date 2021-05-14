@@ -21,19 +21,21 @@ class GetWalletCryptocurrenciesService
     public function execute($walletId): array
     {
         $wallet = $this->eloquentWalletDataSource->findWalletById($walletId);
+        return $this->getFormattedCoins($wallet);
+    }
 
-        $coins = [];
-
+    private function getFormattedCoins($wallet): array
+    {
+        $formattedCoins = [];
         foreach ($wallet->coins as $coin){
-            array_push($coins,[
-                'coin_id' => $coin->id,
+            array_push($formattedCoins,[
+                'coin_id' => $coin->coin_id,
                 'name' => $coin->name,
                 'symbol' => $coin->symbol,
                 'amount' => $coin->amount,
                 'value_usd' => $coin->value_usd
             ]);
         }
-
-        return $coins;
+        return $formattedCoins;
     }
 }

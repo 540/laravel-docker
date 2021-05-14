@@ -1,13 +1,12 @@
 <?php
 
 use App\DataSource\API\CoinDataSource;
-use App\DataSource\API\EloquentCoinDataSource;
+use App\DataSource\API\CoinLoreCoinDataSource;
 use App\Http\Controllers\GetUserController;
 use App\Http\Controllers\GetWalletBalanceController;
 use App\Http\Controllers\GetWalletCryptocurrenciesController;
 use App\Http\Controllers\OpenWalletController;
 use App\Http\Controllers\StatusController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-app()->bind(CoinDataSource::class, EloquentCoinDataSource::class);
+app()->bind(CoinDataSource::class, CoinLoreCoinDataSource::class);
 
 Route::get(
     '/status',

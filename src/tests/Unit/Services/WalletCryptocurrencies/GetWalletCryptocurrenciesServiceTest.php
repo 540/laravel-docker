@@ -55,7 +55,7 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
         $expectedResult = [];
         foreach ($wallet->coins as $coin){
             array_push($expectedResult, [
-                'coin_id' => $coin->id,
+                'coin_id' => $coin->coin_id,
                 'name' => $coin->name,
                 'symbol' => $coin->symbol,
                 'amount' => $coin->amount,
@@ -87,7 +87,7 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
         $expectedResult = [];
         foreach ($wallet->coins as $coin){
             array_push($expectedResult, [
-                'coin_id' => $coin->id,
+                'coin_id' => $coin->coin_id,
                 'name' => $coin->name,
                 'symbol' => $coin->symbol,
                 'amount' => $coin->amount,
