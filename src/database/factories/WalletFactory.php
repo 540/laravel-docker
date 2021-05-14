@@ -23,7 +23,7 @@ class WalletFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => 'existingUserId'
+            'user_id' => 'existentUserId'
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Integration\DataSources\Database;
 
 use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\WalletAlreadyExistsForUserException;
 use App\Exceptions\WalletNotFoundException;
 use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,17 +13,25 @@ class EloquentWalletDataSourceTest extends TestCase
 {
     use RefreshDatabase;
 
+    private EloquentWalletDataSource $eloquentWalletDataSource;
+
+    protected function setUp():void
+    {
+        parent::setUp();
+        $this->eloquentWalletDataSource = new EloquentWalletDataSource();
+    }
+
+
     /**
      * @test
      **/
     public function walletIsNotFoundGivenAnInvalidWalletId()
     {
-        $eloquentWalletCoinDataSource = new EloquentWalletDataSource();
         $walletId = 'invalidWalletId';
 
         $this->expectException(WalletNotFoundException::class);
 
-        $eloquentWalletCoinDataSource->findWalletById($walletId);
+        $this->eloquentWalletDataSource->findWalletById($walletId);
     }
 
     /**
@@ -32,9 +41,7 @@ class EloquentWalletDataSourceTest extends TestCase
     {
         $wallet = Wallet::factory()->create()->first();
 
-        $eloquentWalletCoinDataSource = new EloquentWalletDataSource();
-
-        $result = $eloquentWalletCoinDataSource->findWalletById($wallet->id);
+        $result = $this->eloquentWalletDataSource->findWalletById($wallet->id);
 
         $this->assertEquals($wallet, $result);
     }
@@ -46,12 +53,11 @@ class EloquentWalletDataSourceTest extends TestCase
     {
         Wallet::factory()->create();
 
-        $eloquentWalletDataSource = new EloquentWalletDataSource();
+        $userId = 'existentUserId';
 
-        $userId = 'existingUserId';
-        $result = $eloquentWalletDataSource->createWalletByUserId($userId);
+        $this->expectException(WalletAlreadyExistsForUserException::class);
 
-        $this->assertNull($result);
+        $this->eloquentWalletDataSource->createWalletByUserId($userId);
     }
 
     /**
@@ -60,12 +66,10 @@ class EloquentWalletDataSourceTest extends TestCase
     public function walletIsCreatedGivenANonExistentUserId()
     {
         $userId = 'nonExistentUserId';
-        $walletId = 1;
+        $expectedWalletId = 1;
 
-        $eloquentWalletCoinDataSource = new EloquentWalletDataSource();
+        $result = $this->eloquentWalletDataSource->createWalletByUserId($userId);
 
-        $result = $eloquentWalletCoinDataSource->createWalletByUserId($userId);
-
-        $this->assertEquals($walletId, $result);
+        $this->assertEquals($expectedWalletId, $result);
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\DataSource\Database;
 
+use App\Exceptions\WalletAlreadyExistsForUserException;
 use App\Exceptions\WalletNotFoundException;
 use App\Models\Wallet;
-use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
 class EloquentWalletDataSource
@@ -23,8 +24,8 @@ class EloquentWalletDataSource
     {
         try {
             return DB::table('wallets')->insertGetId(['user_id' => $userId]);
-        }catch (Exception $exception){
-            return null;
+        }catch (QueryException $exception){
+            throw new WalletAlreadyExistsForUserException();
         }
     }
 }
