@@ -21,7 +21,6 @@ class EloquentWalletDataSourceTest extends TestCase
         $this->eloquentWalletDataSource = new EloquentWalletDataSource();
     }
 
-
     /**
      * @test
      **/
