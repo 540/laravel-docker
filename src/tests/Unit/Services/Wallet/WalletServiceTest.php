@@ -309,4 +309,61 @@ class WalletServiceTest extends TestCase
         }
         $this->assertEquals($expectedResult, $result);
     }
+
+    // POST WALLET OPEN TESTS
+
+    /**
+     * @test
+     */
+    public function postWalletOpenUserDoesNotExist()
+    {
+        $userId = 'error-user';
+        $expectedThereIsUserByIdDatabaseReturn = false;
+        $expectedOpenWalletByUserIdDatabaseReturn = 'wallet-000000001';
+        $expectedResult = "User not found";
+
+        $this->eloquentUserDataSource
+            ->thereIsUserById($userId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedThereIsUserByIdDatabaseReturn);
+        $this->eloquentWalletDataSource
+            ->openWalletByUserId($userId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedOpenWalletByUserIdDatabaseReturn);
+
+        try {
+            $this->walletService->executeOpen($userId);
+        } catch (Exception $exception) {
+            $this->assertEquals($expectedResult, $exception->getMessage());
+            return;
+        }
+        $this->fail();
+    }
+
+    /**
+     * @test
+     */
+    public function postWalletOpenWorking()
+    {
+        $userId = 'test-user';
+        $expectedThereIsUserByIdDatabaseReturn = true;
+        $expectedOpenWalletByUserIdDatabaseReturn = 'wallet-000000001';
+        $expectedResult = "wallet-000000001";
+
+        $this->eloquentUserDataSource
+            ->thereIsUserById($userId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedThereIsUserByIdDatabaseReturn);
+        $this->eloquentWalletDataSource
+            ->openWalletByUserId($userId)
+            ->shouldBeCalledOnce()
+            ->willReturn($expectedOpenWalletByUserIdDatabaseReturn);
+
+        try {
+            $result = $this->walletService->executeOpen($userId);
+        } catch (Exception $exception) {
+            $this->fail("Failure by exception catch! - " . $exception->getMessage());
+        }
+        $this->assertEquals($expectedResult, $result);
+    }
 }
