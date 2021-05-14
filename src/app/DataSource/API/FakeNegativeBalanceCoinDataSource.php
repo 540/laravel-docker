@@ -4,7 +4,7 @@ namespace App\DataSource\API;
 
 use App\Exceptions\WrongCoinIdException;
 
-class FakeCoinDataSource implements CoinDataSource
+class FakeNegativeBalanceCoinDataSource implements CoinDataSource
 {
     public function findCoinById($coinId)
     {
@@ -13,7 +13,7 @@ class FakeCoinDataSource implements CoinDataSource
         }
         return [
             'coin_id' => $coinId,
-            'price_usd' => 50
+            'price_usd' => 0
         ];
     }
 }
