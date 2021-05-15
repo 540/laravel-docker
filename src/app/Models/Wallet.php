@@ -9,5 +9,7 @@ class Wallet extends Model
 {
     use HasFactory;
 
+    protected $table = 'wallets';
     protected $fillable = ['wallet_id', 'user_id', 'balance_usd'];
+    public $timestamps = false;
 }

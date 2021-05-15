@@ -24,7 +24,7 @@ class WalletCoinFactory extends Factory
         return [
             'wallet_id' => 'factory-wallet',
             'coin_id' => '2',
-            'amount' => 2
+            'amount' => 1000000
         ];
     }
 }

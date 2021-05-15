@@ -50,5 +50,4 @@ jobs:
         run: |
           docker exec -i laravel-php sh
           cd src
-          ./vendor/bin/phpunit tests/Unit/Services/Wallet/
-          ./vendor/bin/phpunit tests/Unit/Services/Coin/
+          ./vendor/bin/phpunit

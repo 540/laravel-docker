@@ -2,8 +2,11 @@
 
 namespace Tests\Integration\DataSources;
 
-use App\DataSource\Database\EloquentUser540DataSource;
+use App\DataSource\Database\EloquentWalletDataSource;
+use App\Models\Coin;
 use App\Models\User;
+use App\Models\Wallet;
+use App\Models\WalletCoin;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -13,42 +16,119 @@ class EloquentWalletDataSourceTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @test
+     * @setUp
      */
-    public function findsUserByEmail()
+    protected function setUp(): void
     {
+        parent::setUp();
         User::factory(User::class)->create();
-        $eloquentUserDataSource = new EloquentUser540DataSource();
-
-        $user = $eloquentUserDataSource->findByEmail('email@email.com');
-
-        $this->assertInstanceOf(User::class, $user);
+        Wallet::factory(Wallet::class)->create();
+        Coin::factory(Coin::class)->create();
+        WalletCoin::factory(WalletCoin::class)->create();
     }
 
     /**
      * @test
+     * @throws Exception
      */
-    public function noUserIsFoundForTheGivenEmailI()
+    public function getCoinsDataByWalletIdWalletNotFound()
     {
-        $eloquentUserDataSource = new EloquentUser540DataSource();
+        $expectedResult = array();
 
-        $this->expectException(Exception::class);
+        $eloquentWalletDataSource = new EloquentWalletDataSource();
 
-        $eloquentUserDataSource->findByEmail('email@email.com');
+        $result = $eloquentWalletDataSource->getCoinsDataByWalletId('error-wallet');
+        $this->assertEquals($expectedResult, $result);
     }
 
     /**
      * @test
+     * @throws Exception
      */
-    public function noUserIsFoundForTheGivenEmailII()
+    public function getCoinsDataByWalletId()
     {
-        User::factory(User::class)->create();
-        $eloquentUserDataSource = new EloquentUser540DataSource();
+        $expectedResult = array(
+            (object)[
+                "coin_id" => '2',
+                "name" => "Dogecoin",
+                "symbol" => "DOGE",
+                "amount" => 1000000
+            ]
+        );
 
-        try {
-            $eloquentUserDataSource->findByEmail('not_known@email.com');
-        } catch (Exception $exception) {
-            $this->assertEquals('User not found', $exception->getMessage());
-        }
+        $eloquentWalletDataSource = new EloquentWalletDataSource();
+
+        $result = $eloquentWalletDataSource->getCoinsDataByWalletId('factory-wallet');
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function getBalanceUsdByWalletIdWalletNotFound()
+    {
+        $expectedResult = null;
+
+        $eloquentWalletDataSource = new EloquentWalletDataSource();
+
+        $result = $eloquentWalletDataSource->getBalanceUsdByWalletId('error-wallet');
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function getBalanceUsdByWalletId()
+    {
+        $expectedResult = 0;
+
+        $eloquentWalletDataSource = new EloquentWalletDataSource();
+
+        $result = $eloquentWalletDataSource->getBalanceUsdByWalletId('factory-wallet');
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function notExistsByWalletId()
+    {
+        $expectedResult = false;
+
+        $eloquentWalletDataSource = new EloquentWalletDataSource();
+
+        $result = $eloquentWalletDataSource->existsByWalletId('error-wallet');
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function existsByWalletId()
+    {
+        $expectedResult = true;
+
+        $eloquentWalletDataSource = new EloquentWalletDataSource();
+
+        $result = $eloquentWalletDataSource->existsByWalletId('factory-wallet');
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function createWalletByUserId()
+    {
+        $expectedResult = 'wallet-000000001';
+
+        $eloquentWalletDataSource = new EloquentWalletDataSource();
+
+        $result = $eloquentWalletDataSource->createWalletByUserId('factory-user');
+        $this->assertEquals($expectedResult, $result);
     }
 }

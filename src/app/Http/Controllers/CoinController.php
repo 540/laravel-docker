@@ -32,7 +32,7 @@ class CoinController extends BaseController
             $coinId = $request->coin_id;
             $walletId = $request->wallet_id;
             $amountUsd = $request->amount_usd;
-            if (($coinId && $walletId && $amountUsd) == null) {
+            if (($coinId && $walletId && $amountUsd) == null && $amountUsd !== 0) {
                 throw new Exception('Insufficient arguments in the POST');
             }
             if ($amountUsd < 0.01) {
@@ -58,7 +58,7 @@ class CoinController extends BaseController
             $coinId = $request->coin_id;
             $walletId = $request->wallet_id;
             $amountUsd = $request->amount_usd;
-            if (($coinId && $walletId && $amountUsd) == null) {
+            if (($coinId && $walletId && $amountUsd) == null && $amountUsd !== 0) {
                 throw new Exception('Insufficient arguments in the POST');
             }
             if ($amountUsd < 0.01) {
