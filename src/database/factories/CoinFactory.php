@@ -3,6 +3,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Coin;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CoinFactory
 {

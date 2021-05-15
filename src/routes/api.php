@@ -25,3 +25,8 @@ Route::get(
 );
 
 Route::get('user/{email}', IsEarlyAdopterUserController::class);
+
+Route::post(
+    '/coin/buy',
+    'CoinBuyerController@coinbuy'
+);

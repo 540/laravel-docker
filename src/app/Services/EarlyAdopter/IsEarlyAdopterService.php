@@ -28,6 +28,7 @@ class IsEarlyAdopterService
      */
     public function execute(string $email): bool
     {
+
         $user = $this->eloquentUserDataSource->findByEmail($email);
 
         $isEarlyAdopter = false;

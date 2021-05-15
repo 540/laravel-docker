@@ -11,4 +11,5 @@ class Coin
     use HasFactory;
 
     protected $fillable = ['wallet_id','coin_id', 'name', 'symbol', 'amount', 'value_usd'];
+
 }
