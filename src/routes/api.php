@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GetUserController;
 use App\Http\Controllers\OpenWalletController;
+use App\Http\Controllers\SellCoinController;
 use App\Http\Controllers\StatusController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,5 +34,10 @@ Route::get(
 
 Route::post(
     '/wallet/open',
-    'OpenWalletController@openWallet'
+    [OpenWalletController::class, 'openWallet']
+);
+
+Route::post(
+    '/coin/sell',
+    [SellCoinController::class, 'sellCoin']
 );

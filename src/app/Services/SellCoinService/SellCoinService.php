@@ -16,21 +16,16 @@ class SellCoinService
 
     public function execute(string $coinId, int $walletId, float $amountUSD)
     {
-        try {
-            $coin = $this->eloquentCoinSellerDataSource->findCoinById($coinId);
-            $previousTotalCoinValueUSD = $coin->amount * $coin->valueUSD;
-            if($previousTotalCoinValueUSD > $amountUSD) {
-                $newTotalCoinValueUSD = $previousTotalCoinValueUSD - $amountUSD;
-                $newCoinAmount = $newTotalCoinValueUSD / $coin->valueUSD;
-                $this->eloquentCoinSellerDataSource->sellCoinOperation($coin, $walletId, $newCoinAmount);
-            }
-            elseif($previousTotalCoinValueUSD === $amountUSD) {
-                $this->eloquentCoinSellerDataSource->deleteCoin($coin->id);
-            }
-            return $coin;
+        $coin = $this->eloquentCoinSellerDataSource->findCoinById($coinId, $walletId);
+        $previousTotalCoinValueUSD = $coin->amount * $coin->valueUSD;
+        if($previousTotalCoinValueUSD > $amountUSD) {
+            $newTotalCoinValueUSD = $previousTotalCoinValueUSD - $amountUSD;
+            $newCoinAmount = $newTotalCoinValueUSD / $coin->valueUSD;
+            $this->eloquentCoinSellerDataSource->sellCoinOperation($coin, $walletId, $newCoinAmount);
         }
-        catch(Exception $e) {
-            throw new Exception("Error");
+        elseif($previousTotalCoinValueUSD === $amountUSD) {
+            $this->eloquentCoinSellerDataSource->deleteCoin($coin->id);
         }
+        return $coin;
     }
 }

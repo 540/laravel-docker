@@ -16,52 +16,39 @@ class SellCoinControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    private $sellCoinService;
     private SellCoinController $sellCoinController;
-    private Prophet $prophet;
-
-    protected function setUp():void
-    {
-        //parent::setUp();
-        $this->prophet = new Prophet;
-        $this->sellCoinService = $this->prophet->prophesize(SellCoinService::class);
-        $this->sellCoinController = new SellCoinController($this->sellCoinService->reveal());
-    }
 
     /**
      * @test
-     * @throws Exception
      */
     public function getsHttpNotFoundWhenInvalidCoinIdIsReceived()
     {
         $coinId = "invalidCoinId";
         $walletId = 1;
-        $amountUSD = 0;
-        $request = Request::create('/api/coin/sell', 'POST', [
+        $amountUSD = 1;
+
+        $response = $this->postJson('api/coin/sell', [
             'coinId' => $coinId,
             'walletId' => $walletId,
             'amountUSD' => $amountUSD
         ]);
 
-        $this->sellCoinService->execute($coinId, $walletId, $amountUSD)
-            ->willThrow(new Exception("Error"));
-
-        $response = $this->sellCoinController->sellCoin($request);
-        $expectedResponse = response()->json([
-            404 => "A coin with specified ID was not found"
-        ], Response::HTTP_NOT_FOUND);
-
-        $this->assertEquals($expectedResponse, $response);
+        $response->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertExactJson([400 => "Bad request error"]);
     }
 
     /**
      * @test
      */
-    public function coinFoundForGivenId()
+    public function sellsCoinForGivenId()
     {
-        Coin::factory(Coin::class)->create();
+        $coin = Coin::factory(Coin::class)->create()->first();
 
-        $response = $this->post('/api/coin/sell');
+        $response = $this->postJson('/api/coin/sell', [
+            'coinId' => $coin->id,
+            'walletId' => $coin->wallet_id,
+            'amountUSD' => 1
+        ]);
 
         $response->assertStatus(Response::HTTP_OK)
             ->assertExactJson([200 => "Successful operation"]);
@@ -73,24 +60,17 @@ class SellCoinControllerTest extends TestCase
      */
     public function getsHttpBadRequestWhenCoinIdFieldIsNotFound()
     {
-        $coinIdField = "invalidCoinIdField";
-        $walletId = "validWalletId";
-        $amountUSD = 0;
-        $request = Request::create('/api/coin/sell', 'POST', [
+        $coinIdField = "";
+        $walletId = 1;
+        $amountUSD = 1;
+
+        $response = $this->postJson('/api/coin/sell', [
             $coinIdField => 'coinId',
             'walletId' => $walletId,
             'amountUSD' => $amountUSD
         ]);
 
-        $this->sellCoinService->execute($coinIdField, $walletId, $amountUSD)
-            ->willThrow(new Exception("Error"));
-
-        $response = $this->sellCoinController->sellCoin($request);
-
-        $expectedResponse = response()->json([
-            400 => "Bad request error"
-        ], Response::HTTP_BAD_REQUEST);
-
-        $this->assertEquals($expectedResponse, $response);
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)
+            ->assertExactJson([404 => "A coin with specified ID was not found"]);
     }
 }

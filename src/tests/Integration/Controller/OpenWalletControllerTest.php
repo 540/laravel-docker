@@ -33,6 +33,8 @@ class OpenWalletControllerTest extends TestCase
             'userId' => $userId
         ]);
 
+
+
         $this->openWalletService->execute($userId)->willThrow(new Exception("Error"));
 
         $response = $this->openWalletController->openWallet($request);
