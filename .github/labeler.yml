@@ -1,8 +1,9 @@
-repository root:
-  - ./*
+readme:
+  - src/README.md
+  - README.md
   
 feature:
-  - src/app/Http/**/*
+  - src/app/**/*
 
 tests:
   - src/tests/**/*
@@ -25,3 +26,8 @@ composer:
   
 database:
   - src/database/**/*
+  
+docker:
+  -docker/docker
+  -Dockerfile
+  -docker-compose.yml

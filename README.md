@@ -2,9 +2,13 @@
 
 **Based on <a href="https://github.com/540">540</a> / <a href="https://github.com/540/laravel-docker">laravel-docker</a> project.**
 
-![Project Status Image](https://img.shields.io/github/workflow/status/MKoding/laravel-docker/Laravel%20Validation/develop?label=project%20status)
-![Commit Activity Image](https://img.shields.io/github/commit-activity/m/MKoding/laravel-docker)
-![Last Commit Image](https://img.shields.io/github/last-commit/MKoding/laravel-docker)
+![Project Status Image](https://img.shields.io/github/workflow/status/MKoding/laravel-docker/Laravel%20Validation/develop?label=Project%20Status)
+![Commit Activity Image](https://img.shields.io/github/commit-activity/m/MKoding/laravel-docker?label=Commit%20Activity)
+![Last Commit Image](https://img.shields.io/github/last-commit/MKoding/laravel-docker?label=Last%20Commit)
+
+![Solution Status Image](https://img.shields.io/github/milestones/progress-percent/MKoding/laravel-docker/3?label=Solution)
+![Tests Status Image](https://img.shields.io/github/milestones/progress-percent/MKoding/laravel-docker/2?label=Tests)
+![Automation Status Image](https://img.shields.io/github/milestones/progress-percent/MKoding/laravel-docker/1?label=Automation)
 
 **Contributors of the project:**
 
@@ -59,4 +63,3 @@ The project must be mounted using docker:
   - git commit -m "[#issueId] - \<your commit here>"
 
 :)
-
