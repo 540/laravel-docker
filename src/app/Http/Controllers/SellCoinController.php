@@ -30,23 +30,23 @@ class SellCoinController extends BaseController
     }
 
     public function sellCoin(Request $request): JsonResponse {
-        if(!$request->has("coinId")) {
+        if(!$request->has("coin_id")) {
             return response()->json([
-                self::RESPONSE_CODE['COIN_NOT_FOUND_CODE'] => self::RESPONSE_MSG['COIN_NOT_FOUND_MESSAGE']
+                self::RESPONSE_CODE['BAD_REQUEST_CODE'] => self::RESPONSE_MSG['BAD_REQUEST_MESSAGE']
             ], Response::HTTP_BAD_REQUEST);
         }
         try {
             $this->sellCoinService->execute(
-                $request->get("coinId"),
-                $request->get("walletId"),
-                $request->get("amountUSD"));
+                $request->get("coin_id"),
+                $request->get("wallet_id"),
+                $request->get("amount_usd"));
             return response()->json([
                 self::RESPONSE_CODE['SUCCESS_CODE'] => self::RESPONSE_MSG['SUCCESS_MESSAGE']
             ], Response::HTTP_OK);
         }
         catch(Exception $exception) {
             return response()->json([
-                self::RESPONSE_CODE['BAD_REQUEST_CODE'] => self::RESPONSE_MSG['BAD_REQUEST_MESSAGE']
+                self::RESPONSE_CODE['COIN_NOT_FOUND_CODE'] => self::RESPONSE_MSG['COIN_NOT_FOUND_MESSAGE']
             ], Response::HTTP_NOT_FOUND);
         }
     }

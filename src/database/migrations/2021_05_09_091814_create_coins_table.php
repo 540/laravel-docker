@@ -17,8 +17,8 @@ class CreateCoinsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('wallet_id');
             $table->string('coin_id');
-            $table->string("name")->unique();
-            $table->string("symbol")->unique();
+            $table->string("name");
+            $table->string("symbol");
             $table->float('amount');
             $table->float('value_usd');
             $table->timestamps();

@@ -22,9 +22,8 @@ class CoinFactory extends Factory
     public function definition()
     {
         return [
-            'id' => 1,
             'wallet_id' => 1,
-            'coin_id' => 'coin_id',
+            'coin_id' => 'btc',
             'name' => 'user_name',
             'symbol' => 'coinSymbol',
             'amount' => 2,

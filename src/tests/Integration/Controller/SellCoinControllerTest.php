@@ -28,30 +28,57 @@ class SellCoinControllerTest extends TestCase
         $amountUSD = 1;
 
         $response = $this->postJson('api/coin/sell', [
-            'coinId' => $coinId,
-            'walletId' => $walletId,
-            'amountUSD' => $amountUSD
+            'coin_id' => $coinId,
+            'wallet_id' => $walletId,
+            'amount_usd' => $amountUSD
         ]);
 
         $response->assertStatus(Response::HTTP_NOT_FOUND)
-            ->assertExactJson([400 => "Bad request error"]);
+            ->assertExactJson([404 => "A coin with specified ID was not found"]);
     }
 
     /**
      * @test
      */
-    public function sellsCoinForGivenId()
+    public function sellsOneOfMoreCoinsForGivenId()
     {
         $coin = Coin::factory(Coin::class)->create()->first();
 
         $response = $this->postJson('/api/coin/sell', [
-            'coinId' => $coin->id,
-            'walletId' => $coin->wallet_id,
-            'amountUSD' => 1
+            'coin_id' => $coin->coin_id,
+            'wallet_id' => $coin->wallet_id,
+            'amount_usd' => 1
         ]);
+        $returnedCoin = Coin::query()
+            ->where('coin_id', $coin->coin_id)
+            ->where('wallet_id', $coin->wallet_id)
+            ->first();
 
         $response->assertStatus(Response::HTTP_OK)
             ->assertExactJson([200 => "Successful operation"]);
+        $this->assertEquals(1, $returnedCoin->amount);
+    }
+
+    /**
+     * @test
+     */
+    public function sellsEveryCoinForGivenId()
+    {
+        $coin = Coin::factory(Coin::class)->create()->first();
+
+        $response = $this->postJson('/api/coin/sell', [
+            'coin_id' => $coin->coin_id,
+            'wallet_id' => $coin->wallet_id,
+            'amount_usd' => 2
+        ]);
+        $deletedCoin = Coin::query()
+            ->where('coin_id', $coin->coin_id)
+            ->where('wallet_id', $coin->wallet_id)
+            ->first();
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertExactJson([200 => "Successful operation"]);
+        $this->assertEquals(null, $deletedCoin);
     }
 
     /**
@@ -65,12 +92,12 @@ class SellCoinControllerTest extends TestCase
         $amountUSD = 1;
 
         $response = $this->postJson('/api/coin/sell', [
-            $coinIdField => 'coinId',
-            'walletId' => $walletId,
-            'amountUSD' => $amountUSD
+            $coinIdField => 'coin_id',
+            'wallet_id' => $walletId,
+            'amount_usd' => $amountUSD
         ]);
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST)
-            ->assertExactJson([404 => "A coin with specified ID was not found"]);
+            ->assertExactJson([400 => "Bad request error"]);
     }
 }
