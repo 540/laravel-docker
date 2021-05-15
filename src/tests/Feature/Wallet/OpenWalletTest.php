@@ -19,11 +19,10 @@ use Prophecy\Prophet;
 class OpenWalletTest extends TestCase
 {
     use RefreshDatabase;
-    private $openWalletController;
+    private OpenWalletController $openWalletController;
 
     /**
      * @test
-     * Falta cambiarlos por las peticiones json
      **/
     public function getsHttpNotFoundWhenAInvalidUserIdIsReceived ()
     {

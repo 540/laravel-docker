@@ -1,42 +1,31 @@
 <?php
 
+
 namespace App\Services\EarlyAdopter;
 
-use App\DataSource\Database\EloquentUserDataSource;
-use Exception;
+
+use App\Infraestructure\Database\ElocuentUserRepository;
+use App\Services\ServiceManager;
+use Egulias\EmailValidator\Exception\ExpectingAT;
 
 class IsEarlyAdopterService
 {
-    /**
-     * @var EloquentUserDataSource
-     */
-    private $eloquentUserDataSource;
+    private $elocuentUserRepository;
 
-    /**
-     * IsEarlyAdopterService constructor.
-     * @param EloquentUserDataSource $eloquentUserDataSource
-     */
-    public function __construct(EloquentUserDataSource $eloquentUserDataSource)
-    {
-        $this->eloquentUserDataSource = $eloquentUserDataSource;
+    public function __constructor(ElocuentUserRepository $elocuentUserDataSource){
+        $this->elocuentUserRepository = $elocuentUserDataSource;
     }
 
-    /**
-     * @param string $email
-     * @return bool
-     * @throws Exception
-     */
-    public function execute(string $email): bool
-    {
+    public function execute(string $email){
 
-        $user = $this->eloquentUserDataSource->findByEmail($email);
-
+        $user = $this->elocuentUserRepository->findByEmail($email);
+        if($user == null){
+            throw new \Exception('User not found');
+        }
         $isEarlyAdopter = false;
-
-        if ($user->id < 1000) {
+        if($user->id < 1000){
             $isEarlyAdopter = true;
         }
-
         return $isEarlyAdopter;
     }
 }

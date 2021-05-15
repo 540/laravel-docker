@@ -1,7 +1,11 @@
 <?php
 
-use App\Http\Controllers\IsEarlyAdopterUserController;
+use App\Http\Controllers\GetUserController;
+use App\Http\Controllers\GetWalletBalanceController;
+use App\Http\Controllers\GetWalletCryptocurrenciesController;
+use App\Http\Controllers\OpenWalletController;
 use App\Http\Controllers\StatusController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,9 +28,22 @@ Route::get(
     StatusController::class
 );
 
-Route::get('user/{email}', IsEarlyAdopterUserController::class);
+Route::get(
+    '/user/{email}',
+    GetUserController::class
+);
 
 Route::post(
-    '/coin/buy',
-    'CoinBuyerController@coinbuy'
+    '/wallet/open',
+    'OpenWalletController@openWallet'
+);
+
+Route::get(
+    '/wallet/{wallet_id}',
+    [GetWalletCryptocurrenciesController::class, 'getWalletCryptocurrencies']
+);
+
+Route::get(
+    '/wallet/{wallet_id}/balance',
+    [GetWalletBalanceController::class, 'getWalletBalance']
 );

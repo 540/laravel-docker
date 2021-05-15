@@ -1,12 +1,11 @@
 <?php
 
-
 namespace Database\Factories;
 
 use App\Models\Coin;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class CoinFactory
+class CoinFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
@@ -23,13 +22,11 @@ class CoinFactory
     public function definition()
     {
         return [
-            'wallet_id' => 1,
-            'coin_id' => 90,
-            'name' => 'Bitcoin',
-            'symbol' => 'BTC',
-            'amount' => 0.63,
-            'value_usd' => 75
+            'coin_id' => rand(80, 100),
+            'name' => $this->faker->word,
+            'symbol' => $this->faker->currencyCode,
+            'amount' => 1,
+            'value_usd' => 1
         ];
     }
-
 }
