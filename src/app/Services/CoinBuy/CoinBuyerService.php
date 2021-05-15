@@ -43,7 +43,7 @@ class CoinBuyerService
             $coin = $this->eloquentCoinBuyerDataSource->findCoin($coin_id);
             $this->eloquentCoinBuyerDataSource->updateCoin($coin_id,$coin->amount+$coin->amount/$coinInfo["price_usd"],$coin->amount+$amount_usd);
         } catch (Exception $exception) {
-            $params = [$wallet_id,$coin_id,$coinInfo["name"],$coinInfo["name"],$amount_usd/$coinInfo["price_usd"] , $amount_usd];
+            $params = [$wallet_id,$coin_id,$coinInfo["name"],$coinInfo["name"],$amount_usd/$coinInfo["price_usd"],$amount_usd];
             $this->eloquentCoinBuyerDataSource->insertCoin($params);
         }
 

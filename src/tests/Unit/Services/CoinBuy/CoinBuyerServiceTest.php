@@ -1,20 +1,20 @@
 <?php
 
-namespace Tests\Unit\Services\WalletBalance;
+namespace Tests\Unit\Services\CoinBuy;
 
 use App\DataSource\API\CoinLoreApi;
 use App\DataSource\API\EloquentCoinDataSource;
+use App\DataSource\Database\EloquentCoinBuyerDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
 use App\Models\Coin;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Services\WalletBalance\GetWalletBalanceService;
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
-use Tests\TestCase;
 
-class GetWalletBalanceServiceTest extends TestCase
+class CoinBuyerServiceTest extends TestCase
 {
     use RefreshDatabase;
     private Prophet $prophet;
@@ -25,15 +25,32 @@ class GetWalletBalanceServiceTest extends TestCase
         $this->prophet = new Prophet();
     }
 
+    public function execute($coin_id,$wallet_id,$amount_usd): bool
+    {
+        //Que ocurre si se lanza una exception en el DS?
+        $this->eloquentCoinBuyerDataSource->findWallet($wallet_id);
+        //Si la exception pasa al Controller, todo funciona correctamente
+
+        $coinInfo = (new CoinLoreApi())->findCoinById($coin_id);
+        try {
+            $coin = $this->eloquentCoinBuyerDataSource->findCoin($coin_id);
+            $this->eloquentCoinBuyerDataSource->updateCoin($coin_id,$coin->amount+$coin->amount/$coinInfo["price_usd"],$coin->amount+$amount_usd);
+        } catch (Exception $exception) {
+            $params = [$wallet_id,$coin_id,$coinInfo["name"],$coinInfo["name"],$amount_usd/$coinInfo["price_usd"] , $amount_usd];
+            $this->eloquentCoinBuyerDataSource->insertCoin($params);
+        }
+
+        return true;
+    }
     /**
      * @test
      **/
-    public function noWalletIsFoundForAGivenWalletId()
+    public function coinIsFound ()
     {
         $walletId = 1;
 
-        $eloquentWalletDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
-        $eloquentWalletDataSource->findWalletById($walletId)->shouldBeCalledOnce()->willThrow(Exception::class);
+        $eloquentWalletDataSource = $this->prophet->prophesize(EloquentCoinBuyerDataSource::class);
+        $eloquentWalletDataSource->findWallet($walletId)->shouldBeCalledOnce()->willThrow(Exception::class);
 
         $eloquentCoinDataSource = $this->prophet->prophesize(EloquentCoinDataSource::class);
 
@@ -44,11 +61,10 @@ class GetWalletBalanceServiceTest extends TestCase
         $getWalletBalanceService->execute($walletId);
     }
 
-
     /**
      * @test
      **/
-    public function noCoinIsFoundForAGivenCoinId()
+    public function coinIsNotFound()
     {
         $user = User::factory(User::class)->create()->first();
 
@@ -117,4 +133,5 @@ class GetWalletBalanceServiceTest extends TestCase
 
         $this->assertEquals($expectedResult, $result);
     }
+
 }
