@@ -1,4 +1,4 @@
-#Crypto currency wallet API
+# Crypto currency wallet API
 
 **Based on <a href="https://github.com/540">540</a> / <a href="https://github.com/540/laravel-docker">laravel-docker</a> project.**
 
@@ -12,7 +12,7 @@
 
 ***
 
-##How to install the project
+## How to install the project
 The project must be mounted using docker:
 
 - Start docker daemon.
@@ -40,14 +40,14 @@ The project must be mounted using docker:
 - To stop de container:
   - docker-compose stop
 
-##How to colaborate with the project
-###Install the pre-commit:
+## How to colaborate with the project
+### Install the pre-commit:
 - From outside the machine:
   - Run: composer install
   - Run: cp git-hooks/pre-commit .git/hooks/pre-commit
   - Run: chmod +x .git/hooks/pre-commit
   
-###Commit rules:
+### Commit rules:
 - Commit syntax:
   - git commit -m "[] - \<your commit here>"
 - If there is a "PHPCS Failed in a File", run:
