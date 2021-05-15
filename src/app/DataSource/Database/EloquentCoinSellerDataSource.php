@@ -7,7 +7,7 @@ use App\Models\Wallet;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class EloquentCoinRepository
+class EloquentCoinSellerDataSource
 {
     public function findCoinById(string $coinId)
     {

@@ -2,7 +2,7 @@
 
 namespace Tests\Services\SellCoinService;
 
-use App\DataSource\Database\EloquentCoinRepository;
+use App\DataSource\Database\EloquentCoinSellerDataSource;
 use App\Models\Coin;
 use App\Services\SellCoinService\SellCoinService;
 use Exception;
@@ -30,9 +30,9 @@ class SellCoinServiceTest extends TestCase
         $coinId = "invalidCoinId";
         $walletId = "validWalletId";
         $amountUSD = 0;
-        $eloquentCoinRepository = $this->prophet->prophesize(EloquentCoinRepository::class);
-        $eloquentCoinRepository->findCoinById($coinId)->willThrow(Exception::class);
-        $sellCoinService = new SellCoinService($eloquentCoinRepository->reveal());
+        $eloquentCoinSellerDataSource = $this->prophet->prophesize(EloquentCoinSellerDataSource::class);
+        $eloquentCoinSellerDataSource->findCoinById($coinId)->willThrow(Exception::class);
+        $sellCoinService = new SellCoinService($eloquentCoinSellerDataSource->reveal());
 
         $this->expectException(Exception::class);
 
@@ -56,9 +56,9 @@ class SellCoinServiceTest extends TestCase
             'value_usd' => $coin->value_usd
         ]);
 
-        $eloquentCoinRepository = $this->prophet->prophesize(EloquentCoinRepository::class);
-        $eloquentCoinRepository->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn($coin);
-        $sellCoinService = new SellCoinService($eloquentCoinRepository->reveal());
+        $eloquentCoinSellerDataSource = $this->prophet->prophesize(EloquentCoinSellerDataSource::class);
+        $eloquentCoinSellerDataSource->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn($coin);
+        $sellCoinService = new SellCoinService($eloquentCoinSellerDataSource->reveal());
         $returnedCoin = $sellCoinService->execute($coin->coin_id, $coin->wallet_id, 1);
 
         $this->assertEquals($coin->coin_id, $returnedCoin->coin_id);

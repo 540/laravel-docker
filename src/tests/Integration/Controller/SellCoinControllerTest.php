@@ -18,12 +18,13 @@ class SellCoinControllerTest extends TestCase
 
     private $sellCoinService;
     private SellCoinController $sellCoinController;
+    private Prophet $prophet;
 
     protected function setUp():void
     {
         //parent::setUp();
-        $prophet = new Prophet;
-        $this->sellCoinService = $prophet->prophesize(SellCoinService::class);
+        $this->prophet = new Prophet;
+        $this->sellCoinService = $this->prophet->prophesize(SellCoinService::class);
         $this->sellCoinController = new SellCoinController($this->sellCoinService->reveal());
     }
 
@@ -47,7 +48,7 @@ class SellCoinControllerTest extends TestCase
 
         $response = $this->sellCoinController->sellCoin($request);
         $expectedResponse = response()->json([
-            'error' => "Error while selling coins"
+            404 => "A coin with specified ID was not found"
         ], Response::HTTP_NOT_FOUND);
 
         $this->assertEquals($expectedResponse, $response);
@@ -63,7 +64,7 @@ class SellCoinControllerTest extends TestCase
         $response = $this->post('/api/coin/sell');
 
         $response->assertStatus(Response::HTTP_OK)
-            ->assertExactJson(['error' => 'Successful operation']);
+            ->assertExactJson([200 => "Successful operation"]);
     }
 
     /**
@@ -87,7 +88,7 @@ class SellCoinControllerTest extends TestCase
         $response = $this->sellCoinController->sellCoin($request);
 
         $expectedResponse = response()->json([
-            'error' => "Error while selling coins"
+            400 => "Bad request error"
         ], Response::HTTP_BAD_REQUEST);
 
         $this->assertEquals($expectedResponse, $response);

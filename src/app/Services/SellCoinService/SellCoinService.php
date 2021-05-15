@@ -2,30 +2,30 @@
 
 namespace App\Services\SellCoinService;
 
-use App\DataSource\Database\EloquentCoinRepository;
+use App\DataSource\Database\EloquentCoinSellerDataSource;
 use Exception;
 
 class SellCoinService
 {
-    private EloquentCoinRepository $eloquentCoinRepository;
+    private EloquentCoinSellerDataSource $eloquentCoinSellerDataSource;
 
-    public function __construct(EloquentCoinRepository $eloquentCoinRepository)
+    public function __construct(EloquentCoinSellerDataSource $eloquentCoinSellerDataSource)
     {
-        $this->eloquentCoinRepository = $eloquentCoinRepository;
+        $this->eloquentCoinSellerDataSource = $eloquentCoinSellerDataSource;
     }
 
     public function execute(string $coinId, int $walletId, float $amountUSD)
     {
         try {
-            $coin = $this->eloquentCoinRepository->findCoinById($coinId);
+            $coin = $this->eloquentCoinSellerDataSource->findCoinById($coinId);
             $previousTotalCoinValueUSD = $coin->amount * $coin->valueUSD;
             if($previousTotalCoinValueUSD > $amountUSD) {
                 $newTotalCoinValueUSD = $previousTotalCoinValueUSD - $amountUSD;
                 $newCoinAmount = $newTotalCoinValueUSD / $coin->valueUSD;
-                $this->eloquentCoinRepository->sellCoinOperation($coin, $walletId, $newCoinAmount);
+                $this->eloquentCoinSellerDataSource->sellCoinOperation($coin, $walletId, $newCoinAmount);
             }
             elseif($previousTotalCoinValueUSD === $amountUSD) {
-                $this->eloquentCoinRepository->deleteCoin($coin->id);
+                $this->eloquentCoinSellerDataSource->deleteCoin($coin->id);
             }
             return $coin;
         }
