@@ -23,18 +23,18 @@ class EloquentCoinDataSource
 
     public function sellCoinOperation($coin, int $walletId, float $newCoinAmount)
     {
-        $affected = DB::table('coins')
+        $affectedRows = DB::table('coins')
             ->where('coin_id', $coin->coin_id)
             ->where('wallet_id', $walletId)
             ->update(['amount' => $newCoinAmount]);
-        if($affected === 0) {
+        if($affectedRows === 0) {
             throw new Exception("No coin sold");
         }
     }
 
     public function deleteCoin($id) {
-        $deleted = DB::table('coins')->where('id', $id)->delete();
-        if($deleted === 0) {
+        $deletedRows = DB::table('coins')->where('id', $id)->delete();
+        if($deletedRows === 0) {
             throw new Exception("No coin sold");
         }
     }
