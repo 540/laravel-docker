@@ -1,48 +1,53 @@
 <?php
 
-
 namespace App\Services\WalletBalance;
 
-
-use App\DataSource\API\EloquentCoinDataSource;
+use App\DataSource\API\CoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
-use App\Models\Wallet;
-use Exception;
-use Illuminate\Support\Facades\Http;
-use PHPUnit\Framework\ExpectationFailedException;
 
 class GetWalletBalanceService
 {
     private EloquentWalletDataSource $eloquentWalletDataSource;
-    private EloquentCoinDataSource $eloquentCoinDataSource;
+    private CoinDataSource $coinDataSource;
 
-    public function __construct(EloquentWalletDataSource $eloquentDataSource, EloquentCoinDataSource $eloquentCoinDataSource)
+    public function __construct(EloquentWalletDataSource $eloquentDataSource, CoinDataSource $coinDataSource)
     {
         $this->eloquentWalletDataSource = $eloquentDataSource;
-        $this->eloquentCoinDataSource = $eloquentCoinDataSource;
+        $this->coinDataSource = $coinDataSource;
     }
 
     public function execute($walletId):float
     {
         $wallet = $this->eloquentWalletDataSource->findWalletById($walletId);
+        return $this->getCoinsBalance($wallet->coins);
+    }
 
-        if($wallet == null){
-            throw new Exception('a wallet with the specified ID was not found.');
+    private function getCoinsBalance($coins):float
+    {
+        $balance = 0;
+        foreach ($coins as $coin)
+        {
+            $balance += $this->getCoinBalance($coin);
         }
+        return $balance;
+    }
 
-        $pastPrice = 0;
-        $actualPrice = 0;
+    private function getCoinBalance($coin):float
+    {
+        $pastCoinPrice = $this->getCoinPrice($coin->amount, $coin->value_usd);
+        $currentCoinValueUsd = $this->getCurrentCoinValueUsd($coin->coin_id);
+        $actualCoinPrice = $this->getCoinPrice($coin->amount, $currentCoinValueUsd);
 
-        foreach ($wallet->coins as $coin){
-            $pastPrice += $coin->amount * $coin->value_usd;
-            $actualCoin = $this->eloquentCoinDataSource->findCoinById($coin->coin_id);
-            if($actualCoin == null){
-                throw new Exception('a coin with the specified ID was no found.');
-            }
-            //;
-            $actualPrice += $coin->amount * $actualCoin['price_usd'];
-        }
+        return $actualCoinPrice - $pastCoinPrice;
+    }
 
-        return $actualPrice - $pastPrice;
+    private function getCoinPrice(float $amount, float $valueUsd):float
+    {
+        return $amount * $valueUsd;
+    }
+
+    private function getCurrentCoinValueUsd($coinId):float
+    {
+        return $this->coinDataSource->findCoinById($coinId)['price_usd'];
     }
 }

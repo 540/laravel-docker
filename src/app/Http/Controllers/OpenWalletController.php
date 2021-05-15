@@ -2,48 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\OpenWalletService\OpenWalletService;
-use App\Services\ServiceManager;
+use App\Errors\Errors;
+use App\Services\OpenWallet\OpenWalletService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Scalar\String_;
 
 class OpenWalletController extends BaseController
 {
-    private const ERRORS = [
-        'USER_NOT_FOUND_ERROR' => "user not found",
-        'USER_ID_FIELD_NOT_FOUND_ERROR' => "user id field not found",
-        'ERROR_FIELD' => "error",
-        'ERROR_MESSAGE' => "Error while creating the wallet"
-    ];
-
     private OpenWalletService $openWalletService;
 
-    public function __construct(OpenWalletService $serviceManager){
+    public function __construct(OpenWalletService $serviceManager)
+    {
         $this->openWalletService = $serviceManager;
     }
 
     public function openWallet(Request $request): JsonResponse
     {
-        if ($request->has("userId") === false) {
+        if ($request->has("user_id") === false)
+        {
             return response()->json([
-                self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
+                Errors::ERROR_FIELD => Errors::BAD_REQUEST
             ],Response::HTTP_BAD_REQUEST);
         }
-        try {
-            $walletId = $this->openWalletService->execute($request->get("userId"));
+        try
+        {
+            $walletId = $this->openWalletService->execute($request->get("user_id"));
             return response()->json([
-                'walletId' => $walletId
+                'wallet_id' => $walletId
             ],Response::HTTP_OK);
-        } catch (Exception $exception) {
+        } catch (Exception $exception)
+        {
             return response()->json([
-                self::ERRORS['ERROR_FIELD'] => self::ERRORS['ERROR_MESSAGE']
-            ],Response::HTTP_NOT_FOUND);
+                Errors::ERROR_FIELD => $exception->getMessage()
+            ],Response::HTTP_NOT_ACCEPTABLE);
         }
     }
-
 }

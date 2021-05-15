@@ -2,28 +2,24 @@
 
 namespace Tests\Unit\Services\OpenWalletService;
 
-use App\Http\Controllers\OpenWalletController;
-use App\Infraestructure\Database\DatabaseManager;
-use App\Models\Wallet;
-use App\Services\OpenWalletService\OpenWalletService;
-use App\Services\ServiceManager;
+use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\WalletAlreadyExistsForUserException;
+use App\Services\OpenWallet\OpenWalletService;
 use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
 
 class OpenWalletServiceTest extends TestCase
 {
-    private $databaseManager;
+    private $eloquentWalletDataSource;
     private OpenWalletService $openWalletService;
 
     protected function setUp():void
     {
         parent::setUp();
         $prophet = new Prophet;
-        $this->databaseManager = $prophet->prophesize(DatabaseManager::class);
-        $this->openWalletService = new OpenWalletService($this->databaseManager->reveal());
+        $this->eloquentWalletDataSource = $prophet->prophesize(EloquentWalletDataSource::class);
+        $this->openWalletService = new OpenWalletService($this->eloquentWalletDataSource->reveal());
     }
 
     /**
@@ -31,19 +27,15 @@ class OpenWalletServiceTest extends TestCase
      *
      * @throws Exception
      */
-    public function getsErrorWhenAUserDoesNotExist ()
+    public function walletIsNotOpenedGivenAnInvalidUserId ()
     {
-        $userId = "invalidUserId";
-        $request = Request::create('/wallet/open', 'POST',[
-            'userId' => $userId
-        ]);
+        $userId = 'invalid_id';
 
-        $this->expectException(Exception::class);
+        $this->eloquentWalletDataSource->createWalletByUserId($userId)->shouldBeCalledOnce()->willThrow(WalletAlreadyExistsForUserException::class);
 
-        $this->databaseManager->set("userId", $userId)->willThrow(new Exception("Error"));
+        $this->expectException(WalletAlreadyExistsForUserException::class);
 
         $this->openWalletService->execute($userId);
-
     }
 
     /**
@@ -51,20 +43,16 @@ class OpenWalletServiceTest extends TestCase
      *
      * @throws Exception
      */
-    public function getsSuccessfulOperationWhenUserIdIsFound ()
+    public function walletIsOpenedGivenAValidUserId ()
     {
-        $userId = "validUserId";
-        $request = Request::create('/wallet/open', 'POST',[
-            'userId' => $userId
-        ]);
+        $userId = 'validUserId';
+        $walletId = 1;
 
-        $walletId = "validWalletId";
-        $wallet = new Wallet($userId, $walletId);
-        $this->databaseManager->set("userId", $userId)->willReturn($wallet);
+        $this->eloquentWalletDataSource->createWalletByUserId($userId)->shouldBeCalledOnce()->willReturn($walletId);
 
-        $response = $this->openWalletService->execute($userId);
+        $result = $this->openWalletService->execute($userId);
 
-        $this->assertEquals($walletId, $response);
+        $this->assertEquals($walletId, $result);
     }
 
 }
