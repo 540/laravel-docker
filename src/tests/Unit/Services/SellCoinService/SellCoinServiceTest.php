@@ -2,7 +2,7 @@
 
 namespace Tests\Services\SellCoinService;
 
-use App\DataSource\Database\EloquentCoinSellerDataSource;
+use App\DataSource\Database\EloquentCoinDataSource;
 use App\Models\Coin;
 use App\Services\SellCoinService\SellCoinService;
 use Exception;
@@ -31,43 +31,15 @@ class SellCoinServiceTest extends TestCase
         $coinId = "invalidCoinId";
         $walletId = 1;
         $amountUSD = 0;
-        $eloquentCoinSellerDataSource = $this->prophet->prophesize(EloquentCoinSellerDataSource::class);
-        $eloquentCoinSellerDataSource->findCoinById($coinId, $walletId)
+        $eloquentCoinDataSource = $this->prophet
+            ->prophesize(EloquentCoinDataSource::class);
+        $eloquentCoinDataSource->findCoinById($coinId, $walletId)
             ->willThrow(Exception::class);
-        $sellCoinService = new SellCoinService($eloquentCoinSellerDataSource->reveal());
+        $sellCoinService = new SellCoinService($eloquentCoinDataSource->reveal());
 
         $this->expectException(Exception::class);
 
         $sellCoinService->execute($coinId, $walletId, $amountUSD);
-    }
-
-    /**
-     * @test
-     */
-    public function coinIsFoundIfCoinIdIsCorrect()
-    {
-        $coin = Coin::factory()->create()->first();
-        $expectedCoin = [];
-        array_push($expectedCoin, [
-            'wallet_id' => $coin->wallet_id,
-            'coin_id' => $coin->coin_id,
-            'name' => $coin->name,
-            'symbol' => $coin->symbol,
-            'amount' => $coin->amount,
-            'value_usd' => $coin->value_usd
-        ]);
-
-        $eloquentCoinSellerDataSource = $this->prophet
-            ->prophesize(EloquentCoinSellerDataSource::class);
-        $eloquentCoinSellerDataSource
-            ->findCoinById($coin->coin_id, $coin->wallet_id)
-            ->shouldBeCalledOnce()
-            ->willReturn($coin);
-        $sellCoinService = new SellCoinService($eloquentCoinSellerDataSource->reveal());
-
-        $returnedCoin = $sellCoinService->execute($coin->coin_id, $coin->wallet_id, 1);
-
-        $this->assertEquals($coin->coin_id, $returnedCoin->coin_id);
     }
 
     /**
@@ -89,17 +61,17 @@ class SellCoinServiceTest extends TestCase
         $amountUSD = 1;
         $newCoinAmount = 1;
 
-        $eloquentCoinSellerDataSource = $this->prophet
-            ->prophesize(EloquentCoinSellerDataSource::class);
-        $eloquentCoinSellerDataSource
+        $eloquentCoinDataSource = $this->prophet
+            ->prophesize(EloquentCoinDataSource::class);
+        $eloquentCoinDataSource
             ->findCoinById($coin->coin_id, $coin->wallet_id)
             ->shouldBeCalledOnce()
             ->willReturn($coin);
-        $eloquentCoinSellerDataSource
+        $eloquentCoinDataSource
             ->sellCoinOperation($coin, $coin->wallet_id, $newCoinAmount)
             ->shouldBeCalledOnce()
             ->willThrow(Exception::class);
-        $sellCoinService = new SellCoinService($eloquentCoinSellerDataSource->reveal());
+        $sellCoinService = new SellCoinService($eloquentCoinDataSource->reveal());
         $this->expectException(Exception::class);
 
         $sellCoinService->execute($coin->coin_id, $coin->wallet_id, $amountUSD);
@@ -123,13 +95,13 @@ class SellCoinServiceTest extends TestCase
         $newCoinAmount = 1;
         $expectedAmount = 1;
 
-        $eloquentCoinSellerDataSource = $this->prophet
-            ->prophesize(EloquentCoinSellerDataSource::class);
-        $eloquentCoinSellerDataSource
+        $eloquentCoinDataSource = $this->prophet
+            ->prophesize(EloquentCoinDataSource::class);
+        $eloquentCoinDataSource
             ->findCoinById($coin->coin_id, $coin->wallet_id)
             ->shouldBeCalledOnce()
             ->willReturn($coin);
-        $eloquentCoinSellerDataSource
+        $eloquentCoinDataSource
             ->sellCoinOperation($coin, $coin->wallet_id, $newCoinAmount)
             ->shouldBeCalledOnce()
             ->will(function () use ($coin, $newCoinAmount) {
@@ -138,12 +110,12 @@ class SellCoinServiceTest extends TestCase
                     ->where('wallet_id', $coin->wallet_id)
                     ->update(['amount' => $newCoinAmount]);
             });
-        $sellCoinService = new SellCoinService($eloquentCoinSellerDataSource->reveal());
+        $sellCoinService = new SellCoinService($eloquentCoinDataSource->reveal());
 
         $sellCoinService->execute($coin->coin_id, $coin->wallet_id, 1);
-        $updatedCoin = DB::table('coins')->where('id', $coin->id)->first();
+        $updatedSoldCoin = DB::table('coins')->where('id', $coin->id)->first();
 
-        $this->assertEquals($expectedAmount, $updatedCoin->amount);
+        $this->assertEquals($expectedAmount, $updatedSoldCoin->amount);
     }
 
     /**
@@ -164,17 +136,17 @@ class SellCoinServiceTest extends TestCase
         ]);
         $amountUSD = 2;
 
-        $eloquentCoinSellerDataSource = $this->prophet
-            ->prophesize(EloquentCoinSellerDataSource::class);
-        $eloquentCoinSellerDataSource
+        $eloquentCoinDataSource = $this->prophet
+            ->prophesize(EloquentCoinDataSource::class);
+        $eloquentCoinDataSource
             ->findCoinById($coin->coin_id, $coin->wallet_id)
             ->shouldBeCalledOnce()
             ->willReturn($coin);
-        $eloquentCoinSellerDataSource
+        $eloquentCoinDataSource
             ->deleteCoin($coin)
             ->shouldBeCalledOnce()
             ->willThrow(Exception::class);
-        $sellCoinService = new SellCoinService($eloquentCoinSellerDataSource->reveal());
+        $sellCoinService = new SellCoinService($eloquentCoinDataSource->reveal());
         $this->expectException(Exception::class);
 
         $sellCoinService->execute($coin->coin_id, $coin->wallet_id, $amountUSD);
@@ -197,24 +169,24 @@ class SellCoinServiceTest extends TestCase
         ]);
         $amountUSD = 2;
 
-        $eloquentCoinSellerDataSource = $this->prophet
-            ->prophesize(EloquentCoinSellerDataSource::class);
-        $eloquentCoinSellerDataSource
+        $eloquentCoinDataSource = $this->prophet
+            ->prophesize(EloquentCoinDataSource::class);
+        $eloquentCoinDataSource
             ->findCoinById($coin->coin_id, $coin->wallet_id)
             ->shouldBeCalledOnce()
             ->willReturn($coin);
-        $eloquentCoinSellerDataSource
+        $eloquentCoinDataSource
             ->deleteCoin($coin->id)
             ->shouldBeCalledOnce()
             ->will(function () use ($coin) {
                 DB::table('coins')->where('id', $coin->id)->delete();
             });
-        $sellCoinService = new SellCoinService($eloquentCoinSellerDataSource->reveal());
+        $sellCoinService = new SellCoinService($eloquentCoinDataSource->reveal());
 
         $sellCoinService->execute($coin->coin_id, $coin->wallet_id, $amountUSD);
 
-        $deletedCoin = DB::table('coins')->where('id', $coin->id)->first();
+        $deletedSoldCoin = DB::table('coins')->where('id', $coin->id)->first();
 
-        $this->assertNull($deletedCoin);
+        $this->assertNull($deletedSoldCoin);
     }
 }

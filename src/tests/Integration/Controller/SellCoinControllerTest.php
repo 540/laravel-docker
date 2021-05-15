@@ -21,7 +21,7 @@ class SellCoinControllerTest extends TestCase
     /**
      * @test
      */
-    public function getsHttpNotFoundWhenInvalidCoinIdIsReceived()
+    public function getsHttpNotFoundForInvalidCoinId()
     {
         $coinId = "invalidCoinId";
         $walletId = 1;
@@ -40,7 +40,7 @@ class SellCoinControllerTest extends TestCase
     /**
      * @test
      */
-    public function sellsOneOfMoreCoinsForGivenId()
+    public function sellsPartOfTheCoinsForGivenCoinId()
     {
         $coin = Coin::factory(Coin::class)->create()->first();
 
@@ -62,7 +62,7 @@ class SellCoinControllerTest extends TestCase
     /**
      * @test
      */
-    public function sellsEveryCoinForGivenId()
+    public function sellsEveryCoinForGivenCoinId()
     {
         $coin = Coin::factory(Coin::class)->create()->first();
 
@@ -85,7 +85,7 @@ class SellCoinControllerTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function getsHttpBadRequestWhenCoinIdFieldIsNotFound()
+    public function getsHttpBadRequestIfCoinIdFieldIsNotFound()
     {
         $coinIdField = "";
         $walletId = 1;

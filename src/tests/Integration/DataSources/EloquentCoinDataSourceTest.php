@@ -2,13 +2,13 @@
 
 namespace Tests\Integration\DataSources;
 
-use App\DataSource\Database\EloquentCoinSellerDataSource;
+use App\DataSource\Database\EloquentCoinDataSource;
 use App\Models\Coin;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class EloquentCoinSellerDataSourceTest extends TestCase
+class EloquentCoinDataSourceTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -17,11 +17,11 @@ class EloquentCoinSellerDataSourceTest extends TestCase
      */
     public function doesNotFindCoinIfCoinIdIsIncorrect() {
         Coin::factory(Coin::class)->create();
-        $eloquentUserDataSource = new EloquentCoinSellerDataSource();
+        $eloquentCoinDataSource = new EloquentCoinDataSource();
 
         $this->expectException(Exception::class);
 
-        $coin = $eloquentUserDataSource->findCoinById('1', 1);
+        $coin = $eloquentCoinDataSource->findCoinById('1', 1);
     }
 
     /**
@@ -30,9 +30,9 @@ class EloquentCoinSellerDataSourceTest extends TestCase
      */
     public function findsCoinIfCoinIdIsCorrect() {
         Coin::factory(Coin::class)->create();
-        $eloquentUserDataSource = new EloquentCoinSellerDataSource();
+        $eloquentCoinDataSource = new EloquentCoinDataSource();
 
-        $coin = $eloquentUserDataSource->findCoinById('btc', 1);
+        $coin = $eloquentCoinDataSource->findCoinById('btc', 1);
 
         $this->assertInstanceOf(Coin::class, $coin);
     }
@@ -42,11 +42,11 @@ class EloquentCoinSellerDataSourceTest extends TestCase
      */
     public function doesNotSellCoinIfCoinIdIsIncorrect() {
         Coin::factory(Coin::class)->create();
-        $eloquentUserDataSource = new EloquentCoinSellerDataSource();
+        $eloquentCoinDataSource = new EloquentCoinDataSource();
 
         $this->expectException(Exception::class);
 
-        $eloquentUserDataSource->sellCoinOperation('1', 1, 0);
+        $eloquentCoinDataSource->sellCoinOperation('1', 1, 0);
     }
 
     /**
@@ -55,9 +55,9 @@ class EloquentCoinSellerDataSourceTest extends TestCase
      */
     public function sellsCoinIfCoinIdIsCorrect() {
         $coin = Coin::factory(Coin::class)->create()->first();
-        $eloquentUserDataSource = new EloquentCoinSellerDataSource();
+        $eloquentCoinDataSource = new EloquentCoinDataSource();
 
-        $eloquentUserDataSource->sellCoinOperation($coin, 1, 1);
+        $eloquentCoinDataSource->sellCoinOperation($coin, 1, 1);
         $coin = Coin::query()
             ->where('coin_id', $coin->coin_id)
             ->where('wallet_id', $coin->wallet_id)
@@ -73,11 +73,11 @@ class EloquentCoinSellerDataSourceTest extends TestCase
      */
     public function doesNotDeleteCoinIfCoinIdIsIncorrect() {
         Coin::factory(Coin::class)->create();
-        $eloquentUserDataSource = new EloquentCoinSellerDataSource();
+        $eloquentCoinDataSource = new EloquentCoinDataSource();
 
         $this->expectException(Exception::class);
 
-        $eloquentUserDataSource->deleteCoin('invalidId');
+        $eloquentCoinDataSource->deleteCoin('invalidId');
     }
 
     /**
@@ -86,9 +86,9 @@ class EloquentCoinSellerDataSourceTest extends TestCase
      */
     public function deletesCoinIfCoinIdIsCorrect() {
         $coin = Coin::factory(Coin::class)->create()->first();
-        $eloquentUserDataSource = new EloquentCoinSellerDataSource();
+        $eloquentCoinDataSource = new EloquentCoinDataSource();
 
-        $eloquentUserDataSource->deleteCoin(1);
+        $eloquentCoinDataSource->deleteCoin(1);
         $coin = Coin::query()
             ->where('coin_id', $coin->coin_id)
             ->where('wallet_id', $coin->wallet_id)

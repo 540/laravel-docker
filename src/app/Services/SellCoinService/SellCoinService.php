@@ -2,14 +2,14 @@
 
 namespace App\Services\SellCoinService;
 
-use App\DataSource\Database\EloquentCoinSellerDataSource;
+use App\DataSource\Database\EloquentCoinDataSource;
 use Exception;
 
 class SellCoinService
 {
-    private EloquentCoinSellerDataSource $eloquentCoinSellerDataSource;
+    private EloquentCoinDataSource $eloquentCoinSellerDataSource;
 
-    public function __construct(EloquentCoinSellerDataSource $eloquentCoinSellerDataSource)
+    public function __construct(EloquentCoinDataSource $eloquentCoinSellerDataSource)
     {
         $this->eloquentCoinSellerDataSource = $eloquentCoinSellerDataSource;
     }
@@ -26,6 +26,5 @@ class SellCoinService
         elseif($previousTotalCoinValueUSD === $amountUSD) {
             $this->eloquentCoinSellerDataSource->deleteCoin($coin->id);
         }
-        return $coin;
     }
 }
