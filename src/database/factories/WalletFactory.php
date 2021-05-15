@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,9 +22,6 @@ class WalletFactory extends Factory
      */
     public function definition()
     {
-        return [
-            'id' => 1,
-            'user_id' => 1,
-        ];
+        return [];
     }
 }

@@ -13,4 +13,8 @@ class User extends Model
     use HasFactory;
 
     protected $fillable = ['id', 'name', 'email'];
+
+    public function wallet(){
+        return $this->hasOne(Wallet::class);
+    }
 }
