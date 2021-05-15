@@ -34,11 +34,9 @@ class CoinBuyerService
      */
     public function execute($coin_id,$wallet_id,$amount_usd): bool
     {
-
-        $wallet = $this->eloquentCoinBuyerDataSource->findWallet($wallet_id);
-        if ($wallet != null) {
-            throw new Exception("Error, wallet no encontrado");
-        }
+        //Que ocurre si se lanza una exception en el DS?
+        $this->eloquentCoinBuyerDataSource->findWallet($wallet_id);
+        //Si la exception pasa al Controller, todo funciona correctamente
 
         $coinInfo = (new CoinLoreApi())->findCoinById($coin_id);
         try {

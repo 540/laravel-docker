@@ -9,6 +9,9 @@ use Illuminate\Http\Response;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
+use App\Services\WalletBalance\GetWalletBalanceService;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Http;
 
 
 class coinBuyerController extends BaseController {
@@ -23,18 +26,19 @@ class coinBuyerController extends BaseController {
         $this->coinBuyerService = $coinBuyerService;
     }
 
-    public function buyCoin ($request) : jsonResponse
+
+    public function buyCoin ($request) : JsonResponse
     {
         if (($request->has('coin_id') === false) || ($request->has('wallet_id') === false) || ($request->has('amount_usd') === false)) {
             return response()->json([
-                'error' => 'bad request error'
+                'error' => 'wrong field'
             ], Response::HTTP_BAD_REQUEST);
         }
 
         try {
             $this->coinBuyerService->execute($request->input('coin_id'),$request->input('wallet_id'),$request->input('amount_id'));
             return response()->json([
-                'ok' => 'success operation'
+                'bought' => 'success operation'
             ], Response::HTTP_OK);
 
         } catch (Exception $exception) {

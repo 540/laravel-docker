@@ -7,16 +7,20 @@ namespace App\DataSource\Database;
 use App\Models\Coin;
 use App\Models\User;
 use App\Models\Wallet;
+use Exception;
 use phpDocumentor\Reflection\Types\Boolean;
 
 
 class EloquentCoinBuyerDataSource
 {
+    /**
+     * @throws Exception
+     */
     public function findWallet($walletId): Boolean
     {
         $id = Wallet::query()->where('id', $walletId)->first();
         if (is_null($id)) {
-            throw new Exception('Wallet not found');
+            throw new Exception('wallet not found');
         }
         return true;
     }
@@ -25,7 +29,7 @@ class EloquentCoinBuyerDataSource
     {
         $coin = Coin::query()->where('coin_id', $coinId)->first();
         if (is_null($coin)) {
-            throw new Exception('Coin not found');
+            throw new Exception('coin not found');
         }
         return $coin;
     }

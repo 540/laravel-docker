@@ -2,6 +2,8 @@
 
 namespace Tests\Integration\Controller;
 
+use App\Models\Coin;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use App\DataSource\Database\EloquentCoinBuyerDataSource;
 use App\Http\Controllers\coinBuyerController;
@@ -14,19 +16,16 @@ use PHPUnit\Framework\TestCase;
 
 class CoinBuyerControllerTest extends TestCase
 {
+
+    use RefreshDatabase;
     private $coinBuyerController;
 
     /**
      * @test
      * Falta cambiarlos por las peticiones json
      **/
-    public function getsHttpNotFoundWhenAInvalidWalletIdIsReceived ()
+    public function getsHttpBadRequestWhenAInvalidRequestFieldIsReceived ()
     {
-        $this->coinBuyerController = new CoinBuyerController(new CoinBuyerService(new EloquentCoinBuyerDataSource()));
-
-        $response = response()->json([
-            'ok' => 'success operation'
-        ], Response::HTTP_OK);
 
         $request = Request::create('/wallet/buy', 'POST',[
             'coin' => 1,
@@ -34,29 +33,26 @@ class CoinBuyerControllerTest extends TestCase
             'amount_usd' => 50
         ]);
 
-        $response = $this->coinBuyerController->buyCoin($request);
+        $response = $this->get($request);
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertJson(['error' => 'wrong field']);
+
     }
 
     /**
      * @test
      **/
-    public function getsHttpBadRequestWhenAnInvalidFieldIsReceived ()
+    public function getsHttpNotFoundWhenWalletWasNotFound ()
     {
-        $this->coinBuyerController = new CoinBuyerController(new CoinBuyerService(new EloquentCoinBuyerDataSource()));
-
-        Wallet::factory(Wallet::class)->create();
-
         $request = Request::create('/wallet/buy', 'POST',[
             'coin_id' => 1,
             'wallet_id' => 0,
             'amount_usd' => 50
         ]);
 
-        $response = $this->coinBuyerController->buyCoin($request);
+        $response = $this->get($request);
 
-        $this->assertEquals(404, $response->getStatusCode());
+        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson(['error' => 'wrong field']);
     }
 
     /**
@@ -64,10 +60,10 @@ class CoinBuyerControllerTest extends TestCase
      **/
     public function getsSuccessfulOperationWhenWalletAndCoinAreFound ()
     {
-        $this->coinBuyerController = new CoinBuyerController(new CoinBuyerService(new EloquentCoinBuyerDataSource()));
 
-        Wallet::factory(Wallet::class)->create();
-        Coin::factory(Wallet::class)->create();
+        $wallet = Wallet::factory()->make();
+        $coins = Coin::factory(Coin::class)->make();
+        $wallet->coins()->save($coins);
 
         $request = Request::create('/wallet/buy', 'POST',[
             'coin_id' => 1,
@@ -75,9 +71,9 @@ class CoinBuyerControllerTest extends TestCase
             'amount_usd' => 50
         ]);
 
-        $response = $this->coinBuyerController->buyCoin($request);
+        $response = $this->get($request);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $response->assertStatus(Response::HTTP_OK)->assertJson(['bought' => 'success operation']);
     }
 
     /**
@@ -85,19 +81,20 @@ class CoinBuyerControllerTest extends TestCase
      **/
     public function getsSuccessfulOperationWhenWalletIsFoundButNotCoin ()
     {
-        $this->coinBuyerController = new CoinBuyerController(new CoinBuyerService(new EloquentCoinBuyerDataSource()));
+        //Se instancia wallet pero no coin
+        $wallet = Wallet::factory()->make();
 
-        Wallet::factory(Wallet::class)->create();
+        //Como hacer el get para hacer un getteo de un walletId Existente
 
         $request = Request::create('/wallet/buy', 'POST',[
-            'coin_id' => 1,
-            'wallet_id' => 1,
+            'coin_id' => 90,
+            'wallet_id' => $wallet->get('id'),
             'amount_usd' => 50
         ]);
 
-        $response = $this->coinBuyerController->buyCoin($request);
+        $response = $this->get($request);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $response->assertStatus(Response::HTTP_OK)->assertJson(['bought' => 'success operation']);
     }
 
 

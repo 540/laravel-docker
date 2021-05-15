@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Event;
 use Prophecy\Prophet;
 use Tests\TestCase;
 
-class OpenWalletControllerTest extends TestCase
+class sOpenWalletControllerTest extends TestCase
 {
     private $openWalletService;
     private OpenWalletController $openWalletController;
