@@ -85,7 +85,7 @@ class EloquentWalletCoinDataSourceTest extends TestCase
                 '100'
             );
         } catch (Exception $exception) {
-            $this->fail();
+            $this->fail("Failure by exception catch! - " . $exception->getMessage());
         }
 
         $this->assertTrue(true);
@@ -108,9 +108,10 @@ class EloquentWalletCoinDataSourceTest extends TestCase
             );
         } catch (Exception $exception) {
             $this->assertEquals('Insufficient amount to sell', $exception->getMessage());
+            return;
         }
 
-        $this->assertTrue(true);
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -129,7 +130,7 @@ class EloquentWalletCoinDataSourceTest extends TestCase
                 '100'
             );
         } catch (Exception $exception) {
-            $this->fail();
+            $this->fail("Failure by exception catch! - " . $exception->getMessage());
         }
 
         $this->assertTrue(true);

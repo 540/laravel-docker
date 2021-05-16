@@ -87,7 +87,7 @@ class CoinServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -126,7 +126,7 @@ class CoinServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -165,7 +165,7 @@ class CoinServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -243,7 +243,7 @@ class CoinServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -282,7 +282,7 @@ class CoinServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -321,7 +321,7 @@ class CoinServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
