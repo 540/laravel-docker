@@ -77,7 +77,7 @@ class WalletServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -118,7 +118,7 @@ class WalletServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -205,7 +205,7 @@ class WalletServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -251,7 +251,7 @@ class WalletServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -297,7 +297,7 @@ class WalletServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
@@ -372,7 +372,7 @@ class WalletServiceTest extends TestCase
             $this->assertEquals($expectedResult, $exception->getMessage());
             return;
         }
-        $this->fail();
+        $this->fail('Exception not catch!');
     }
 
     /**
