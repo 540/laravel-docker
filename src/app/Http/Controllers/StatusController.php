@@ -25,7 +25,7 @@ class StatusController extends BaseController
             );
         }
         return response()->json(
-            ['status' => 'Success', 'message' => 'Systems are up and running',],
+            ['status' => 'Success', 'message' => 'Systems are up and running'],
             Response::HTTP_OK
         );
     }

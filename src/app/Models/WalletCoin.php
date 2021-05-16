@@ -9,5 +9,7 @@ class WalletCoin extends Model
 {
     use HasFactory;
 
+    protected $table = 'walletscoins';
     protected $fillable = ['wallet_id', 'coin_id', 'amount'];
+    public $timestamps = false;
 }

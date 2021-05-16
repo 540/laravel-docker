@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\CoinController;
-use App\Http\Controllers\IsEarlyAdopterUserController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
@@ -49,9 +48,4 @@ Route::post(
 Route::post(
     '/coin/sell',
     [CoinController::class, 'sell']
-);
-
-Route::get( //DEMO IKER
-    'user/{email}',
-    IsEarlyAdopterUserController::class
 );

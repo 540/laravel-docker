@@ -2,7 +2,7 @@
 
 namespace Tests\Integration\DataSources;
 
-use App\DataSource\Database\EloquentUserDataSource;
+use App\DataSource\Database\EloquentCoinDataSource;
 use App\Models\Coin;
 use App\Models\User;
 use App\Models\Wallet;
@@ -11,7 +11,7 @@ use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class EloquentUserDataSourceTest extends TestCase
+class EloquentCoinDataSourceTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -31,13 +31,13 @@ class EloquentUserDataSourceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function notExistsByUserId()
+    public function notExistsByCoinId()
     {
         $expectedResult = false;
 
-        $eloquentUserDataSource = new EloquentUserDataSource();
+        $eloquentCoinDataSource = new EloquentCoinDataSource();
 
-        $result = $eloquentUserDataSource->existsByUserId('error-user');
+        $result = $eloquentCoinDataSource->existsByCoinId('error-coin');
         $this->assertEquals($expectedResult, $result);
     }
 
@@ -45,13 +45,13 @@ class EloquentUserDataSourceTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function existsByUserId()
+    public function existsByCoinId()
     {
         $expectedResult = true;
 
-        $eloquentUserDataSource = new EloquentUserDataSource();
+        $eloquentCoinDataSource = new EloquentCoinDataSource();
 
-        $result = $eloquentUserDataSource->existsByUserId('factory-user');
+        $result = $eloquentCoinDataSource->existsByCoinId('2');
         $this->assertEquals($expectedResult, $result);
     }
 }
