@@ -2,57 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Coin\CoinService;
+use App\Services\Coin\PostCoinSellService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
-use function PHPUnit\Framework\isNull;
 
-class CoinController extends BaseController
+class PostCoinSellController extends BaseController
 {
     /**
-     * @var coinService
+     * @var postCoinSellService
      */
-    private CoinService $coinService;
+    private PostCoinSellService $postCoinSellService;
 
     /**
-     * WalletController constructor.
-     * @param CoinService $coinService
+     * PostCoinSellController constructor.
+     * @param PostCoinSellService $postCoinSellService
      */
-    public function __construct(CoinService $coinService)
+    public function __construct(PostCoinSellService $postCoinSellService)
     {
-        $this->coinService = $coinService;
+        $this->postCoinSellService = $postCoinSellService;
     }
 
-    public function buy(Request $request)
-    {
-        try {
-            $coinId = $request->coin_id;
-            $walletId = $request->wallet_id;
-            $amountUsd = $request->amount_usd;
-            if (($coinId && $walletId && $amountUsd) == null && $amountUsd !== 0) {
-                throw new Exception('Insufficient arguments in the POST');
-            }
-            if ($amountUsd < 0.01) {
-                throw new Exception('Insufficient amount to buy');
-            }
-
-            $this->coinService->executeBuy($coinId, $walletId, $amountUsd);
-        } catch (Exception $exception) {
-            return $this->exceptionHandler($exception);
-        }
-
-        return response()->json(
-            [
-                'status' => 'Successful operation', 'message' => 'The buy has been successfully completed'
-            ],
-            Response::HTTP_OK
-        );
-    }
-
-    public function sell(Request $request)
+    public function __invoke(Request $request)
     {
         try {
             $coinId = $request->coin_id;
@@ -65,7 +38,7 @@ class CoinController extends BaseController
                 throw new Exception('Insufficient amount to sell');
             }
 
-            $this->coinService->executeSell($coinId, $walletId, $amountUsd);
+            $this->postCoinSellService->execute($coinId, $walletId, $amountUsd);
         } catch (Exception $exception) {
             return $this->exceptionHandler($exception);
         }

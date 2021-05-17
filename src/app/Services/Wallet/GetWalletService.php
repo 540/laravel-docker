@@ -2,36 +2,30 @@
 
 namespace App\Services\Wallet;
 
-use App\DataSource\Database\EloquentUserDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
 use App\DataSource\External\CoinLoreDataSource;
 use Exception;
 
-class WalletService
+class GetWalletService
 {
     /**
      * @var EloquentWalletDataSource
-     * @var EloquentUserDataSource
      * @var CoinLoreDataSource
      */
     private EloquentWalletDataSource $eloquentWalletRepository;
-    private EloquentUserDataSource $eloquentUserRepository;
     private CoinLoreDataSource $coinLoreRepository;
 
     /**
-     * WalletService constructor.
+     * GetWalletService constructor.
      * @param EloquentWalletDataSource $eloquentWalletRepository
-     * @param EloquentUserDataSource $eloquentUserRepository
      * @param CoinLoreDataSource $coinLoreRepository
      */
     public function __construct(
         EloquentWalletDataSource $eloquentWalletRepository,
-        EloquentUserDataSource $eloquentUserRepository,
         CoinLoreDataSource $coinLoreRepository
     ) {
         $this->eloquentWalletRepository = $eloquentWalletRepository;
         $this->coinLoreRepository = $coinLoreRepository;
-        $this->eloquentUserRepository = $eloquentUserRepository;
     }
 
     /**
@@ -65,43 +59,5 @@ class WalletService
         }
 
         return $wallet;
-    }
-
-    /**
-     * @param string $wallet_id
-     * @return float
-     * @throws Exception
-     */
-    public function executeBalance(string $wallet_id): float
-    {
-        try {
-            $wallet = $this->execute($wallet_id);
-        } catch (Exception $exception) {
-            throw $exception;
-        }
-
-        $balanceUsd = $this->eloquentWalletRepository->getBalanceUsdByWalletId($wallet_id);
-        if (is_null($balanceUsd)) {
-            throw new Exception('Wallet balance not found');
-        }
-        for ($i = 0; $i < count($wallet); $i++) {
-            $balanceUsd += $wallet[$i]['value_usd'];
-        }
-
-        return round($balanceUsd, 2);
-    }
-
-    /**
-     * @param string $user_id
-     * @return string
-     * @throws Exception
-     */
-    public function executeOpen(string $user_id): string
-    {
-        if (!$this->eloquentUserRepository->existsByUserId($user_id)) {
-            throw new Exception('User not found');
-        }
-
-        return $this->eloquentWalletRepository->createWalletByUserId($user_id);
     }
 }

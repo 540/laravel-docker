@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\CoinController;
+use App\Http\Controllers\GetWalletController;
+use App\Http\Controllers\GetWalletBalanceController;
+use App\Http\Controllers\PostWalletOpenController;
+use App\Http\Controllers\PostCoinBuyController;
+use App\Http\Controllers\PostCoinSellController;
 use App\Http\Controllers\StatusController;
-use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,25 +30,25 @@ Route::get(
 
 Route::get(
     '/wallet/{wallet_id}',
-    WalletController::class
+    GetWalletController::class
 );
 
 Route::get(
     '/wallet/{wallet_id}/balance',
-    [WalletController::class, 'balance']
+    GetWalletBalanceController::class
 );
 
 Route::post(
     '/wallet/open',
-    [WalletController::class, 'open']
+    PostWalletOpenController::class
 );
 
 Route::post(
     '/coin/buy',
-    [CoinController::class, 'buy']
+    PostCoinBuyController::class
 );
 
 Route::post(
     '/coin/sell',
-    [CoinController::class, 'sell']
+    PostCoinSellController::class
 );
