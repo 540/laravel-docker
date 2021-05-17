@@ -42,7 +42,6 @@ class BuyCoinsController extends BaseController
 
         // Indicar operación
         $operation = "buy";
-
         // Insertar en la cartera
         try{
             $buyCoinsResponse = $this->buyCoinsService->execute($idCoin, $idWallet, $amount, $operation);
