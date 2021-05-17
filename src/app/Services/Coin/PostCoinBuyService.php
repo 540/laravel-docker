@@ -8,7 +8,7 @@ use App\DataSource\Database\EloquentWalletDataSource;
 use App\DataSource\External\CoinLoreDataSource;
 use Exception;
 
-class CoinService
+class PostCoinBuyService
 {
     /**
      * @var EloquentWalletDataSource
@@ -71,7 +71,7 @@ class CoinService
      * @return void
      * @throws Exception
      */
-    public function executeBuy(string $coinId, string $walletId, float $amountUsd): void
+    public function execute(string $coinId, string $walletId, float $amountUsd): void
     {
         try {
             $amount = $this->calculateCoinsAmount($coinId, $walletId, $amountUsd);
@@ -83,26 +83,5 @@ class CoinService
         }
 
         $this->eloquentWalletCoinRepository->buyCoins($coinId, $walletId, $amount, $amountUsd);
-    }
-
-    /**
-     * @param string $coinId
-     * @param string $walletId
-     * @param float $amountUsd
-     * @return void
-     * @throws Exception
-     */
-    public function executeSell(string $coinId, string $walletId, float $amountUsd): void
-    {
-        try {
-            $amount = $this->calculateCoinsAmount($coinId, $walletId, $amountUsd);
-            if ($amount == 0) {
-                throw new Exception('Insufficient amount to sell');
-            }
-        } catch (Exception $exception) {
-            throw $exception;
-        }
-
-        $this->eloquentWalletCoinRepository->sellCoins($coinId, $walletId, $amount, $amountUsd);
     }
 }

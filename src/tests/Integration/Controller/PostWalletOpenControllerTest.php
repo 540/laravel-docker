@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 
-class WalletControllerTest extends TestCase
+class PostWalletOpenControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -24,61 +24,6 @@ class WalletControllerTest extends TestCase
         Wallet::factory(Wallet::class)->create();
         Coin::factory(Coin::class)->create();
         WalletCoin::factory(WalletCoin::class)->create();
-    }
-
-    /**
-     * @test
-     */
-    public function getWalletWalletNotFound()
-    {
-        $response = $this->get('/api/wallet/error-wallet');
-
-        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertExactJson([
-            'status' => 'Wallet with the specified ID was not found',
-            'message' => 'Wallet not found'
-        ]);
-    }
-
-    /**
-     * @test
-     */
-    public function getWallet()
-    {
-        $response = $this->get('/api/wallet/factory-wallet');
-
-        $response->assertStatus(Response::HTTP_OK)
-            ->assertJsonFragment([
-                "amount" => "1000000.0",
-                "coin_id" => "2",
-                "name" => "Dogecoin",
-                "symbol" => "DOGE",
-            ]);
-    }
-
-    /**
-     * @test
-     */
-    public function getWalletBalanceWalletNotFound()
-    {
-        $response = $this->get('/api/wallet/error-wallet/balance');
-
-        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertExactJson([
-            'status' => 'Wallet with the specified ID was not found',
-            'message' => 'Wallet not found'
-        ]);
-    }
-
-    /**
-     * @test
-     */
-    public function getWalletBalance()
-    {
-        $response = $this->get('/api/wallet/factory-wallet/balance');
-
-        $response->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                "balance_usd"
-            ]);
     }
 
     /**
