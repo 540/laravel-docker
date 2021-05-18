@@ -7,6 +7,7 @@ use App\Exceptions\WalletAlreadyExistsForUserException;
 use App\Exceptions\WalletNotFoundException;
 use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class EloquentWalletDataSourceTest extends TestCase
@@ -68,5 +69,25 @@ class EloquentWalletDataSourceTest extends TestCase
 
         $expectedWalletId = 1;
         $this->assertEquals($expectedWalletId, $result);
+    }
+
+    /**
+     * @test
+     **/
+    public function testName()
+    {
+        $this->expectException(\Exception::class);
+
+        $affected = DB::table('coins')->insert([
+            'wallet_id' => 10,
+            'coin_id' => 10,
+            'name' => 'name',
+            'symbol' => 'symbol',
+            'amount' => 1,
+            'value_usd' => 1
+        ]);
+
+        echo Wallet::query()->get();
+        echo $affected;
     }
 }
