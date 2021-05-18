@@ -2,16 +2,19 @@
 
 namespace Tests\Unit\Services\CoinBuy;
 
-use App\DataSource\API\CoinLoreApi;
-use App\DataSource\API\EloquentCoinDataSource;
-use App\DataSource\Database\EloquentCoinBuyerDataSource;
+use App\DataSource\API\CoinLoreCoinDataSource;
+use App\DataSource\Database\EloquentCoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\CannotCreateOrUpdateACoinException;
+use App\Exceptions\CoinIdNotFoundInWalletException;
+use App\Exceptions\WalletNotFoundException;
+use App\Exceptions\WrongCoinIdException;
 use App\Models\Coin;
-use App\Models\User;
 use App\Models\Wallet;
-use App\Services\WalletBalance\GetWalletBalanceService;
+use App\Services\CoinBuy\CoinBuyerService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Support\Facades\DB;
+use Tests\TestCase;
 use Prophecy\Prophet;
 
 class CoinBuyerServiceTest extends TestCase
@@ -19,119 +22,187 @@ class CoinBuyerServiceTest extends TestCase
     use RefreshDatabase;
     private Prophet $prophet;
 
+    private  $eloquentCoinDataSource;
+    private CoinBuyerService $coinBuyerService;
+    private  $eloquentWalletDataSource;
+    private  $coinLoreCoinDataSource;
+
     protected function setUp():void
     {
         parent::setUp();
-        $this->prophet = new Prophet();
+        $prophet = new Prophet;
+        $this->eloquentCoinDataSource = $prophet->prophesize(EloquentCoinDataSource::class);
+        $this->eloquentWalletDataSource = $prophet->prophesize(EloquentWalletDataSource::class);
+        $this->coinLoreCoinDataSource = $prophet->prophesize(CoinLoreCoinDataSource::class);
+        $this->coinBuyerService = new CoinBuyerService($this->eloquentCoinDataSource->reveal(),$this->eloquentWalletDataSource->reveal(),$this->coinLoreCoinDataSource->reveal());
     }
 
-    public function execute($coin_id,$wallet_id,$amount_usd): bool
-    {
-        //Que ocurre si se lanza una exception en el DS?
-        $this->eloquentCoinBuyerDataSource->findWallet($wallet_id);
-        //Si la exception pasa al Controller, todo funciona correctamente
-
-        $coinInfo = (new CoinLoreApi())->findCoinById($coin_id);
-        try {
-            $coin = $this->eloquentCoinBuyerDataSource->findCoin($coin_id);
-            $this->eloquentCoinBuyerDataSource->updateCoin($coin_id,$coin->amount+$coin->amount/$coinInfo["price_usd"],$coin->amount+$amount_usd);
-        } catch (Exception $exception) {
-            $params = [$wallet_id,$coin_id,$coinInfo["name"],$coinInfo["name"],$amount_usd/$coinInfo["price_usd"] , $amount_usd];
-            $this->eloquentCoinBuyerDataSource->insertCoin($params);
-        }
-
-        return true;
-    }
     /**
      * @test
-     **/
-    public function coinIsFound ()
+     *
+     * @throws \Exception
+     */
+    public function coinIsNotFoundAndItIsCreated ()
     {
         $walletId = 1;
+        $coinId = '90';
+        $amount_usd = 1;
+        $params = [$walletId,$coinId,'name','symbol',1,1];
 
-        $eloquentWalletDataSource = $this->prophet->prophesize(EloquentCoinBuyerDataSource::class);
-        $eloquentWalletDataSource->findWallet($walletId)->shouldBeCalledOnce()->willThrow(Exception::class);
+        $wallet = Wallet::factory(Wallet::class)->create()->first();
 
-        $eloquentCoinDataSource = $this->prophet->prophesize(EloquentCoinDataSource::class);
+        $this->eloquentCoinDataSource->findCoin($coinId,$wallet->id)->shouldBeCalledOnce()->willThrow(new CoinIdNotFoundInWalletException());
+        $this->coinLoreCoinDataSource->findCoinById($coinId)->shouldBeCalledOnce()->willReturn(['name'=>'name','symbol'=>'symbol','price_usd'=>1]);
 
-        $getWalletBalanceService = new GetWalletBalanceService($eloquentWalletDataSource->reveal(), $eloquentCoinDataSource->reveal());
+        $this->eloquentCoinDataSource->insertCoin($params)->shouldBeCalledOnce()->will(function () use ($params) {
+            DB::table('coins')->insert([
+                'wallet_id' => $params[0],
+                'coin_id' => $params[1],
+                'name' => $params[2],
+                'symbol' => $params[3],
+                'amount' => $params[4],
+                'value_usd' => $params[5]
+            ]);
+        });
 
-        $this->expectException(Exception::class);
+        $this->coinBuyerService->execute($coinId,$wallet->id,$amount_usd);
 
-        $getWalletBalanceService->execute($walletId);
+        $coin = Coin::query()->where('wallet_id', $params[0])->where('coin_id',$params[1])->first();
+
+        $this->assertEquals($coin->wallet_id,$params[0]);
+        $this->assertEquals($coin->coin_id,$params[1]);
+        $this->assertEquals($coin->name,$params[2]);
+        $this->assertEquals($coin->symbol,$params[3]);
+        $this->assertEquals($coin->amount,$params[4]);
+        $this->assertEquals($coin->value_usd,$params[5]);
+
     }
 
     /**
      * @test
-     **/
-    public function coinIsNotFound()
+     *
+     * @throws \Exception
+     */
+    public function coinIsNotFoundAndCannotBeCreated()
     {
-        $user = User::factory(User::class)->create()->first();
 
-        $wallet = Wallet::factory(Wallet::class)->make();
+        $walletId = 1;
+        $coinId = '90';
+        $amount_usd = 1;
+        $params = [$walletId,$coinId,'name','symbol',1,1];
 
-        $user->wallet()->save($wallet);
+        $wallet = Wallet::factory(Wallet::class)->create()->first();
 
-        $wallet = Wallet::query()->find($user->wallet->id)->first();
+        $this->eloquentCoinDataSource->findCoin($coinId,$wallet->id)->shouldBeCalledOnce()->willThrow(new CoinIdNotFoundInWalletException());
+        $this->coinLoreCoinDataSource->findCoinById($coinId)->shouldBeCalledOnce()->willReturn(['name'=>'name','symbol'=>'symbol','price_usd'=>1]);
 
+        $this->eloquentCoinDataSource->insertCoin($params)->shouldBeCalledOnce()->willThrow(new CannotCreateOrUpdateACoinException());
+
+        $this->expectException(CannotCreateOrUpdateACoinException::class);
+
+        $this->coinBuyerService->execute($coinId,$wallet->id,$amount_usd);
+
+    }
+
+    /**
+     * @test
+     *
+     * @throws \Exception
+     */
+    public function coinIsFoundItIsUpdated()
+    {
+        $newAmount = 1.0;
+        $newValue = 1.0;
+
+        $wallet = Wallet::factory(Wallet::class)->create()->first();
         $coin = Coin::factory(Coin::class)->make();
-
         $wallet->coins()->save($coin);
-
         $coin = Coin::query()->where('wallet_id', $wallet->id)->first();
 
-        $eloquentWalletDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
-        $eloquentWalletDataSource->findWalletById($wallet->id)->shouldBeCalledOnce()->willReturn($wallet);
+        $this->eloquentCoinDataSource->findCoin($coin->coin_id,$wallet->id)->shouldBeCalledOnce()->willReturn($coin);
+        $this->coinLoreCoinDataSource->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn(['name'=>$coin->name,'symbol'=>$coin->symbol,'price_usd'=>1]);
 
-        $eloquentCoinDataSource = $this->prophet->prophesize(EloquentCoinDataSource::class);
-        $eloquentCoinDataSource->findCoinById($coin->id)->shouldBeCalledOnce()->willReturn(null);
+        $this->eloquentCoinDataSource->updateCoin($wallet->id,$coin->coin_id,$newAmount,$newValue)->shouldBeCalledOnce()->will(function () use ($coin,$wallet,$newAmount,$newValue) {
+             DB::table('coins')->where('coin_id', $coin->coin_id)->where('wallet_id',$wallet->id)
+                ->update(['amount' => $newAmount, 'value_usd' => $newValue]);
+        });
 
+        $this->coinBuyerService->execute($coin->coin_id,$wallet->id,$newAmount);
 
-        $getWalletBalanceService = new GetWalletBalanceService($eloquentWalletDataSource->reveal(), $eloquentCoinDataSource->reveal());
+        $coin = Coin::query()->where('wallet_id', $wallet->id)->where('coin_id',$coin->coin_id)->first();
 
-        $this->expectException(Exception::class);
-        $getWalletBalanceService->execute($wallet->id);
+        $this->assertEquals($coin->amount,$newAmount);
+        $this->assertEquals($coin->value_usd,$newValue);
+
     }
 
     /**
      * @test
-     **/
-    public function BalanceIsProvidedForAGivenWalletId()
+     *
+     * @throws \Exception
+     */
+    public function coinIsFoundAndCannotBeUpdated()
     {
-        $user = User::factory()->create()->first();
 
-        $wallet = Wallet::factory()->make();
+        $newAmount = 1.0;
+        $newValue = 1.0;
+        $amount_usd = 1.0;
 
-        $user->wallet()->save($wallet);
+        $wallet = Wallet::factory(Wallet::class)->create()->first();
+        $coin = Coin::factory(Coin::class)->make();
+        $wallet->coins()->save($coin);
+        $coin = Coin::query()->where('wallet_id', $wallet->id)->first();
 
-        $wallet = Wallet::query()->find($user->wallet->id)->first();
+        $this->eloquentCoinDataSource->findCoin($coin->coin_id,$wallet->id)->shouldBeCalledOnce()->willReturn($coin);
+        $this->coinLoreCoinDataSource->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn(['name'=>$coin->name,'symbol'=>$coin->symbol,'price_usd'=>1]);
 
-        $coins = Coin::factory(Coin::class)->count(2)->make();
+        $this->eloquentCoinDataSource->updateCoin($wallet->id,$coin->coin_id,$newAmount,$newValue)->willThrow(new CannotCreateOrUpdateACoinException());
 
-        $wallet->coins()->saveMany($coins);
+        $this->expectException(CannotCreateOrUpdateACoinException::class);
 
-        $coins = Coin::query()->where('wallet_id', $wallet->id)->get();
+        $this->coinBuyerService->execute($coin->coin_id,$wallet->id,$amount_usd);
 
-        $eloquentWalletDataSource = $this->prophet->prophesize(EloquentWalletDataSource::class);
-        $eloquentWalletDataSource->findWalletById($wallet->id)->shouldBeCalledOnce()->willReturn($wallet);
+    }
 
-        $eloquentCoinDataSource = $this->prophet->prophesize(EloquentCoinDataSource::class);
+    /**
+     * @test
+     *
+     * @throws \Exception
+     */
+    public function walletIsNotFound ()
+    {
 
-        $expectedResult = 0;
+        $amount_usd = 50;
+        $coinId = 2;
+        $invalidWalletId = 0;
 
-        foreach ($coins as $coin){
-            $eloquentCoinDataSource->findCoinById($coin->coin_id)->willReturn([
-                'price_usd' => 30
-            ]);
+        $this->eloquentWalletDataSource->findWalletById($invalidWalletId)->shouldBeCalledOnce()->willThrow(WalletNotFoundException::class);
 
-            $expectedResult += 30 - ($coin->amount * $coin->value_usd);
-        }
+        $this->expectException(WalletNotFoundException::class);
 
-        $getWalletBalanceService = new GetWalletBalanceService($eloquentWalletDataSource->reveal(), $eloquentCoinDataSource->reveal());
+        $this->coinBuyerService->execute($coinId,$invalidWalletId,$amount_usd);
 
-        $result = $getWalletBalanceService->execute($wallet->id);
+    }
 
-        $this->assertEquals($expectedResult, $result);
+    /**
+     * @test
+     *
+     * @throws \Exception
+     */
+    public function wrongCoinIdProvided ()
+    {
+
+        $coinId = '999';
+        $amount_usd = 50;
+
+        $wallet = Wallet::factory(Wallet::class)->create()->first();
+
+        $this->coinLoreCoinDataSource->findCoinById($coinId)->shouldBeCalledOnce()->willThrow(new WrongCoinIdException());
+
+        $this->expectException(WrongCoinIdException::class);
+
+        $this->coinBuyerService->execute($coinId,$wallet->id,$amount_usd);
+
     }
 
 }

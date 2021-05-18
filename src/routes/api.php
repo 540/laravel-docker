@@ -2,6 +2,7 @@
 
 use App\DataSource\API\CoinDataSource;
 use App\DataSource\API\CoinLoreCoinDataSource;
+use App\Http\Controllers\coinBuyerController;
 use App\Http\Controllers\GetUserController;
 use App\Http\Controllers\GetWalletBalanceController;
 use App\Http\Controllers\GetWalletCryptocurrenciesController;
@@ -49,4 +50,9 @@ Route::get(
 Route::get(
     '/wallet/{wallet_id}/balance',
     [GetWalletBalanceController::class, 'getWalletBalance']
+);
+
+Route::post(
+    '/coin/buy',
+    [CoinBuyerController::class, 'buyCoin']
 );

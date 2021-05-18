@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Http;
 
 class CoinLoreCoinDataSource implements CoinDataSource
 {
+    /**
+     * @throws WrongCoinIdException
+     */
     public function findCoinById($coinId)
     {
         try{

@@ -2,17 +2,13 @@
 
 namespace Tests\Integration\Controller;
 
+use App\Errors\Errors;
 use App\Models\Coin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
-use App\DataSource\Database\EloquentCoinBuyerDataSource;
-use App\Http\Controllers\coinBuyerController;
-use App\Models\User;
 use App\Models\Wallet;
-use App\Services\CoinBuy\coinBuyerService;
-
 use Illuminate\Http\Response;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class CoinBuyerControllerTest extends TestCase
 {
@@ -27,15 +23,13 @@ class CoinBuyerControllerTest extends TestCase
     public function getsHttpBadRequestWhenAInvalidRequestFieldIsReceived ()
     {
 
-        $request = Request::create('/wallet/buy', 'POST',[
-            'coin' => 1,
+        $response = $this->postJson('api/coin/buy', [
+            'coin' => '1',
             'wallet_id' => 0,
             'amount_usd' => 50
         ]);
 
-        $response = $this->get($request);
-
-        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertJson(['error' => 'wrong field']);
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertJson(['error' => Errors::BAD_REQUEST_ERROR]);
 
     }
 
@@ -44,15 +38,14 @@ class CoinBuyerControllerTest extends TestCase
      **/
     public function getsHttpNotFoundWhenWalletWasNotFound ()
     {
-        $request = Request::create('/wallet/buy', 'POST',[
-            'coin_id' => 1,
+
+        $response = $this->postJson('api/coin/buy', [
+            'coin_id' => '1',
             'wallet_id' => 0,
             'amount_usd' => 50
         ]);
 
-        $response = $this->get($request);
-
-        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson(['error' => 'wrong field']);
+        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson(['error' =>  Errors::COIN_SPICIFIED_ID_NOT_FOUND]);
     }
 
     /**
@@ -61,19 +54,18 @@ class CoinBuyerControllerTest extends TestCase
     public function getsSuccessfulOperationWhenWalletAndCoinAreFound ()
     {
 
-        $wallet = Wallet::factory()->make();
+        $wallet = Wallet::factory()->create()->first();
         $coins = Coin::factory(Coin::class)->make();
         $wallet->coins()->save($coins);
+        $coins = Coin::query()->where('coin_id',$coins->coin_id)->first();
 
-        $request = Request::create('/wallet/buy', 'POST',[
-            'coin_id' => 1,
-            'wallet_id' => 1,
+        $response = $this->postJson('api/coin/buy', [
+            'coin_id' => $coins->coin_id,
+            'wallet_id' =>  $wallet->id,
             'amount_usd' => 50
         ]);
 
-        $response = $this->get($request);
-
-        $response->assertStatus(Response::HTTP_OK)->assertJson(['bought' => 'success operation']);
+        $response->assertStatus(Response::HTTP_OK)->assertJson(['bought' => 'successful operation']);
     }
 
     /**
@@ -82,24 +74,16 @@ class CoinBuyerControllerTest extends TestCase
     public function getsSuccessfulOperationWhenWalletIsFoundButNotCoin ()
     {
         //Se instancia wallet pero no coin
-        $wallet = Wallet::factory()->make();
+        $wallet = Wallet::factory()->create()->first();
 
-        //Como hacer el get para hacer un getteo de un walletId Existente
-
-        $request = Request::create('/wallet/buy', 'POST',[
-            'coin_id' => 90,
-            'wallet_id' => $wallet->get('id'),
+        $response = $this->postJson('api/coin/buy', [
+            'coin_id' => '1',
+            'wallet_id' =>  $wallet->id,
             'amount_usd' => 50
         ]);
 
-        $response = $this->get($request);
-
-        $response->assertStatus(Response::HTTP_OK)->assertJson(['bought' => 'success operation']);
+        $response->assertStatus(Response::HTTP_OK)->assertJson(['bought' => 'successful operation']);
     }
-
-
-
-
 
 
 }

@@ -14,8 +14,7 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
+    public function run() {
         $user = User::factory()->create();
         $user->wallet()->save(Wallet::factory()->make());
 
