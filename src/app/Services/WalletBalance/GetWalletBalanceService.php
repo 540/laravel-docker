@@ -34,11 +34,10 @@ class GetWalletBalanceService
 
     private function getCoinBalance($coin):float
     {
-        $pastCoinPrice = $this->getCoinPrice($coin->amount, $coin->value_usd);
         $currentCoinValueUsd = $this->getCurrentCoinValueUsd($coin->coin_id);
         $actualCoinPrice = $this->getCoinPrice($coin->amount, $currentCoinValueUsd);
 
-        return $actualCoinPrice - $pastCoinPrice;
+        return $actualCoinPrice - $coin->value_usd;
     }
 
     private function getCoinPrice(float $amount, float $valueUsd):float

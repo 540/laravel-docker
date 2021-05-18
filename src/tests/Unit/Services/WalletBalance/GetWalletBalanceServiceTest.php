@@ -81,7 +81,7 @@ class GetWalletBalanceServiceTest extends TestCase
             $this->coinDataSource->findCoinById($coin->coin_id)->willReturn([
                 'price_usd' => 30
             ]);
-            $expectedBalance += 30 - ($coin->amount * $coin->value_usd);
+            $expectedBalance += 30 - ($coin->value_usd);
         }
 
         $result = $this->getWalletBalanceService->execute($wallet->id);
