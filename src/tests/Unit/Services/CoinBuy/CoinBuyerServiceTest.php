@@ -111,8 +111,8 @@ class CoinBuyerServiceTest extends TestCase
      */
     public function coinIsFoundItIsUpdated()
     {
-        $newAmount = 1.0;
-        $newValue = 1.0;
+
+        $amount_usd = 5.0;
 
         $wallet = Wallet::factory(Wallet::class)->create()->first();
         $coin = Coin::factory(Coin::class)->make();
@@ -122,12 +122,15 @@ class CoinBuyerServiceTest extends TestCase
         $this->eloquentCoinDataSource->findCoin($coin->coin_id,$wallet->id)->shouldBeCalledOnce()->willReturn($coin);
         $this->coinLoreCoinDataSource->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn(['name'=>$coin->name,'symbol'=>$coin->symbol,'price_usd'=>1]);
 
+        $newAmount= $coin->amount + ($amount_usd/1);
+        $newValue = $coin->value_usd + $amount_usd;
+
         $this->eloquentCoinDataSource->updateCoin($wallet->id,$coin->coin_id,$newAmount,$newValue)->shouldBeCalledOnce()->will(function () use ($coin,$wallet,$newAmount,$newValue) {
              DB::table('coins')->where('coin_id', $coin->coin_id)->where('wallet_id',$wallet->id)
                 ->update(['amount' => $newAmount, 'value_usd' => $newValue]);
         });
 
-        $this->coinBuyerService->execute($coin->coin_id,$wallet->id,$newAmount);
+        $this->coinBuyerService->execute($coin->coin_id,$wallet->id,$amount_usd);
 
         $coin = Coin::query()->where('wallet_id', $wallet->id)->where('coin_id',$coin->coin_id)->first();
 
@@ -144,8 +147,6 @@ class CoinBuyerServiceTest extends TestCase
     public function coinIsFoundAndCannotBeUpdated()
     {
 
-        $newAmount = 1.0;
-        $newValue = 1.0;
         $amount_usd = 1.0;
 
         $wallet = Wallet::factory(Wallet::class)->create()->first();
@@ -156,7 +157,7 @@ class CoinBuyerServiceTest extends TestCase
         $this->eloquentCoinDataSource->findCoin($coin->coin_id,$wallet->id)->shouldBeCalledOnce()->willReturn($coin);
         $this->coinLoreCoinDataSource->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn(['name'=>$coin->name,'symbol'=>$coin->symbol,'price_usd'=>1]);
 
-        $this->eloquentCoinDataSource->updateCoin($wallet->id,$coin->coin_id,$newAmount,$newValue)->willThrow(new CannotCreateOrUpdateACoinException());
+        $this->eloquentCoinDataSource->updateCoin($wallet->id,$coin->coin_id,($coin->amount + ($amount_usd/ 1)), ($coin->value_usd + $amount_usd))->shouldBeCalledOnce()->willThrow(new CannotCreateOrUpdateACoinException());
 
         $this->expectException(CannotCreateOrUpdateACoinException::class);
 

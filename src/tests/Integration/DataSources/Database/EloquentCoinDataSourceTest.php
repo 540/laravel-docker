@@ -108,25 +108,4 @@ class EloquentCoinDataSourceTest extends TestCase
         $this->assertTrue(DB::table('coins')->where('wallet_id',$wallet->id)->where('coin_id', $coinId)->exists());
     }
 
-    /**
-     * @test
-     * @throws App\Exceptions\CannotCreateOrUpdateACoinException
-     */
-    public function coinHasNotBeenCreatedCauseWalletDoesNotExist()
-    {
-        $coinId = '999';
-        $walletId = 999;
-
-        Wallet::factory(Wallet::class)->create();
-
-        $params = [$walletId,$coinId,'name','symbol',1,1];
-
-        //Crear una coin diferente para que lance la excepcion
-        $this->expectException(CannotCreateOrUpdateACoinException::class);
-
-        $this->eloquentCoinDataSource->insertCoin($params);
-
-    }
-
-
 }

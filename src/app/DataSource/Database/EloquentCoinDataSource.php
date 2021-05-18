@@ -50,7 +50,7 @@ class EloquentCoinDataSource
     public function updateCoin ($walletId, $coinId, $newAmount, $newValue) {
         $rowsAffected = DB::table('coins')->where('coin_id', $coinId)->where('wallet_id',$walletId)
             ->update(['amount' => $newAmount, 'value_usd' => $newValue]);
-        if ($rowsAffected === 0)
+        if ($rowsAffected == 0)
             throw new CannotCreateOrUpdateACoinException();
     }
 

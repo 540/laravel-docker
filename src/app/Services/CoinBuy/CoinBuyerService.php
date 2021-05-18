@@ -47,7 +47,8 @@ class CoinBuyerService
 
         try {
             $coin = $this->eloquentCoinBuyerDataSource->findCoin($coin_id, $wallet_id);
-            $this->eloquentCoinBuyerDataSource->updateCoin($wallet_id, $coin_id, ($coin->amount + ($coin->amount/ $coinInfo["price_usd"])), ($coin->amount + $amount_usd));
+            $this->eloquentCoinBuyerDataSource->updateCoin($wallet_id, $coin_id, ($coin->amount + ($amount_usd/ $coinInfo["price_usd"])), ($coin->value_usd + $amount_usd));
+            echo "Aqui";
         } catch (CoinIdNotFoundInWalletException $exception) {
             $params = [$wallet_id, $coin_id, $coinInfo['name'], $coinInfo['symbol'], ($amount_usd / $coinInfo['price_usd']), $amount_usd];
             $this->eloquentCoinBuyerDataSource->insertCoin($params);
