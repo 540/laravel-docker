@@ -16,7 +16,7 @@ class EloquentCoinDataSource
     /**
      * @throws CoinIdNotFoundInWalletException
      */
-    public function findCoin($coinId, $walletId)
+    public function findCoinById($coinId, $walletId)
     {
         $coin = DB::table('coins')->where('wallet_id',$walletId)->where('coin_id', $coinId)->first();
 
@@ -52,6 +52,26 @@ class EloquentCoinDataSource
             ->update(['amount' => $newAmount, 'value_usd' => $newValue]);
         if ($rowsAffected == 0)
             throw new CannotCreateOrUpdateACoinException();
+    }
+
+    public function sellCoinOperation($coin, int $walletId, float $newCoinAmount)
+    {
+        //TODO UPDATE VALUE_USD
+        $affectedRows = DB::table('coins')
+            ->where('coin_id', $coin->coin_id)
+            ->where('wallet_id', $walletId)
+            ->update(['amount' => $newCoinAmount]);
+        echo $affectedRows;
+        if($affectedRows === 0) {
+            throw new Exception("No coin sold");
+        }
+    }
+
+    public function deleteCoin($id) {
+        $deletedRows = DB::table('coins')->where('id', $id)->delete();
+        if($deletedRows === 0) {
+            throw new Exception("No coin sold");
+        }
     }
 
 }

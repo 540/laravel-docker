@@ -71,23 +71,4 @@ class EloquentWalletDataSourceTest extends TestCase
         $this->assertEquals($expectedWalletId, $result);
     }
 
-    /**
-     * @test
-     **/
-    public function testName()
-    {
-        $this->expectException(\Exception::class);
-
-        $affected = DB::table('coins')->insert([
-            'wallet_id' => 10,
-            'coin_id' => 10,
-            'name' => 'name',
-            'symbol' => 'symbol',
-            'amount' => 1,
-            'value_usd' => 1
-        ]);
-
-        echo Wallet::query()->get();
-        echo $affected;
-    }
 }

@@ -51,7 +51,7 @@ class CoinBuyerServiceTest extends TestCase
 
         $wallet = Wallet::factory(Wallet::class)->create()->first();
 
-        $this->eloquentCoinDataSource->findCoin($coinId,$wallet->id)->shouldBeCalledOnce()->willThrow(new CoinIdNotFoundInWalletException());
+        $this->eloquentCoinDataSource->findCoinById($coinId,$wallet->id)->shouldBeCalledOnce()->willThrow(new CoinIdNotFoundInWalletException());
         $this->coinLoreCoinDataSource->findCoinById($coinId)->shouldBeCalledOnce()->willReturn(['name'=>'name','symbol'=>'symbol','price_usd'=>1]);
 
         $this->eloquentCoinDataSource->insertCoin($params)->shouldBeCalledOnce()->will(function () use ($params) {
@@ -83,7 +83,7 @@ class CoinBuyerServiceTest extends TestCase
      *
      * @throws \Exception
      */
-    public function coinIsNotFoundAndCannotBeCreated()
+    public function coinIsNotFoundAndCannotBeCreated ()
     {
 
         $walletId = 1;
@@ -93,7 +93,7 @@ class CoinBuyerServiceTest extends TestCase
 
         $wallet = Wallet::factory(Wallet::class)->create()->first();
 
-        $this->eloquentCoinDataSource->findCoin($coinId,$wallet->id)->shouldBeCalledOnce()->willThrow(new CoinIdNotFoundInWalletException());
+        $this->eloquentCoinDataSource->findCoinById($coinId,$wallet->id)->shouldBeCalledOnce()->willThrow(new CoinIdNotFoundInWalletException());
         $this->coinLoreCoinDataSource->findCoinById($coinId)->shouldBeCalledOnce()->willReturn(['name'=>'name','symbol'=>'symbol','price_usd'=>1]);
 
         $this->eloquentCoinDataSource->insertCoin($params)->shouldBeCalledOnce()->willThrow(new CannotCreateOrUpdateACoinException());
@@ -119,7 +119,7 @@ class CoinBuyerServiceTest extends TestCase
         $wallet->coins()->save($coin);
         $coin = Coin::query()->where('wallet_id', $wallet->id)->first();
 
-        $this->eloquentCoinDataSource->findCoin($coin->coin_id,$wallet->id)->shouldBeCalledOnce()->willReturn($coin);
+        $this->eloquentCoinDataSource->findCoinById($coin->coin_id,$wallet->id)->shouldBeCalledOnce()->willReturn($coin);
         $this->coinLoreCoinDataSource->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn(['name'=>$coin->name,'symbol'=>$coin->symbol,'price_usd'=>1]);
 
         $newAmount= $coin->amount + ($amount_usd/1);
@@ -154,7 +154,7 @@ class CoinBuyerServiceTest extends TestCase
         $wallet->coins()->save($coin);
         $coin = Coin::query()->where('wallet_id', $wallet->id)->first();
 
-        $this->eloquentCoinDataSource->findCoin($coin->coin_id,$wallet->id)->shouldBeCalledOnce()->willReturn($coin);
+        $this->eloquentCoinDataSource->findCoinById($coin->coin_id,$wallet->id)->shouldBeCalledOnce()->willReturn($coin);
         $this->coinLoreCoinDataSource->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn(['name'=>$coin->name,'symbol'=>$coin->symbol,'price_usd'=>1]);
 
         $this->eloquentCoinDataSource->updateCoin($wallet->id,$coin->coin_id,($coin->amount + ($amount_usd/ 1)), ($coin->value_usd + $amount_usd))->shouldBeCalledOnce()->willThrow(new CannotCreateOrUpdateACoinException());

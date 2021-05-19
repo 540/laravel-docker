@@ -4,6 +4,7 @@ namespace Tests\Services\SellCoinService;
 
 use App\DataSource\Database\EloquentCoinDataSource;
 use App\Models\Coin;
+use App\Models\Wallet;
 use App\Services\SellCoinService\SellCoinService;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -48,7 +49,10 @@ class SellCoinServiceTest extends TestCase
      */
     public function getsExceptionIfCannotSellPartOfTheCoinsForGivenCorrectId()
     {
-        $coin = Coin::factory()->create()->first();
+        $wallet = Wallet::factory(Wallet::class)->create()->first();
+        $coin = Coin::factory(Coin::class)->make();
+        $wallet->coins()->save($coin);
+        $coin = Coin::query()->where('wallet_id', $wallet->id)->first();
         $expectedCoin = [];
         array_push($expectedCoin, [
             'wallet_id' => $coin->wallet_id,
@@ -59,7 +63,7 @@ class SellCoinServiceTest extends TestCase
             'value_usd' => $coin->value_usd
         ]);
         $amountUSD = 1;
-        $newCoinAmount = 1;
+        $newCoinAmount = 0.5;
 
         $eloquentCoinDataSource = $this->prophet
             ->prophesize(EloquentCoinDataSource::class);
