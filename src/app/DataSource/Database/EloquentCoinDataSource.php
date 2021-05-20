@@ -54,13 +54,12 @@ class EloquentCoinDataSource
             throw new CannotCreateOrUpdateACoinException();
     }
 
-    public function sellCoinOperation($coin, int $walletId, float $newCoinAmount)
+    public function sellCoinOperation($coin, int $newAmount, float $newValue)
     {
-        //TODO UPDATE VALUE_USD
         $affectedRows = DB::table('coins')
             ->where('coin_id', $coin->coin_id)
-            ->where('wallet_id', $walletId)
-            ->update(['amount' => $newCoinAmount]);
+            ->where('wallet_id', $coin->wallet_id)
+            ->update(['amount' => $newAmount, 'value_usd' => $newValue]);
         echo $affectedRows;
         if($affectedRows === 0) {
             throw new Exception("No coin sold");

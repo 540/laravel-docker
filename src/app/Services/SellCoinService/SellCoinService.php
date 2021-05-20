@@ -2,17 +2,23 @@
 
 namespace App\Services\SellCoinService;
 
+use App\DataSource\API\CoinLoreCoinDataSource;
 use App\DataSource\Database\EloquentCoinDataSource;
+use App\DataSource\Database\EloquentWalletDataSource;
 use App\Exceptions\CoinIdNotFoundInWalletException;
 use Exception;
 
 class SellCoinService
 {
     private EloquentCoinDataSource $eloquentCoinDataSource;
+    private EloquentWalletDataSource $eloquentWalletDataSource;
+    private CoinLoreCoinDataSource $coinLoreCoinDataSource;
 
-    public function __construct(EloquentCoinDataSource $eloquentCoinSellerDataSource)
+    public function __construct(EloquentCoinDataSource $eloquentCoinDataSource, EloquentWalletDataSource $eloquentWalletDataSource, CoinLoreCoinDataSource $coinLoreCoinDataSource)
     {
-        $this->eloquentCoinDataSource = $eloquentCoinSellerDataSource;
+        $this->eloquentCoinDataSource = $eloquentCoinDataSource;
+        $this->eloquentWalletDataSource = $eloquentWalletDataSource;
+        $this->coinLoreCoinDataSource = $coinLoreCoinDataSource;
     }
 
     /**
@@ -21,20 +27,17 @@ class SellCoinService
      */
     public function execute(string $coinId, int $walletId, float $amountUSD)
     {
-        //todo findwalletid
+        $this->eloquentWalletDataSource->findWalletById($walletId);
+
+        $coinInfo = $this->coinLoreCoinDataSource->findCoinById($coinId);
+
         $coin = $this->eloquentCoinDataSource->findCoinById($coinId, $walletId);
-        //todo coin lore -> Se adquiere el price_usd
-        // amountADescontar = $amountUsd/coinLore['price_usd']
-        $previousTotalCoinValueUSD = $coin->amount * $coin->value_usd;
-        // $coin->amount > amountADescontar
-        if($previousTotalCoinValueUSD > $amountUSD) {
-            $newTotalCoinValueUSD = $previousTotalCoinValueUSD - $amountUSD;
-            // $newTotalCoinValueUSD = $coin->value_usd - $amountUSD;
-            // $newAmount = $coin->amount - $amountADescontar
-            $newCoinAmount = $newTotalCoinValueUSD / $coin->value_usd; //todo coin lore value_usd
-            $this->eloquentCoinDataSource->sellCoinOperation($coin, $walletId, $newCoinAmount);
-        } else {
+
+        $amountToSell = $amountUSD / $coinInfo['price_usd'];
+d;
+        if($coin->amount > $amountToSell)
+            $this->eloquentCoinDataSource->sellCoinOperation($coin, ($coin->amount-$amountToSell), ($coin->value_usd-$amountUSD));
+        else
             $this->eloquentCoinDataSource->deleteCoin($coin->id);
-        }//todo exception when is less than $amountUSD
     }
 }
