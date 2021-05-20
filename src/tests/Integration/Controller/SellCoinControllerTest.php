@@ -2,14 +2,17 @@
 
 namespace Tests\Unit\Controllers;
 
+use App\DataSource\API\CoinDataSource;
 use App\Http\Controllers\SellCoinController;
 use App\Models\Coin;
+use App\Models\Wallet;
 use App\Services\SellCoinService\SellCoinService;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Prophecy\Prophet;
+use Tests\Integration\Controller\Doubles\FakeCoinLoreDataSource;
 use Tests\TestCase;
 
 class SellCoinControllerTest extends TestCase
@@ -42,12 +45,17 @@ class SellCoinControllerTest extends TestCase
      */
     public function sellsPartOfTheCoinsForGivenCoinId()
     {
-        $coin = Coin::factory(Coin::class)->create()->first();
+        $this->app->bind(CoinDataSource::class, FakeCoinLoreDataSource::class);
+
+        $wallet = Wallet::factory()->create()->first();
+        $coin = Coin::factory(Coin::class)->make();
+        $wallet->coins()->save($coin);
+        $coin = Coin::query()->where('coin_id',$coin->coin_id)->first();
 
         $response = $this->postJson('/api/coin/sell', [
             'coin_id' => $coin->coin_id,
             'wallet_id' => $coin->wallet_id,
-            'amount_usd' => 1
+            'amount_usd' => 0.5
         ]);
         $returnedCoin = Coin::query()
             ->where('coin_id', $coin->coin_id)
@@ -56,7 +64,7 @@ class SellCoinControllerTest extends TestCase
 
         $response->assertStatus(Response::HTTP_OK)
             ->assertExactJson([200 => "Successful operation"]);
-        $this->assertEquals(1, $returnedCoin->amount);
+        $this->assertEquals(0.5, $returnedCoin->amount);
     }
 
     /**
@@ -64,7 +72,12 @@ class SellCoinControllerTest extends TestCase
      */
     public function sellsEveryCoinForGivenCoinId()
     {
-        $coin = Coin::factory(Coin::class)->create()->first();
+        $this->app->bind(CoinDataSource::class, FakeCoinLoreDataSource::class);
+
+        $wallet = Wallet::factory()->create()->first();
+        $coin = Coin::factory(Coin::class)->make();
+        $wallet->coins()->save($coin);
+        $coin = Coin::query()->where('coin_id',$coin->coin_id)->first();
 
         $response = $this->postJson('/api/coin/sell', [
             'coin_id' => $coin->coin_id,
@@ -87,13 +100,12 @@ class SellCoinControllerTest extends TestCase
      */
     public function getsHttpBadRequestIfCoinIdFieldIsNotFound()
     {
-        $coinIdField = "";
         $walletId = 1;
         $amountUSD = 1;
 
         $response = $this->postJson('/api/coin/sell', [
-            $coinIdField => 'coin_id',
-            'wallet_id' => $walletId,
+            'coin' => 'coin_id',
+            'wallet' => $walletId,
             'amount_usd' => $amountUSD
         ]);
 

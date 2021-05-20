@@ -4,6 +4,7 @@
 namespace App\Services\CoinBuy;
 
 
+use App\DataSource\API\CoinDataSource;
 use App\DataSource\API\CoinLoreCoinDataSource;
 use App\DataSource\Database\EloquentCoinDataSource;
 use App\DataSource\Database\EloquentUserDataSource;
@@ -26,7 +27,7 @@ class CoinBuyerService
      * IsEarlyAdopterService constructor.
      * @param EloquentCoinDataSource $eloquentCoinBuyerDataSource;
      */
-    public function __construct(EloquentCoinDataSource $eloquentCoinBuyerDataSource,EloquentWalletDataSource $eloquentWalletDataSource,CoinLoreCoinDataSource $coinLoreCoinDataSource)
+    public function __construct(EloquentCoinDataSource $eloquentCoinBuyerDataSource,EloquentWalletDataSource $eloquentWalletDataSource,CoinDataSource $coinLoreCoinDataSource)
     {
         $this->coinLoreCoinDataSource = $coinLoreCoinDataSource;
         $this->eloquentCoinBuyerDataSource = $eloquentCoinBuyerDataSource;

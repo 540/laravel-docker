@@ -7,6 +7,7 @@ use App\Http\Controllers\GetUserController;
 use App\Http\Controllers\GetWalletBalanceController;
 use App\Http\Controllers\GetWalletCryptocurrenciesController;
 use App\Http\Controllers\OpenWalletController;
+use App\Http\Controllers\SellCoinController;
 use App\Http\Controllers\StatusController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,4 +56,9 @@ Route::get(
 Route::post(
     '/coin/buy',
     [CoinBuyerController::class, 'buyCoin']
+);
+
+Route::post(
+    '/coin/sell',
+    [SellCoinController::class, 'sellCoin']
 );

@@ -57,17 +57,25 @@ class CoinBuyerControllerTest extends TestCase
         $this->app->bind(CoinDataSource::class, FakeCoinLoreDataSource::class);
 
         $wallet = Wallet::factory()->create()->first();
-        $coins = Coin::factory(Coin::class)->make();
-        $wallet->coins()->save($coins);
-        $coins = Coin::query()->where('coin_id',$coins->coin_id)->first();
+        $coin = Coin::factory(Coin::class)->make();
+        $wallet->coins()->save($coin);
+        $coin = Coin::query()->where('coin_id',$coin->coin_id)->first();
 
         $response = $this->postJson('api/coin/buy', [
-            'coin_id' => $coins->coin_id,
+            'coin_id' => $coin->coin_id,
             'wallet_id' =>  $wallet->id,
             'amount_usd' => 50
         ]);
 
+        $updatedCoin = Coin::query()
+            ->where('coin_id', $coin->coin_id)
+            ->where('wallet_id', $coin->wallet_id)
+            ->first();
+
         $response->assertStatus(Response::HTTP_OK)->assertJson(['bought' => 'successful operation']);
+
+        $this->assertEquals($coin->amount+50, $updatedCoin->amount);
+        $this->assertEquals($coin->value_usd+50, $updatedCoin->value_usd);
     }
 
     /**
@@ -86,7 +94,16 @@ class CoinBuyerControllerTest extends TestCase
             'amount_usd' => 50
         ]);
 
+        $createdCoin = Coin::query()
+            ->where('coin_id', 1)
+            ->where('wallet_id', $wallet->id)
+            ->first();
+
         $response->assertStatus(Response::HTTP_OK)->assertJson(['bought' => 'successful operation']);
+
+        $this->assertEquals(1, $createdCoin->id);
+        $this->assertEquals($wallet->id, $createdCoin->wallet_id);
+
     }
 
 

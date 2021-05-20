@@ -2,6 +2,7 @@
 
 namespace App\Services\SellCoinService;
 
+use App\DataSource\API\CoinDataSource;
 use App\DataSource\API\CoinLoreCoinDataSource;
 use App\DataSource\Database\EloquentCoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
@@ -12,9 +13,9 @@ class SellCoinService
 {
     private EloquentCoinDataSource $eloquentCoinDataSource;
     private EloquentWalletDataSource $eloquentWalletDataSource;
-    private CoinLoreCoinDataSource $coinLoreCoinDataSource;
+    private CoinDataSource $coinLoreCoinDataSource;
 
-    public function __construct(EloquentCoinDataSource $eloquentCoinDataSource, EloquentWalletDataSource $eloquentWalletDataSource, CoinLoreCoinDataSource $coinLoreCoinDataSource)
+    public function __construct(EloquentCoinDataSource $eloquentCoinDataSource, EloquentWalletDataSource $eloquentWalletDataSource, CoinDataSource $coinLoreCoinDataSource)
     {
         $this->eloquentCoinDataSource = $eloquentCoinDataSource;
         $this->eloquentWalletDataSource = $eloquentWalletDataSource;
