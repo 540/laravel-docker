@@ -7,6 +7,7 @@ use App\Exceptions\CannotCreateOrUpdateACoinException;
 use App\Exceptions\CoinIdNotFoundInWalletException;
 use App\Models\Coin;
 use App\Models\Wallet;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -80,15 +81,12 @@ class EloquentCoinDataSourceTest extends TestCase
      */
     public function coinHasNotBeenUpdated()
     {
-        $wallet = Wallet::factory(Wallet::class)->create()->first();
-        $coin = Coin::factory(Coin::class)->make();
-        $wallet->coins()->save($coin);
-        $coin = Coin::query()->where('wallet_id', $wallet->id)->first();
+        $walletId = 'invalidWallet';
+        $coinId = 'invalidCoinId';
 
-        //Como hacer para que lance la excepcion de not updated
         $this->expectException(CannotCreateOrUpdateACoinException::class);
 
-        $this->eloquentCoinDataSource->updateCoin($wallet->id, $coin->id,1,1);
+        $this->eloquentCoinDataSource->updateCoin($walletId, $coinId,1,1);
     }
 
     /**
@@ -111,44 +109,13 @@ class EloquentCoinDataSourceTest extends TestCase
     /**
      * @test
      */
-    public function doesNotSellCoinIfCoinIdIsIncorrect() {
-        Coin::factory(Coin::class)->create();
-        $eloquentCoinDataSource = new EloquentCoinDataSource();
-
-        $this->expectException(Exception::class);
-
-        $eloquentCoinDataSource->sellCoinOperation('1', 1, 0);
-    }
-
-    /**
-     * @test
-     * @throws Exception
-     */
-    public function sellsCoinIfCoinIdIsCorrect() {
-        $coin = Coin::factory(Coin::class)->create()->first();
-        $eloquentCoinDataSource = new EloquentCoinDataSource();
-
-        $eloquentCoinDataSource->sellCoinOperation($coin, 1, 1);
-        $coin = Coin::query()
-            ->where('coin_id', $coin->coin_id)
-            ->where('wallet_id', $coin->wallet_id)
-            ->first();
-        $expectedCoinAmount = 1;
-        $leftCoinAmount = $coin->amount;
-
-        $this->assertEquals($expectedCoinAmount, $leftCoinAmount);
-    }
-
-    /**
-     * @test
-     */
     public function doesNotDeleteCoinIfCoinIdIsIncorrect() {
-        Coin::factory(Coin::class)->create();
-        $eloquentCoinDataSource = new EloquentCoinDataSource();
+
+        $coinId = 'invalidId';
 
         $this->expectException(Exception::class);
 
-        $eloquentCoinDataSource->deleteCoin('invalidId');
+        $this->eloquentCoinDataSource->deleteCoin($coinId);
     }
 
     /**
@@ -156,17 +123,19 @@ class EloquentCoinDataSourceTest extends TestCase
      * @throws Exception
      */
     public function deletesCoinIfCoinIdIsCorrect() {
-        $coin = Coin::factory(Coin::class)->create()->first();
-        $eloquentCoinDataSource = new EloquentCoinDataSource();
 
-        $eloquentCoinDataSource->deleteCoin(1);
+        $wallet = Wallet::factory(Wallet::class)->create()->first();
+        $coin = Coin::factory(Coin::class)->make();
+        $wallet->coins()->save($coin);
+        $coin = Coin::query()->where('wallet_id', $wallet->id)->first();
+
+        $this->eloquentCoinDataSource->deleteCoin($coin->id);
         $coin = Coin::query()
             ->where('coin_id', $coin->coin_id)
             ->where('wallet_id', $coin->wallet_id)
             ->first();
-        $expectedCoin = null;
 
-        $this->assertEquals($expectedCoin, $coin);
+        $this->assertNull($coin);
     }
 
 }

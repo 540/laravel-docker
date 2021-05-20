@@ -2,12 +2,13 @@
 
 namespace Tests\Integration\Controller;
 
+use App\DataSource\API\CoinDataSource;
 use App\Errors\Errors;
 use App\Models\Coin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Request;
 use App\Models\Wallet;
 use Illuminate\Http\Response;
+use Tests\Integration\Controller\Doubles\FakeCoinLoreDataSource;
 use Tests\TestCase;
 
 class CoinBuyerControllerTest extends TestCase
@@ -53,6 +54,7 @@ class CoinBuyerControllerTest extends TestCase
      **/
     public function getsSuccessfulOperationWhenWalletAndCoinAreFound ()
     {
+        $this->app->bind(CoinDataSource::class, FakeCoinLoreDataSource::class);
 
         $wallet = Wallet::factory()->create()->first();
         $coins = Coin::factory(Coin::class)->make();
@@ -73,7 +75,9 @@ class CoinBuyerControllerTest extends TestCase
      **/
     public function getsSuccessfulOperationWhenWalletIsFoundButNotCoin ()
     {
-        //Se instancia wallet pero no coin
+
+        $this->app->bind(CoinDataSource::class, FakeCoinLoreDataSource::class);
+
         $wallet = Wallet::factory()->create()->first();
 
         $response = $this->postJson('api/coin/buy', [

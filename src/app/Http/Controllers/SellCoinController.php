@@ -30,7 +30,6 @@ class SellCoinController extends BaseController
     }
 
     public function sellCoin(Request $request): JsonResponse {
-        //todo 3 options
         if(!$request->has("coin_id")) {
             return response()->json([
                 self::RESPONSE_CODE['BAD_REQUEST_CODE'] => self::RESPONSE_MSG['BAD_REQUEST_MESSAGE']
@@ -45,7 +44,7 @@ class SellCoinController extends BaseController
                 self::RESPONSE_CODE['SUCCESS_CODE'] => self::RESPONSE_MSG['SUCCESS_MESSAGE']
             ], Response::HTTP_OK);
         }
-        catch(Exception $exception) {
+        catch (Exception $exception) {
             return response()->json([
                 self::RESPONSE_CODE['COIN_NOT_FOUND_CODE'] => self::RESPONSE_MSG['COIN_NOT_FOUND_MESSAGE']
             ], Response::HTTP_NOT_FOUND);
