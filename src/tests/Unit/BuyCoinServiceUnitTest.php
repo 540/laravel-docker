@@ -7,7 +7,7 @@ use App\Http\Services\Adopter\BuyCoinsAdapterService;
 use App\Http\Services\Adopter\OpenWalletService;
 use App\Infrastructure\ApiSource\ApiSource;
 use App\Infrastructure\Database\WalletDataSource;
-use App\Models\Cryptocurrencies;
+use App\Models\Transaction;
 use App\Models\Wallet;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;

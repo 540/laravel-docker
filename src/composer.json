@@ -17,7 +17,8 @@
         "laravel/tinker": "^2.5",
       "ext-http": "*",
         "ext-json": "*",
-      "ext-curl": "*"
+      "ext-curl": "*",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

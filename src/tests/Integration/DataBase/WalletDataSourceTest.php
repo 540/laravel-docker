@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\TestCase;
 
 use App\Models\Wallet;
-use App\Models\Cryptocurrencies;
+use App\Models\Transaction;
 
 class WalletDataSourceTest extends TestCase
 {

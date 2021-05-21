@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Infrastructure\Database\WalletDataSource;
+use App\Infrastructure\Database\ElocuentUserDataSource;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,8 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind(WalletDataSource::class, function () {
-            return new WalletDataSource();
+        $this->app->bind(ElocuentUserDataSource::class, function () {
+            return new ElocuentUserDataSource();
         });
     }
 }

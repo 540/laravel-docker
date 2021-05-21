@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Http\Services\Adopter\GetWalletCryptocurrenciesService;
 use App\Infrastructure\Database\WalletDataSource;
-use App\Models\Cryptocurrencies;
+use App\Models\Transaction;
 use App\Models\Wallet;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
@@ -69,7 +69,7 @@ class GetCryptocurrenciesServiceUnitTest extends TestCase
      */
     public function insertedExistingWalletId_TransactionsMade_ExpectedResponse()
     {
-        $expectedOutput = new Cryptocurrencies();
+        $expectedOutput = new Transaction();
         $expectedOutput->fill([
             "id_transaction"=> 2,
             "id_coin"=> "90",
