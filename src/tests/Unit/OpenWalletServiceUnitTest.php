@@ -50,11 +50,11 @@ class OpenWalletServiceUnitTest extends TestCase
     {
         $idUser = "2";
         $wallet= new Wallet();
-        $wallet->fill(['id_user' => $idUser, 'id_wallet' => "1"]);
+        $wallet->fill(['id' => "1", 'id_user' => $idUser]);
 
         $this->walletDataSource->insertById($idUser)->shouldBeCalledOnce()->willReturn($wallet);
         $walletData = $this->openWalletService->execute($idUser);
 
-        $this->assertEquals("1", $walletData['id_wallet']);
+        $this->assertEquals("1", $walletData['id']);
     }
 }

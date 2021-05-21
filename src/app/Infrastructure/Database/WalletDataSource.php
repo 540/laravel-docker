@@ -95,9 +95,8 @@ class WalletDataSource
                 ->where('id_wallet', $idWallet)
                 ->where('operation', 'buy')
                 ->sum('buyed_coins_amount');
-        }else{
-            return -1;
         }
+        return -1;
     }
 
     /**

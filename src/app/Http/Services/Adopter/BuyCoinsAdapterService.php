@@ -43,7 +43,6 @@ class BuyCoinsAdapterService
         if ($coinPrice == 0) {
             throw new \Exception('coin does not exist');
         }
-var_dump($coinPrice);
         $buyedCoins = $amount/$coinPrice;
 
         $wallet = $this->walletRepository->insertTransaction($idCoin, $idWallet, $amount, $buyedCoins, $coinPrice, $operation);

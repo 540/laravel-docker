@@ -3,8 +3,7 @@
 
 namespace App\Infrastructure\ApiSource;
 
-
-use App\Infrastructure\ApiSourceInterface\ApiSourceInterface;
+use App\Infrastructure\ApiSourceInterface;
 
 class ApiSource implements ApiSourceInterface
 {
@@ -22,7 +21,7 @@ class ApiSource implements ApiSourceInterface
      * @param $url
      * @return bool|string
      */
-    private function curl($url)
+    public function curl($url)
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(

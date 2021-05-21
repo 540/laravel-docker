@@ -50,6 +50,7 @@ class SellCoinServiceUnitTest extends TestCase
         $wallet= new Wallet();
         $wallet->fill(['id_user' => $idUser, 'id_wallet' => "1"]);
 
+        $this->apiDataSource->apiGetPrice("90")->willReturn(50000);
         $this->walletDataSource->selectAmountBoughtCoins('90','6')->shouldBeCalledOnce()->willReturn(-1);
 
         $this->expectExceptionMessage("wallet not found");
@@ -69,6 +70,7 @@ class SellCoinServiceUnitTest extends TestCase
         $soldCoins = 5;
         $wantToSellAmount = 6;
 
+        $this->apiDataSource->apiGetPrice("90")->willReturn(50000);
         $this->walletDataSource->selectAmountBoughtCoins('90','6')->shouldBeCalledOnce()->willReturn($boughtCoins);
         $this->walletDataSource->selectAmountSoldCoins('90','6')->shouldBeCalledOnce()->willReturn($soldCoins);
 
@@ -89,6 +91,7 @@ class SellCoinServiceUnitTest extends TestCase
         $soldCoins = 5;
         $wantToSellAmount = 1;
 
+        $this->apiDataSource->apiGetPrice("90")->willReturn(50000);
         $this->walletDataSource->selectAmountBoughtCoins('90','6')->shouldBeCalledOnce()->willReturn($boughtCoins);
         $this->walletDataSource->selectAmountSoldCoins('90','6')->shouldBeCalledOnce()->willReturn($soldCoins);
         $this->walletDataSource->insertTransaction('90','6',$wantToSellAmount,$boughtCoins,'50000','sell')->shouldBeCalledOnce()->willReturn(null);
@@ -112,9 +115,9 @@ class SellCoinServiceUnitTest extends TestCase
         $soldCoins = 5;
         $wantToSellAmount = 1;
 
+        $this->apiDataSource->apiGetPrice("90")->shouldBeCalledOnce()->willReturn(50000);
         $this->walletDataSource->selectAmountBoughtCoins('90','6')->shouldBeCalledOnce()->willReturn($boughtCoins);
         $this->walletDataSource->selectAmountSoldCoins('90','6')->shouldBeCalledOnce()->willReturn($soldCoins);
-        $this->apiDataSource->apiGetPrice("90")->shouldBeCalledOnce()->willReturn(50000);
         $this->walletDataSource->insertTransaction('90','6','50000', $wantToSellAmount,'50000','sell')->shouldBeCalledOnce()->willReturn(1);
 
         $buyCoinsResponse = $this->sellCoinsService->execute('90','6', $wantToSellAmount,'sell');

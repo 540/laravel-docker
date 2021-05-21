@@ -69,7 +69,9 @@ class BuyCoinServiceUnitTest extends TestCase
         $wallet= new Wallet();
         $wallet->fill(['id_user' => $idUser, 'id_wallet' => "1"]);
 
-        $this->walletDataSource->insertTransaction('10','2','50000','1','50000','buy')->shouldBeCalledOnce()->willReturn(-1);
+        $this->apiDataSource->apiGetPrice("90")->willReturn(50000);
+        $this->walletDataSource->insertTransaction('90','2','50000','1','50000','buy')->shouldBeCalledOnce()->willReturn(-1);
+
         $this->expectExceptionMessage("wallet not found");
         $this->buyCoinsService->execute('90','2','50000','buy');
     }
@@ -84,9 +86,8 @@ class BuyCoinServiceUnitTest extends TestCase
         $wallet= new Wallet();
         $wallet->fill(['id_user' => $idUser, 'id_wallet' => "1"]);
 
-        $this->walletDataSource->insertTransaction('90','2','50000','1','50000','buy')->shouldBeCalledOnce()->willReturn(1);
         $this->apiDataSource->apiGetPrice("90")->shouldBeCalledOnce()->willReturn(50000);
-
+        $this->walletDataSource->insertTransaction('90','2','50000','1','50000','buy')->shouldBeCalledOnce()->willReturn(1);
         $response = $this->buyCoinsService->execute('90','2','50000','buy');
 
         $this->assertEquals("Successful Operation", $response);

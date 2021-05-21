@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Infrastructure\ApiSourceInterface;
+namespace App\Infrastructure;
 
 
 interface ApiSourceInterface
