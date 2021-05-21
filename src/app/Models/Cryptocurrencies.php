@@ -12,6 +12,8 @@ class Cryptocurrencies extends Model
 {
     use HasFactory, Notifiable;
 
+    protected $table = 'transaction';
+
     /**
      * The attributes that are mass assignable.
      *

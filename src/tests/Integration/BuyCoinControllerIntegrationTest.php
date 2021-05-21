@@ -21,7 +21,7 @@ class BuyCoinControllerIntegrationTest extends TestCase
      * @test
      */
     public function insertedWalletIdDoesNotExist_BadRequestIsGiven(){
-        Wallet::factory(Wallet::class)->create();
+        //Wallet::factory(Wallet::class)->create();
 
         $response = $this->postJson("/api/coin/buy",["coind_id" => '90', 'wallet_id' => '20', 'amount_usd' => 500000]);
         var_dump($response->getContent());

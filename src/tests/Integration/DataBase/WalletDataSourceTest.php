@@ -6,6 +6,9 @@ use App\Infrastructure\Database\WalletDataSource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\TestCase;
 
+use App\Models\Wallet;
+use App\Models\Cryptocurrencies;
+
 class WalletDataSourceTest extends TestCase
 {
     use RefreshDatabase;
