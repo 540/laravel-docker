@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 
 use App\Errors\Errors;
+use App\Responses\Responses;
 use App\Services\CoinBuy\CoinBuyerService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -33,7 +34,7 @@ class CoinBuyerController extends BaseController {
         try {
             $this->coinBuyerService->execute($request->input('coin_id'),$request->input('wallet_id'),$request->input('amount_usd'));
             return response()->json([
-                'bought' => 'successful operation'
+                'bought' => Responses::SUCCESS_MESSAGE
             ], Response::HTTP_OK);
 
         } catch (Exception $exception) {

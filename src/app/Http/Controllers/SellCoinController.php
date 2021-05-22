@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Errors\Errors;
+use App\Responses\Responses;
 use App\Services\SellCoinService\SellCoinService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -11,17 +13,6 @@ use Illuminate\Routing\Controller as BaseController;
 
 class SellCoinController extends BaseController
 {
-    private const RESPONSE_CODE = [
-        'SUCCESS_CODE' => 200,
-        'BAD_REQUEST_CODE' => 400,
-        'COIN_NOT_FOUND_CODE' => 404
-    ];
-
-    private const RESPONSE_MSG = [
-        'SUCCESS_MESSAGE' => "Successful operation",
-        'BAD_REQUEST_MESSAGE' => "Bad request error",
-        'COIN_NOT_FOUND_MESSAGE' => "A coin with specified ID was not found"
-    ];
 
     private SellCoinService $sellCoinService;
 
@@ -33,7 +24,7 @@ class SellCoinController extends BaseController
 
         if(!$request->has("coin_id")||!$request->has("wallet_id")||!$request->has("amount_usd")) {
             return response()->json([
-                self::RESPONSE_CODE['BAD_REQUEST_CODE'] => self::RESPONSE_MSG['BAD_REQUEST_MESSAGE']
+                Response::HTTP_BAD_REQUEST => Errors::BAD_REQUEST_ERROR
             ], Response::HTTP_BAD_REQUEST);
         }
         try {
@@ -42,12 +33,12 @@ class SellCoinController extends BaseController
                 $request->get("wallet_id"),
                 $request->get("amount_usd"));
             return response()->json([
-                self::RESPONSE_CODE['SUCCESS_CODE'] => self::RESPONSE_MSG['SUCCESS_MESSAGE']
+                Response::HTTP_BAD_REQUEST => Responses::SUCCESS_MESSAGE
             ], Response::HTTP_OK);
         }
         catch (Exception $exception) {
             return response()->json([
-                self::RESPONSE_CODE['COIN_NOT_FOUND_CODE'] => self::RESPONSE_MSG['COIN_NOT_FOUND_MESSAGE']
+                Response::HTTP_BAD_REQUEST => $exception->getMessage()
             ], Response::HTTP_NOT_FOUND);
         }
     }
