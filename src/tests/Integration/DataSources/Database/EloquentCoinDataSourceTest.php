@@ -3,7 +3,9 @@
 namespace Tests\Integration\DataSources\Database;
 
 use App\DataSource\Database\EloquentCoinDataSource;
-use App\Exceptions\CannotCreateOrUpdateACoinException;
+use App\Exceptions\CannotCreateACoinException;
+use App\Exceptions\CannotDeleteACoinException;
+use App\Exceptions\CannotUpdateACoinException;
 use App\Exceptions\CoinIdNotFoundInWalletException;
 use App\Models\Coin;
 use App\Models\Wallet;
@@ -55,7 +57,7 @@ class EloquentCoinDataSourceTest extends TestCase
 
     /**
      * @test
-     * @throws CannotCreateOrUpdateACoinException
+     * @throws CannotUpdateACoinException
      */
     public function coinHasBeenUpdated()
     {
@@ -78,13 +80,14 @@ class EloquentCoinDataSourceTest extends TestCase
 
     /**
      * @test
+     * @throws CannotUpdateACoinException
      */
     public function coinHasNotBeenUpdated()
     {
         $walletId = 'invalidWallet';
         $coinId = 'invalidCoinId';
 
-        $this->expectException(CannotCreateOrUpdateACoinException::class);
+        $this->expectException(CannotCreateACoinException::class);
 
         $this->eloquentCoinDataSource->updateCoin($walletId, $coinId,1,1);
     }
@@ -108,6 +111,7 @@ class EloquentCoinDataSourceTest extends TestCase
 
     /**
      * @test
+     * @throws CannotDeleteACoinException
      */
     public function doesNotDeleteCoinIfCoinIdIsIncorrect() {
 
@@ -120,7 +124,7 @@ class EloquentCoinDataSourceTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
+     * @throws CannotDeleteACoinException
      */
     public function deletesCoinIfCoinIdIsCorrect() {
 

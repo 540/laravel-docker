@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 class EloquentWalletDataSource
 {
+    /**
+     * @throws WalletNotFoundException
+     */
     public function findWalletById($walletId)
     {
         $wallet = Wallet::query()->where('id', $walletId)->first();
@@ -20,6 +23,9 @@ class EloquentWalletDataSource
         return $wallet;
     }
 
+    /**
+     * @throws WalletAlreadyExistsForUserException
+     */
     public function createWalletByUserId($userId)
     {
         try {

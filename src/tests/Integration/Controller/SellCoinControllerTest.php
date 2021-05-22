@@ -6,12 +6,9 @@ use App\DataSource\API\CoinDataSource;
 use App\Http\Controllers\SellCoinController;
 use App\Models\Coin;
 use App\Models\Wallet;
-use App\Services\SellCoinService\SellCoinService;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
-use Illuminate\Http\Request;
-use Prophecy\Prophet;
 use Tests\Integration\Controller\Doubles\FakeCoinLoreDataSource;
 use Tests\TestCase;
 

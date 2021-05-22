@@ -5,8 +5,7 @@ namespace App\Services\WalletCryptocurrencies;
 
 
 use App\DataSource\Database\EloquentWalletDataSource;
-use Exception;
-use function PHPUnit\Framework\isNull;
+use App\Exceptions\WalletNotFoundException;
 
 class GetWalletCryptocurrenciesService
 {
@@ -17,7 +16,9 @@ class GetWalletCryptocurrenciesService
         $this->eloquentWalletDataSource = $eloquentWalletCoinDataSource;
     }
 
-
+    /**
+     * @throws WalletNotFoundException
+     */
     public function execute($walletId): array
     {
         $wallet = $this->eloquentWalletDataSource->findWalletById($walletId);

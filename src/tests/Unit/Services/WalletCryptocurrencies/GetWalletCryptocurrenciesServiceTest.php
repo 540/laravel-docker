@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\WalletCryptocurrencies;
 
 use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\WalletNotFoundException;
 use App\Exceptions\WrongCoinIdException;
 use App\Models\Coin;
 use App\Models\Wallet;
@@ -32,7 +33,8 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
 
     /**
      * @test
-     **/
+     * @throws WalletNotFoundException
+     */
     public function noCoinsFoundGivenAnInvalidWalletId()
     {
         $walletId = 'invalidWalletId';
@@ -46,7 +48,8 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
 
     /**
      * @test
-     **/
+     * @throws WalletNotFoundException
+     */
     public function noCoinsFoundGivenAValidWalletId()
     {
         $wallet = $this->getWalletFromFactory();
@@ -62,7 +65,9 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
 
     /**
      * @test
-     **/
+     *
+     * @throws WalletNotFoundException
+     */
     public function aCoinIsFoundForAGivenWalletId()
     {
         $wallet = $this->getWalletFromFactory();
@@ -91,7 +96,8 @@ class GetWalletCryptocurrenciesServiceTest extends TestCase
 
     /**
      * @test
-     **/
+     * @throws WalletNotFoundException
+     */
     public function twoCoinsAreFoundForAGivenWalletId()
     {
         $wallet = $this->getWalletFromFactory();

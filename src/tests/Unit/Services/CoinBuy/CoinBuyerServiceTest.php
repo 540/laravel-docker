@@ -5,7 +5,8 @@ namespace Tests\Unit\Services\CoinBuy;
 use App\DataSource\API\CoinLoreCoinDataSource;
 use App\DataSource\Database\EloquentCoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
-use App\Exceptions\CannotCreateOrUpdateACoinException;
+use App\Exceptions\CannotCreateACoinException;
+use App\Exceptions\CannotUpdateACoinException;
 use App\Exceptions\CoinIdNotFoundInWalletException;
 use App\Exceptions\WalletNotFoundException;
 use App\Exceptions\WrongCoinIdException;
@@ -39,8 +40,11 @@ class CoinBuyerServiceTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws \Exception
+     * @throws CoinIdNotFoundInWalletException
+     * @throws WrongCoinIdException
+     * @throws CannotCreateACoinException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
      */
     public function coinIsNotFoundAndItIsCreated ()
     {
@@ -65,7 +69,7 @@ class CoinBuyerServiceTest extends TestCase
             ]);
         });
 
-        $this->coinBuyerService->execute($coinId,$wallet->id,$amount_usd);
+        $this->coinBuyerService->execute($coinId, $wallet->id, $amount_usd);
 
         $coin = Coin::query()->where('wallet_id', $params[0])->where('coin_id',$params[1])->first();
 
@@ -80,8 +84,11 @@ class CoinBuyerServiceTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws \Exception
+     * @throws CoinIdNotFoundInWalletException
+     * @throws WrongCoinIdException
+     * @throws CannotCreateACoinException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
      */
     public function coinIsNotFoundAndCannotBeCreated ()
     {
@@ -96,18 +103,21 @@ class CoinBuyerServiceTest extends TestCase
         $this->eloquentCoinDataSource->findCoinById($coinId,$wallet->id)->shouldBeCalledOnce()->willThrow(new CoinIdNotFoundInWalletException());
         $this->coinLoreCoinDataSource->findCoinById($coinId)->shouldBeCalledOnce()->willReturn(['name'=>'name','symbol'=>'symbol','price_usd'=>1]);
 
-        $this->eloquentCoinDataSource->insertCoin($params)->shouldBeCalledOnce()->willThrow(new CannotCreateOrUpdateACoinException());
+        $this->eloquentCoinDataSource->insertCoin($params)->shouldBeCalledOnce()->willThrow(new CannotCreateACoinException());
 
-        $this->expectException(CannotCreateOrUpdateACoinException::class);
+        $this->expectException(CannotCreateACoinException::class);
 
-        $this->coinBuyerService->execute($coinId,$wallet->id,$amount_usd);
+        $this->coinBuyerService->execute($coinId, $wallet->id, $amount_usd);
 
     }
 
     /**
      * @test
-     *
-     * @throws \Exception
+     * @throws CoinIdNotFoundInWalletException
+     * @throws WrongCoinIdException
+     * @throws CannotCreateACoinException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
      */
     public function coinIsFoundItIsUpdated()
     {
@@ -141,8 +151,11 @@ class CoinBuyerServiceTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws \Exception
+     * @throws CoinIdNotFoundInWalletException
+     * @throws WrongCoinIdException
+     * @throws CannotCreateACoinException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
      */
     public function coinIsFoundAndCannotBeUpdated()
     {
@@ -157,9 +170,9 @@ class CoinBuyerServiceTest extends TestCase
         $this->eloquentCoinDataSource->findCoinById($coin->coin_id,$wallet->id)->shouldBeCalledOnce()->willReturn($coin);
         $this->coinLoreCoinDataSource->findCoinById($coin->coin_id)->shouldBeCalledOnce()->willReturn(['name'=>$coin->name,'symbol'=>$coin->symbol,'price_usd'=>1]);
 
-        $this->eloquentCoinDataSource->updateCoin($wallet->id,$coin->coin_id,($coin->amount + ($amount_usd/ 1)), ($coin->value_usd + $amount_usd))->shouldBeCalledOnce()->willThrow(new CannotCreateOrUpdateACoinException());
+        $this->eloquentCoinDataSource->updateCoin($wallet->id,$coin->coin_id,($coin->amount + ($amount_usd/ 1)), ($coin->value_usd + $amount_usd))->shouldBeCalledOnce()->willThrow(new CannotCreateACoinException());
 
-        $this->expectException(CannotCreateOrUpdateACoinException::class);
+        $this->expectException(CannotCreateACoinException::class);
 
         $this->coinBuyerService->execute($coin->coin_id,$wallet->id,$amount_usd);
 
@@ -167,8 +180,9 @@ class CoinBuyerServiceTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws \Exception
+     * @throws CannotCreateACoinException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
      */
     public function walletIsNotFound ()
     {
@@ -187,8 +201,10 @@ class CoinBuyerServiceTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws \Exception
+     * @throws CannotCreateACoinException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
+     * @throws WrongCoinIdException
      */
     public function wrongCoinIdProvided ()
     {

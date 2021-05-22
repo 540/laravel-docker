@@ -17,14 +17,10 @@ class CoinBuyerController extends BaseController {
 
     private CoinBuyerService $coinBuyerService;
 
-    /**
-     * IsEarlyAdopterUserController constructor.
-     */
     public function __construct(CoinBuyerService $coinBuyerService)
     {
         $this->coinBuyerService = $coinBuyerService;
     }
-
 
     public function buyCoin (Request $request) : JsonResponse
     {

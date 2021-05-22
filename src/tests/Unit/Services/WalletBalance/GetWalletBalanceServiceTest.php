@@ -4,6 +4,9 @@ namespace Tests\Unit\Services\WalletBalance;
 
 use App\DataSource\API\CoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\CannotDeleteACoinException;
+use App\Exceptions\CannotUpdateACoinException;
+use App\Exceptions\CoinIdNotFoundInWalletException;
 use App\Exceptions\WalletNotFoundException;
 use App\Exceptions\WrongCoinIdException;
 use App\Models\Coin;
@@ -32,7 +35,8 @@ class GetWalletBalanceServiceTest extends TestCase
 
     /**
      * @test
-     **/
+     * @throws WalletNotFoundException
+     */
     public function noWalletIsFoundGivenAnInvalidWalletId()
     {
         $walletId = 1;
@@ -45,7 +49,8 @@ class GetWalletBalanceServiceTest extends TestCase
 
     /**
      * @test
-     **/
+     * @throws WalletNotFoundException
+     */
     public function coinIsNotFoundGivenAWrongCoinId()
     {
         $wallet = Wallet::factory(Wallet::class)->create()->first();
@@ -64,7 +69,8 @@ class GetWalletBalanceServiceTest extends TestCase
 
     /**
      * @test
-     **/
+     * @throws WalletNotFoundException
+     */
     public function balanceIsProvidedGivenAValidWalletId()
     {
         $wallet = Wallet::factory()->create()->first();

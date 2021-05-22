@@ -1,14 +1,17 @@
 <?php
 
-namespace Tests\Services\SellCoinService;
+namespace Tests\Unit\Services\SellCoinService;
 
 use App\DataSource\API\CoinLoreCoinDataSource;
 use App\DataSource\Database\EloquentCoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\CannotDeleteACoinException;
+use App\Exceptions\CannotUpdateACoinException;
 use App\Exceptions\CoinIdNotFoundInWalletException;
+use App\Exceptions\WalletNotFoundException;
+use App\Exceptions\WrongCoinIdException;
 use App\Models\Coin;
 use App\Models\Wallet;
-use App\Services\CoinBuy\CoinBuyerService;
 use App\Services\SellCoinService\SellCoinService;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -39,6 +42,9 @@ class SellCoinServiceTest extends TestCase
     /**
      * @test
      * @throws CoinIdNotFoundInWalletException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
+     * @throws CannotDeleteACoinException
      */
     public function coinIsNotFoundIfCoinIdIsNotCorrect()
     {
@@ -55,7 +61,11 @@ class SellCoinServiceTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
+     * @throws CoinIdNotFoundInWalletException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
+     * @throws CannotDeleteACoinException
+     * @throws WrongCoinIdException
      */
     public function getsExceptionIfCannotSellPartOfTheCoinsForGivenCorrectId()
     {
@@ -81,7 +91,10 @@ class SellCoinServiceTest extends TestCase
     /**
      * @test
      * @throws CoinIdNotFoundInWalletException
-     * @throws \App\Exceptions\CannotCreateOrUpdateACoinException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
+     * @throws CannotDeleteACoinException
+     * @throws WrongCoinIdException
      */
     public function sellsPartOfTheCoinsForGivenId()
     {
@@ -120,7 +133,11 @@ class SellCoinServiceTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
+     * @throws CoinIdNotFoundInWalletException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
+     * @throws CannotDeleteACoinException
+     * @throws WrongCoinIdException
      */
     public function getsExceptionIfCannotSellEveryCoinForGivenCorrectId()
     {
@@ -148,7 +165,11 @@ class SellCoinServiceTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
+     * @throws CoinIdNotFoundInWalletException
+     * @throws WalletNotFoundException
+     * @throws CannotUpdateACoinException
+     * @throws CannotDeleteACoinException
+     * @throws WrongCoinIdException
      */
     public function sellsEveryCoinForGivenId()
     {

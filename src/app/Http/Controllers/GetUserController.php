@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\EarlyAdopter\IsEarlyAdopterService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\DB;
 
 class GetUserController extends BaseController
 {
-    private $isEarlyAdopterService;
+    private IsEarlyAdopterService $isEarlyAdopterService;
 
     public function __constructor($isEarlyAdopterService)
     {
