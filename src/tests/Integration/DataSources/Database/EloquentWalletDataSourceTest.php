@@ -7,7 +7,6 @@ use App\Exceptions\WalletAlreadyExistsForUserException;
 use App\Exceptions\WalletNotFoundException;
 use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class EloquentWalletDataSourceTest extends TestCase
@@ -35,7 +34,8 @@ class EloquentWalletDataSourceTest extends TestCase
 
     /**
      * @test
-     **/
+     * @throws WalletNotFoundException
+     */
     public function walletIsFoundGivenAnValidWalletId()
     {
         $wallet = Wallet::factory()->create()->first();
@@ -60,7 +60,8 @@ class EloquentWalletDataSourceTest extends TestCase
 
     /**
      * @test
-     **/
+     * @throws WalletAlreadyExistsForUserException
+     */
     public function walletIsCreatedGivenANonExistentUserId()
     {
         $userId = 'nonExistentUserId';

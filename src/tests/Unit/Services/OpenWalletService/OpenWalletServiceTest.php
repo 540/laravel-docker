@@ -5,7 +5,6 @@ namespace Tests\Unit\Services\OpenWalletService;
 use App\DataSource\Database\EloquentWalletDataSource;
 use App\Exceptions\WalletAlreadyExistsForUserException;
 use App\Services\OpenWallet\OpenWalletService;
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophet;
 
@@ -24,8 +23,7 @@ class OpenWalletServiceTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws Exception
+     * @throws WalletAlreadyExistsForUserException
      */
     public function walletIsNotOpenedGivenAnInvalidUserId ()
     {
@@ -40,8 +38,7 @@ class OpenWalletServiceTest extends TestCase
 
     /**
      * @test
-     *
-     * @throws Exception
+     * @throws WalletAlreadyExistsForUserException
      */
     public function walletIsOpenedGivenAValidUserId ()
     {

@@ -4,6 +4,7 @@ namespace Tests\Integration\Controller;
 
 use App\DataSource\API\CoinDataSource;
 use App\Errors\Errors;
+use App\Http\Controllers\CoinBuyerController;
 use App\Models\Coin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Wallet;
@@ -14,7 +15,7 @@ use Tests\TestCase;
 class CoinBuyerControllerTest extends TestCase
 {
     use RefreshDatabase;
-    private $coinBuyerController;
+    private CoinBuyerController $coinBuyerController;
 
     /**
      * @test

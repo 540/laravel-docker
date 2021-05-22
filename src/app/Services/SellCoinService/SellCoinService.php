@@ -3,11 +3,12 @@
 namespace App\Services\SellCoinService;
 
 use App\DataSource\API\CoinDataSource;
-use App\DataSource\API\CoinLoreCoinDataSource;
 use App\DataSource\Database\EloquentCoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\CannotDeleteACoinException;
+use App\Exceptions\CannotUpdateACoinException;
 use App\Exceptions\CoinIdNotFoundInWalletException;
-use Exception;
+use App\Exceptions\WalletNotFoundException;
 
 class SellCoinService
 {
@@ -24,7 +25,10 @@ class SellCoinService
 
     /**
      * @throws CoinIdNotFoundInWalletException
-     * @throws Exception
+     * @throws WalletNotFoundException
+     * @throws CannotDeleteACoinException|
+     * @throws CannotUpdateACoinException
+     *
      */
     public function execute(string $coinId, int $walletId, float $amountUSD)
     {

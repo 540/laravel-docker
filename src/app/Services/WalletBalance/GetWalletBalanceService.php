@@ -4,6 +4,7 @@ namespace App\Services\WalletBalance;
 
 use App\DataSource\API\CoinDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\WalletNotFoundException;
 
 class GetWalletBalanceService
 {
@@ -16,6 +17,9 @@ class GetWalletBalanceService
         $this->coinDataSource = $coinDataSource;
     }
 
+    /**
+     * @throws WalletNotFoundException
+     */
     public function execute($walletId):float
     {
         $wallet = $this->eloquentWalletDataSource->findWalletById($walletId);
