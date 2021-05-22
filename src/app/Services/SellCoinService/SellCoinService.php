@@ -37,7 +37,7 @@ class SellCoinService
         $amountToSell = $amountUSD / $coinInfo['price_usd'];
 
         if($coin->amount > $amountToSell)
-            $this->eloquentCoinDataSource->updateCoin($coin->wallet_id,$coin->coin_id, ($coin->amount-$amountToSell), ($coin->value_usd-$amountUSD));
+            $this->eloquentCoinDataSource->updateCoin($coin->wallet_id,$coin->coin_id, ($coin->amount - $amountToSell), ($coin->value_usd-$amountUSD));
         else
             $this->eloquentCoinDataSource->deleteCoin($coin->id);
     }

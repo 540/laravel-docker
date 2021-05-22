@@ -2,7 +2,6 @@
 
 namespace Tests\Integration\Controller;
 
-use App\Errors\Errors;
 use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
@@ -24,7 +23,7 @@ class OpenWalletControllerTest extends TestCase
             'user_id' => $userId
         ]);
 
-        $response->assertStatus(Response::HTTP_NOT_ACCEPTABLE)->assertExactJson([Errors::ERROR_FIELD => Errors::WALLET_ALREADY_EXISTS_FOR_THIS_USER]);
+        $response->assertStatus(Response::HTTP_NOT_ACCEPTABLE)->assertExactJson([Response::HTTP_NOT_ACCEPTABLE => 'User with the specified ID already has a wallet.']);
     }
 
     /**
@@ -37,7 +36,7 @@ class OpenWalletControllerTest extends TestCase
             'user' => $userId
         ]);
 
-        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertExactJson([Errors::ERROR_FIELD => Errors::BAD_REQUEST]);
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertExactJson([Response::HTTP_BAD_REQUEST => 'Request fields have some errors.']);
     }
 
     /**

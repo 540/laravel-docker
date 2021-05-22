@@ -3,13 +3,13 @@
 namespace Tests\Integration\Controller;
 
 use App\DataSource\API\CoinDataSource;
-use App\DataSource\API\FakeNegativeBalanceCoinDataSource;
-use App\DataSource\API\FakePositiveBalanceCoinDataSource;
 use App\Errors\Errors;
 use App\Models\Coin;
 use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
+use Tests\Doubles\FakeNegativeBalanceCoinDataSource;
+use Tests\Doubles\FakePositiveBalanceCoinDataSource;
 use Tests\TestCase;
 
 class GetWalletBalanceControllerTest extends TestCase
@@ -23,7 +23,7 @@ class GetWalletBalanceControllerTest extends TestCase
     {
         $response = $this->get('api/wallet/1/balance');
 
-        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson([Errors::ERROR_FIELD => Errors::WALLET_NOT_FOUND]);
+        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson([Response::HTTP_NOT_FOUND => Errors::WALLET_NOT_FOUND]);
     }
 
     /**
@@ -41,7 +41,7 @@ class GetWalletBalanceControllerTest extends TestCase
 
         $response = $this->get('/api/wallet/' . $wallet->id . '/balance');
 
-        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson([Errors::ERROR_FIELD => Errors::WRONG_COIN_ID]);
+        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson([Response::HTTP_NOT_FOUND => Errors::WRONG_COIN_ID]);
     }
 
     /**

@@ -24,7 +24,7 @@ class OpenWalletController extends BaseController
         if ($request->has("user_id") === false)
         {
             return response()->json([
-                Errors::ERROR_FIELD => Errors::BAD_REQUEST
+                Response::HTTP_BAD_REQUEST => Errors::BAD_REQUEST
             ],Response::HTTP_BAD_REQUEST);
         }
         try
@@ -36,7 +36,7 @@ class OpenWalletController extends BaseController
         } catch (Exception $exception)
         {
             return response()->json([
-                Errors::ERROR_FIELD => $exception->getMessage()
+                Response::HTTP_NOT_ACCEPTABLE => $exception->getMessage()
             ],Response::HTTP_NOT_ACCEPTABLE);
         }
     }

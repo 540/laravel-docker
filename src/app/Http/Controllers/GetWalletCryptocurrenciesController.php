@@ -24,7 +24,7 @@ class GetWalletCryptocurrenciesController extends Controller
             return response()->json($coins, Response::HTTP_OK);
         }catch (Exception $exception){
             return response()->json([
-                Errors::ERROR_FIELD => $exception->getMessage()
+                Response::HTTP_NOT_FOUND => $exception->getMessage()
             ], Response::HTTP_NOT_FOUND);
         }
     }

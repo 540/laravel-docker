@@ -8,29 +8,26 @@ use App\Models\Coin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Wallet;
 use Illuminate\Http\Response;
-use Tests\Integration\Controller\Doubles\FakeCoinLoreDataSource;
+use Tests\Doubles\FakeCoinLoreDataSource;
 use Tests\TestCase;
 
 class CoinBuyerControllerTest extends TestCase
 {
-
     use RefreshDatabase;
     private $coinBuyerController;
 
     /**
      * @test
-     * Falta cambiarlos por las peticiones json
      **/
     public function getsHttpBadRequestWhenAInvalidRequestFieldIsReceived ()
     {
-
         $response = $this->postJson('api/coin/buy', [
             'coin' => '1',
             'wallet_id' => 0,
             'amount_usd' => 50
         ]);
 
-        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertJson(['error' => Errors::BAD_REQUEST_ERROR]);
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertJson([Response::HTTP_BAD_REQUEST => Errors::BAD_REQUEST_ERROR]);
 
     }
 
@@ -46,7 +43,7 @@ class CoinBuyerControllerTest extends TestCase
             'amount_usd' => 50
         ]);
 
-        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson(['error' =>  Errors::COIN_SPICIFIED_ID_NOT_FOUND]);
+        $response->assertStatus(Response::HTTP_NOT_FOUND)->assertJson([Response::HTTP_NOT_FOUND =>  Errors::WALLET_NOT_FOUND]);
     }
 
     /**
@@ -72,7 +69,7 @@ class CoinBuyerControllerTest extends TestCase
             ->where('wallet_id', $coin->wallet_id)
             ->first();
 
-        $response->assertStatus(Response::HTTP_OK)->assertJson(['bought' => 'successful operation']);
+        $response->assertStatus(Response::HTTP_OK)->assertJson([Response::HTTP_OK => 'successful operation']);
 
         $this->assertEquals($coin->amount+50, $updatedCoin->amount);
         $this->assertEquals($coin->value_usd+50, $updatedCoin->value_usd);
@@ -99,12 +96,10 @@ class CoinBuyerControllerTest extends TestCase
             ->where('wallet_id', $wallet->id)
             ->first();
 
-        $response->assertStatus(Response::HTTP_OK)->assertJson(['bought' => 'successful operation']);
+        $response->assertStatus(Response::HTTP_OK)->assertJson([Response::HTTP_OK => 'successful operation']);
 
         $this->assertEquals(1, $createdCoin->id);
         $this->assertEquals($wallet->id, $createdCoin->wallet_id);
 
     }
-
-
 }

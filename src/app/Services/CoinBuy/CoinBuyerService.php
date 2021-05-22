@@ -9,7 +9,9 @@ use App\DataSource\API\CoinLoreCoinDataSource;
 use App\DataSource\Database\EloquentCoinDataSource;
 use App\DataSource\Database\EloquentUserDataSource;
 use App\DataSource\Database\EloquentWalletDataSource;
+use App\Exceptions\CannotCreateOrUpdateACoinException;
 use App\Exceptions\CoinIdNotFoundInWalletException;
+use App\Exceptions\WalletNotFoundException;
 use Exception;
 use function PHPUnit\Framework\throwException;
 use Illuminate\Http\Request;
@@ -20,13 +22,10 @@ class CoinBuyerService
      * @var EloquentUserDataSource
      */
     private $eloquentCoinBuyerDataSource;
-    private $eloquentWalletDataSource;
-    private $coinLoreCoinDataSource;
+    private EloquentWalletDataSource $eloquentWalletDataSource;
+    private CoinDataSource $coinLoreCoinDataSource;
 
-    /**
-     * IsEarlyAdopterService constructor.
-     * @param EloquentCoinDataSource $eloquentCoinBuyerDataSource;
-     */
+
     public function __construct(EloquentCoinDataSource $eloquentCoinBuyerDataSource,EloquentWalletDataSource $eloquentWalletDataSource,CoinDataSource $coinLoreCoinDataSource)
     {
         $this->coinLoreCoinDataSource = $coinLoreCoinDataSource;
@@ -35,17 +34,14 @@ class CoinBuyerService
     }
 
     /**
-     * @param string $email
-     * @return bool
+     * @throws CannotCreateOrUpdateACoinException
+     * @throws WalletNotFoundException
      * @throws Exception
      */
     public function execute($coin_id,$wallet_id,$amount_usd): void
     {
-
         $this->eloquentWalletDataSource->findWalletById($wallet_id);
-
         $coinInfo = $this->coinLoreCoinDataSource->findCoinById($coin_id);
-
         try {
             $coin = $this->eloquentCoinBuyerDataSource->findCoinById($coin_id, $wallet_id);
             $this->eloquentCoinBuyerDataSource->updateCoin($wallet_id, $coin_id, ($coin->amount + ($amount_usd/ $coinInfo["price_usd"])), ($coin->value_usd + $amount_usd));

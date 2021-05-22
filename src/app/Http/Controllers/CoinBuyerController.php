@@ -17,9 +17,6 @@ class CoinBuyerController extends BaseController {
 
     private CoinBuyerService $coinBuyerService;
 
-    /**
-     * IsEarlyAdopterUserController constructor.
-     */
     public function __construct(CoinBuyerService $coinBuyerService)
     {
         $this->coinBuyerService = $coinBuyerService;
@@ -30,23 +27,21 @@ class CoinBuyerController extends BaseController {
     {
         if (($request->has('coin_id') === false) || ($request->has('wallet_id') === false) || ($request->has('amount_usd') === false)) {
             return response()->json([
-                'error' => Errors::BAD_REQUEST_ERROR
+                Response::HTTP_BAD_REQUEST => Errors::BAD_REQUEST_ERROR
             ], Response::HTTP_BAD_REQUEST);
         }
 
         try {
             $this->coinBuyerService->execute($request->input('coin_id'),$request->input('wallet_id'),$request->input('amount_usd'));
             return response()->json([
-                'bought' => 'successful operation'
+                Response::HTTP_OK => 'successful operation'
             ], Response::HTTP_OK);
 
         } catch (Exception $exception) {
             return response()->json([
-                'error' => Errors::COIN_SPICIFIED_ID_NOT_FOUND
+                Response::HTTP_NOT_FOUND => $exception->getMessage()
             ], Response::HTTP_NOT_FOUND);
         }
-
-
     }
 
 }
