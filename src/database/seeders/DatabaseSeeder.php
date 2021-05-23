@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Coin;
+use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,8 +14,14 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-        // \App\Models\User::factory(10)->create();
+    public function run() {
+        $user = User::factory()->create();
+        $user->wallet()->save(Wallet::factory()->make());
+
+        $wallet = Wallet::query()->first();
+
+        $coins = Coin::factory(Coin::class)->count(2)->make();
+
+        $wallet->coins()->saveMany($coins);
     }
 }

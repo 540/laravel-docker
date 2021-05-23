@@ -1,8 +1,9 @@
 <?php
 
-namespace Tests\Integration\DataSources;
+namespace Tests\Integration\DataSources\Database;
 
 use App\DataSource\Database\EloquentUserDataSource;
+use App\Exceptions\UserNotFoundException;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,6 +15,7 @@ class EloquentUserDataSourceTest extends TestCase
 
     /**
      * @test
+     * @throws UserNotFoundException
      */
     public function findsUserByEmail()
     {
@@ -27,6 +29,7 @@ class EloquentUserDataSourceTest extends TestCase
 
     /**
      * @test
+     * @throws UserNotFoundException
      */
     public function noUserIsFoundForTheGivenEmailI()
     {

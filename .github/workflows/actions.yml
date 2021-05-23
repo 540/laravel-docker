@@ -1,0 +1,49 @@
+name: actions
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          tools: composer:v2
+          php-version: '7.4'
+
+      - name: Install dependencies
+        run: cd src;
+             composer install;
+             composer update;
+
+      - name: Generate key
+        run:  cp .env src;
+              cd src;
+              php artisan key:generate;
+
+      - name: Migrate DB
+        run:  cd src;
+              php artisan migrate;
+
+      - name: Run php app lint
+        run: cd src;
+             php -l app -q;
+
+      - name: Run php routes lint
+        run: cd src;
+             php -l routes -q;
+
+      - name: Run php test lint
+        run: cd src;
+             php -l tests -q;
+
+      - name: Run unit test
+        run: cd src;
+             ./vendor/bin/phpunit -c phpunit.xml;
