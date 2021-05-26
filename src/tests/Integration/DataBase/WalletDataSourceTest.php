@@ -4,10 +4,7 @@ namespace Tests\Integration\DataBase;
 
 use App\Infrastructure\Database\WalletDataSource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\TestCase;
-
-use App\Models\Wallet;
-use App\Models\Transaction;
+use Tests\TestCase;
 
 class WalletDataSourceTest extends TestCase
 {

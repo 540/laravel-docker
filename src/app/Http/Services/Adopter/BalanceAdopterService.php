@@ -3,7 +3,6 @@
 
 namespace App\Http\Services\Adopter;
 
-
 use App\Infrastructure\ApiSource\ApiSource;
 use App\Infrastructure\Database\WalletDataSource;
 

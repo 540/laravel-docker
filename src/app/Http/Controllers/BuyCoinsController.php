@@ -40,6 +40,10 @@ class BuyCoinsController extends BaseController
         $idWallet = $request->input("wallet_id");
         $amount = $request->input("amount_usd");
 
+        var_dump($idCoin);
+        var_dump($idWallet);
+        var_dump($amount);
+
         // Indicar operación
         $operation = "buy";
         // Insertar en la cartera

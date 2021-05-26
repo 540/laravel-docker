@@ -11,7 +11,6 @@ use Prophecy\Prophet;
 
 class BalanceServiceUnitTest extends TestCase
 {
-
     /**
      * @var WalletDataSource|\Prophecy\Prophecy\ObjectProphecy
      */
@@ -21,7 +20,7 @@ class BalanceServiceUnitTest extends TestCase
      */
     private BalanceAdopterService $balanceService;
     /**
-     * @var ApiSource|\Prophecy\Prophecy\ObjectProphecy
+     * @var ApiSource
      */
     private $apiDataSource;
 
