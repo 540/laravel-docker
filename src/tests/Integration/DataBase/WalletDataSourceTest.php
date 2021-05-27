@@ -13,27 +13,9 @@ class WalletDataSourceTest extends TestCase
     /**
      * @test
      */
-    public function createWalletInsertingById(){
-        $walletDataSource = new WalletDataSource();
-        $result = $walletDataSource->insertById(35);
-        $this->assertNotNull($result);
-    }
-
-    /**
-     * @test
-     */
     public function findWalletDataByWalletId(){
         $walletDataSource = new WalletDataSource();
         $result = $walletDataSource->findWalletDataByWalletId(3);
-        $this->assertNotNull($result);
-    }
-
-    /**
-     * @test
-     */
-    public function findWalletByUserId(){
-        $walletDataSource = new WalletDataSource();
-        $result = $walletDataSource->findWalletByUserId(2);
         $this->assertNotNull($result);
     }
 
