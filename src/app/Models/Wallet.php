@@ -9,7 +9,7 @@ class Wallet extends Model
 {
     use HasFactory;
 
-    protected $table = 'wallet';
+    protected $table = 'WALLET';
 
     /**
      * The attributes that are mass assignable.

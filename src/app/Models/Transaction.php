@@ -11,7 +11,7 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'transaction';
+    protected $table = 'transactions';
 
     /**
      * The attributes that are mass assignable.
