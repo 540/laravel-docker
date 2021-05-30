@@ -16,15 +16,17 @@ class StatusController extends BaseController
             DB::connection()->getDatabaseName();
             DB::connection()->getPdo();
         } catch (Exception $exception) {
-            return response()->json([
-                'status' => 'Error',
-                'message' => 'Database is not available',
+            return response()->json(
+                [
+                'status' => 'Error', 'message' => 'Database is not available',
                 'data' => $exception->getMessage()
-            ], Response::HTTP_NOT_FOUND);
+                ],
+                Response::HTTP_NOT_FOUND
+            );
         }
-        return response()->json([
-            'status' => 'Success',
-            'message' => 'Systems are up and running',
-        ], Response::HTTP_OK);
+        return response()->json(
+            ['status' => 'Success', 'message' => 'Systems are up and running'],
+            Response::HTTP_OK
+        );
     }
 }

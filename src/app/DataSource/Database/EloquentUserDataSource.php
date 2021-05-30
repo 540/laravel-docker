@@ -2,17 +2,21 @@
 
 namespace App\DataSource\Database;
 
-use App\Models\User;
-use Exception;
+use Illuminate\Support\Facades\DB;
 
 class EloquentUserDataSource
 {
-    public function findByEmail($email): User
+    /**
+     * @param $user_id
+     * @return bool
+     */
+    public function existsByUserId($user_id): bool
     {
-        $user = User::query()->where('email', $email)->first();
-        if (is_null($user)) {
-            throw new Exception('User not found');
-        }
-        return $user;
+        $result = DB::table('users')
+            ->select('user_id')
+            ->where('user_id', $user_id)
+            ->first();
+
+        return ($result != null);
     }
 }

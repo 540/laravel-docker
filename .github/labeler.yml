@@ -1,0 +1,33 @@
+readme:
+  - src/README.md
+  - README.md
+  
+feature:
+  - src/app/**/*
+
+tests:
+  - src/tests/**/*
+
+good practices:
+  - git-hooks/**/*
+  - .github/workflows/**/*
+  
+automation:
+  - git-hooks/**/*
+  - .github/workflows/**/*
+  
+code quality:
+  - git-hooks/**/*
+  - .github/workflows/**/*
+
+composer:
+  - src/composer.json
+  - composer.json
+  
+database:
+  - src/database/**/*
+  
+docker:
+  -docker/docker
+  -Dockerfile
+  -docker-compose.yml

@@ -1,0 +1,53 @@
+name: Laravel Validation
+on:
+  push:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup
+        run: |
+          docker-compose up -d
+          docker ps
+      - name: Build
+        run: |
+          docker exec -i laravel-php sh
+          cd src
+          composer install
+          cp .env.example .env
+          php artisan package:discover
+          php artisan key:generate
+      #- name: Database migation
+      #  run: |
+      #    docker exec -i laravel-php sh
+      #    cd src
+      #    php artisan migrate
+      #- name: Database migation
+      #  run: |
+      #    docker exec -i laravel-php sh
+      #    cd src
+      #    php artisan db:seed
+      - name: Linter
+        run: |
+          docker exec -i laravel-php sh
+          cd src
+          ./vendor/bin/phpcs -n app/*
+          ./vendor/bin/phpcs -n bootstrap/app.php
+          ./vendor/bin/phpcs -n config/*
+          ./vendor/bin/phpcs -n database/*
+          ./vendor/bin/phpcs -n postman/*
+          ./vendor/bin/phpcs -n public/*
+          ./vendor/bin/phpcs -n resources/*
+          ./vendor/bin/phpcs -n routes/*
+          ./vendor/bin/phpcs -n tests/*
+      - name: Test
+        run: |
+          docker exec -i laravel-php sh
+          cd src
+          ./vendor/bin/phpunit

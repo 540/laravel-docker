@@ -21,5 +21,10 @@ bundles/
 .hg/
 .git/
 vendor/pkg/
+vendor
 pyenv
-Vagrantfile
+Vagrantfile 
+mysql/ib*
+*.cache
+mysql/laravel/*.frm
+mysql/laravel/*.ibd

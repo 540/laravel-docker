@@ -3,7 +3,10 @@
 namespace Tests\Integration\DataSources;
 
 use App\DataSource\Database\EloquentUserDataSource;
+use App\Models\Coin;
 use App\Models\User;
+use App\Models\Wallet;
+use App\Models\WalletCoin;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -13,43 +16,42 @@ class EloquentUserDataSourceTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @test
+     * @setUp
      */
-    public function findsUserByEmail()
+    protected function setUp(): void
     {
+        parent::setUp();
         User::factory(User::class)->create();
-        $eloquentUserDataSource = new EloquentUserDataSource();
-
-        $user = $eloquentUserDataSource->findByEmail('email@email.com');
-
-        $this->assertInstanceOf(User::class, $user);
+        Wallet::factory(Wallet::class)->create();
+        Coin::factory(Coin::class)->create();
+        WalletCoin::factory(WalletCoin::class)->create();
     }
 
     /**
      * @test
+     * @throws Exception
      */
-    public function noUserIsFoundForTheGivenEmailI()
+    public function notExistsByUserId()
     {
+        $expectedResult = false;
+
         $eloquentUserDataSource = new EloquentUserDataSource();
 
-        $this->expectException(Exception::class);
-
-        $eloquentUserDataSource->findByEmail('email@email.com');
+        $result = $eloquentUserDataSource->existsByUserId('error-user');
+        $this->assertEquals($expectedResult, $result);
     }
 
     /**
      * @test
+     * @throws Exception
      */
-    public function noUserIsFoundForTheGivenEmailII()
+    public function existsByUserId()
     {
-        User::factory(User::class)->create();
+        $expectedResult = true;
+
         $eloquentUserDataSource = new EloquentUserDataSource();
 
-        try {
-            $eloquentUserDataSource->findByEmail('not_known@email.com');
-        } catch (Exception $exception) {
-            $this->assertEquals('User not found', $exception->getMessage());
-        }
-
+        $result = $eloquentUserDataSource->existsByUserId('factory-user');
+        $this->assertEquals($expectedResult, $result);
     }
 }
