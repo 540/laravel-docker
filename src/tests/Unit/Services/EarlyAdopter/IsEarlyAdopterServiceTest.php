@@ -2,23 +2,17 @@
 
 namespace Tests\Unit\Services\EarlyAdopter;
 
-use App\DataSource\Database\EloquentUserDataSource;
-use App\Models\User;
-use App\Services\EarlyAdopter\IsEarlyAdopterService;
+use App\Application\EarlyAdopter\IsEarlyAdopterService;
+use App\Application\UserDataSource\UserDataSource;
+use App\Domain\User;
+use Exception;
+use Mockery;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Prophet;
 
 class IsEarlyAdopterServiceTest extends TestCase
 {
-    /**
-     * @var EloquentUserDataSource
-     */
-    private $eloquentUserDataSource;
-
-    /**
-     * @var IsEarlyAdopterService
-     */
-    private $isEarlyAdopterService;
+    private IsEarlyAdopterService $isEarlyAdopterService;
+    private UserDataSource $userDataSource;
 
     /**
      * @setUp
@@ -26,10 +20,30 @@ class IsEarlyAdopterServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $prophet = new Prophet();
-        $this->eloquentUserDataSource = $prophet->prophesize(EloquentUserDataSource::class);
 
-        $this->isEarlyAdopterService = new IsEarlyAdopterService($this->eloquentUserDataSource->reveal());
+        $this->userDataSource = Mockery::mock(UserDataSource::class);
+
+        $this->isEarlyAdopterService = new IsEarlyAdopterService($this->userDataSource);
+    }
+
+    /**
+     * @test
+     */
+    public function userNotFound()
+    {
+        $email = 'not_existing_email@email.com';
+
+        $user = new User(9999, $email);
+
+        $this->userDataSource
+            ->expects('findByEmail')
+            ->with($email)
+            ->once()
+            ->andThrow(new Exception('User not found'));
+
+        $this->expectException(Exception::class);
+
+        $this->isEarlyAdopterService->execute($email);
     }
 
     /**
@@ -38,11 +52,14 @@ class IsEarlyAdopterServiceTest extends TestCase
     public function userIsNotEarlyAdopter()
     {
         $email = 'not_early_adopter@email.com';
-        $user = new User();
-        $user->fill(['id' => 9999, 'email' => $email]);
 
-        $this->eloquentUserDataSource->findByEmail($email)->shouldBeCalledOnce()->willReturn($user);
+        $user = new User(9999, $email);
 
+        $this->userDataSource
+            ->expects('findByEmail')
+            ->with($email)
+            ->once()
+            ->andReturn($user);
         $isUserEarlyAdopter = $this->isEarlyAdopterService->execute($email);
 
         $this->assertFalse($isUserEarlyAdopter);
@@ -54,10 +71,14 @@ class IsEarlyAdopterServiceTest extends TestCase
     public function userIsAnEarlyAdopter()
     {
         $email = 'not_early_adopter@email.com';
-        $user = new User();
-        $user->fill(['id' => 1, 'email' => $email]);
 
-        $this->eloquentUserDataSource->findByEmail($email)->shouldBeCalledOnce()->willReturn($user);
+        $user = new User(300, $email);
+
+        $this->userDataSource
+            ->expects('findByEmail')
+            ->with($email)
+            ->once()
+            ->andReturn($user);
 
         $isUserEarlyAdopter = $this->isEarlyAdopterService->execute($email);
 

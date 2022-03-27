@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\IsEarlyAdopterUserController;
-use App\Http\Controllers\StatusController;
+use App\Infrastructure\Controllers\IsEarlyAdopterUserController;
+use App\Infrastructure\Controllers\StatusController;
 use Illuminate\Support\Facades\Route;
 
 /*
