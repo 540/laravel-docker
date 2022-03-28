@@ -10,15 +10,15 @@ class IsEarlyAdopterService
     /**
      * @var UserDataSource
      */
-    private $eloquentUserDataSource;
+    private $userDataSource;
 
     /**
      * IsEarlyAdopterService constructor.
-     * @param UserDataSource $eloquentUserDataSource
+     * @param UserDataSource $userDataSource
      */
-    public function __construct(UserDataSource $eloquentUserDataSource)
+    public function __construct(UserDataSource $userDataSource)
     {
-        $this->eloquentUserDataSource = $eloquentUserDataSource;
+        $this->userDataSource = $userDataSource;
     }
 
     /**
@@ -28,7 +28,7 @@ class IsEarlyAdopterService
      */
     public function execute(string $email): bool
     {
-        $user = $this->eloquentUserDataSource->findByEmail($email);
+        $user = $this->userDataSource->findByEmail($email);
 
         $isEarlyAdopter = false;
 

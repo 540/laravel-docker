@@ -60,6 +60,7 @@ class IsEarlyAdopterServiceTest extends TestCase
             ->with($email)
             ->once()
             ->andReturn($user);
+
         $isUserEarlyAdopter = $this->isEarlyAdopterService->execute($email);
 
         $this->assertFalse($isUserEarlyAdopter);

@@ -24,7 +24,6 @@ class IsEarlyAdopterUserController extends BaseController
     {
         try {
             $isEarlyAdopter = $this->isEarlyAdopterService->execute($email);
-
         } catch (Exception $exception) {
             return response()->json([
                 'error' => $exception->getMessage()
