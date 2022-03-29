@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Services\EarlyAdopter;
+namespace Tests\app\Application\EarlyAdopter;
 
 use App\Application\EarlyAdopter\IsEarlyAdopterService;
 use App\Application\UserDataSource\UserDataSource;
