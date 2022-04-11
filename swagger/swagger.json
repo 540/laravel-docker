@@ -20,6 +20,75 @@
     "https"
   ],
   "paths": {
+    "/coin/status": {
+      "post": {
+        "tags": [
+          "coin"
+        ],
+        "summary": "Get given coin status",
+        "description": "",
+        "operationId": "coinStatus",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "coin_id"
+              ],
+              "properties": {
+                "coin_id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coin_id": {
+                  "type": "string"
+                },
+                "symbol": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "nameid": {
+                  "type": "string"
+                },
+                "rank": {
+                  "type": "integer"
+                },
+                "price_usd": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "404": {
+            "description": "A coin with the specified ID was not found."
+          }
+        }
+      }
+    },
     "/coin/buy": {
       "post": {
         "tags": [
@@ -64,8 +133,8 @@
           "200": {
             "description": "successful operation"
           },
-          "400": {
-            "description": "bad request error"
+          "503": {
+            "description": "Service unavailable"
           },
           "404": {
             "description": "A coin with the specified ID was not found."
@@ -117,8 +186,8 @@
           "200": {
             "description": "successful operation"
           },
-          "400": {
-            "description": "bad request error"
+          "503": {
+            "description": "Service unavailable"
           },
           "404": {
             "description": "A coin with the specified ID was not found."
@@ -168,8 +237,8 @@
               }
             }
           },
-          "400": {
-            "description": "bad request error"
+          "503": {
+            "description": "Service unavailable"
           },
           "404": {
             "description": "A user with the specified ID was not found."
@@ -177,7 +246,7 @@
         }
       }
     },
-    "/wallet/{wallet_id}/": {
+    "/wallet/{wallet_id}": {
       "get": {
         "tags": [
           "wallet"
@@ -207,8 +276,8 @@
               }
             }
           },
-          "400": {
-            "description": "bad request error"
+          "503": {
+            "description": "Service unavailable"
           },
           "404": {
             "description": "a wallet with the specified ID was not found."
@@ -249,8 +318,8 @@
               }
             }
           },
-          "400": {
-            "description": "bad request error"
+          "503": {
+            "description": "Service unavailable"
           },
           "404": {
             "description": "a wallet with the specified ID was not found."
