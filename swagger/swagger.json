@@ -20,8 +20,8 @@
     "https"
   ],
   "paths": {
-    "/coin/status": {
-      "post": {
+    "/coin/status/coin_id": {
+      "get": {
         "tags": [
           "coin"
         ],
@@ -31,26 +31,13 @@
         "consumes": [
           "application/json"
         ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "",
+            "in": "path",
+            "name": "coin_id",
+            "type": "string",
             "required": true,
-            "schema": {
-              "type": "object",
-              "required": [
-                "coin_id"
-              ],
-              "properties": {
-                "coin_id": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": "Id of the coin to get information"
           }
         ],
         "responses": {
@@ -68,7 +55,7 @@
                 "name": {
                   "type": "string"
                 },
-                "nameid": {
+                "name_id": {
                   "type": "string"
                 },
                 "rank": {
