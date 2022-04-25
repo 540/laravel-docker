@@ -26,4 +26,5 @@ Route::get(
 );
 
 Route::get('user/{email}', IsEarlyAdopterUserController::class);
+Route::get('user/{id}}', IsEarlyAdopterUserController::class);
 Route::get('user/id/{userId}', GetUserController::class);
