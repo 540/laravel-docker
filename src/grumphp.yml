@@ -1,0 +1,14 @@
+grumphp:
+  tasks:
+    phpmd:
+      whitelist_patterns: []
+      exclude: []
+      report_format: text
+      ruleset: ['cleancode', 'codesize', 'naming']
+      triggered_by: ['php']
+    phplint:
+      exclude: [ ]
+      jobs: ~
+      short_open_tag: false
+      ignore_patterns: [ ]
+      triggered_by: [ 'php', 'phtml', 'php3', 'php4', 'php5' ]
