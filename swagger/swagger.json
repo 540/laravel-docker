@@ -20,7 +20,7 @@
     "https"
   ],
   "paths": {
-    "/coin/status/coin_id": {
+    "/coin/status/{coin_id}": {
       "get": {
         "tags": [
           "coin"
@@ -125,6 +125,9 @@
           },
           "404": {
             "description": "A coin with the specified ID was not found."
+          },
+          "400": {
+            "description": "coin_id/wallet_id/amount_usd mandatory (uno para cada caso)"
           }
         }
       }
@@ -178,6 +181,9 @@
           },
           "404": {
             "description": "A coin with the specified ID was not found."
+          },
+          "400": {
+            "description": "coin_id/wallet_id/amount_usd mandatory (uno para cada caso)"
           }
         }
       }
@@ -196,22 +202,6 @@
         "produces": [
           "application/json"
         ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "User id",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "user_id": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -226,9 +216,6 @@
           },
           "503": {
             "description": "Service unavailable"
-          },
-          "404": {
-            "description": "A user with the specified ID was not found."
           }
         }
       }
