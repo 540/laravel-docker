@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Criptocurrencies wallet"
   },
-  "host": "petstore.swagger.io",
+  "host": "localhost:8088",
   "tags": [
     {
       "name": "coin",
@@ -17,10 +17,10 @@
     }
   ],
   "schemes": [
-    "https"
+    "http"
   ],
   "paths": {
-    "/coin/status/{coin_id}": {
+    "/api/coin/status/{coin_id}": {
       "get": {
         "tags": [
           "coin"
@@ -76,7 +76,7 @@
         }
       }
     },
-    "/coin/buy": {
+    "/api/coin/buy": {
       "post": {
         "tags": [
           "coin"
@@ -132,7 +132,7 @@
         }
       }
     },
-    "/coin/sell": {
+    "/api/coin/sell": {
       "post": {
         "tags": [
           "coin"
@@ -188,7 +188,7 @@
         }
       }
     },
-    "/wallet/open": {
+    "/api/wallet/open": {
       "post": {
         "tags": [
           "wallet"
@@ -220,7 +220,7 @@
         }
       }
     },
-    "/wallet/{wallet_id}": {
+    "/api/wallet/{wallet_id}": {
       "get": {
         "tags": [
           "wallet"
@@ -259,7 +259,7 @@
         }
       }
     },
-    "/wallet/{wallet_id}/balance": {
+    "/api/wallet/{wallet_id}/balance": {
       "get": {
         "tags": [
           "wallet"
