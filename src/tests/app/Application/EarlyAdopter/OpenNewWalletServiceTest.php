@@ -58,17 +58,21 @@ class OpenNewWalletServiceTest extends TestCase
      */
     public function walletCreated()
     {
-        $user_id = "1";
+        $user_id = "2";
         $wallet = new Wallet();
-        $wallet->data["wallet_id"] ="1";
-        $wallet->data["user_id"] = $user_id;
+        $wallet->data['wallet_id'] = 1;
+        $wallet->data['user_id'] = $user_id;
 
-        $this->walletDataSource->addById($user_id); // Falta poner que once() y eso
+        $this->walletDataSource
+            ->expects('addById')
+            ->with($user_id)
+            ->once()
+            ->andReturn($wallet);
+
         $walletData = $this->openNewWalletService->execute($user_id);
 
-        $this->assertEquals("1", $walletData['id']);
+        $this->assertEquals(1, $walletData->data['wallet_id']);
     }
-
 
 }
 

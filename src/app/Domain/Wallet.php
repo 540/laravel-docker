@@ -6,7 +6,7 @@ class Wallet
 {
 
     public array $data = [
-    "wallet_id",
-    "user_id"
+    'wallet_id',
+    'user_id'
     ];
 }

@@ -3,12 +3,13 @@
 namespace App\Application\EarlyAdopter;
 
 use App\Application\UserDataSource\WalletDataSource;
+use App\Domain\Wallet;
 use Exception;
 
 class OpenNewWalletService
 {
 
-    private $walletRepository;
+    private WalletDataSource $walletRepository;
 
     public function __construct(WalletDataSource $walletDataSource)
     {
@@ -16,13 +17,14 @@ class OpenNewWalletService
     }
 
 
-    public function execute($id){
-        if($id == null){
-            throw new Exception('A user with the specified ID was not found');
+    public function execute($user_id): Wallet
+    {
+        if($user_id == null){
+            throw new Exception("A user with the specified ID was not found");
         }
 
         try {
-            $wallet = $this->walletRepository->addById($id);
+            $wallet = $this->walletRepository->addById($user_id);
         } catch (Exception) {
             throw new Exception("Service unavailable");
         }
