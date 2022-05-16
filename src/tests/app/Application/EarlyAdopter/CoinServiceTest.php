@@ -2,17 +2,17 @@
 
 namespace Tests\app\Application\EarlyAdopter;
 
-use App\Application\EarlyAdopter\IsEarlyAdopterService;
-use App\Application\UserDataSource\UserDataSource;
-use App\Domain\User;
+use App\Application\CoinDataSource\CoinDataSource;
+use App\Application\EarlyAdopter\CoinService;
+use App\Domain\Coin;
 use Exception;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
-class IsEarlyAdopterServiceTest extends TestCase
+class CoinServiceTest extends TestCase
 {
-    private IsEarlyAdopterService $isEarlyAdopterService;
-    private UserDataSource $userDataSource;
+    private CoinService $coinService;
+    private CoinDataSource $coinDataSource;
 
     /**
      * @setUp
@@ -21,17 +21,17 @@ class IsEarlyAdopterServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->userDataSource = Mockery::mock(UserDataSource::class);
+        $this->coinDataSource = Mockery::mock(CoinDataSource::class);
 
-        $this->isEarlyAdopterService = new IsEarlyAdopterService($this->userDataSource);
+        $this->coinService = new CoinService($this->coinDataSource);
     }
 
     /**
      * @test
      */
-    public function userNotFound()
+    public function coinNotFound()
     {
-        $email = 'not_existing_email@email.com';
+        $id = 'not_existing_email@email.com';
 
         $user = new User(9999, $email);
 

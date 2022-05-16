@@ -1,6 +1,6 @@
 <?php
 
-use App\Infrastructure\Controllers\GetUserController;
+use App\Infrastructure\Controllers\GetCoinController;
 use App\Infrastructure\Controllers\BuyCoinController;
 use App\Infrastructure\Controllers\IsEarlyAdopterUserController;
 use App\Infrastructure\Controllers\StatusController;
@@ -21,11 +21,12 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get(
+/*Route::get(
     '/status',
     StatusController::class
-);
+);*/
 
-Route::get('user/{email}', IsEarlyAdopterUserController::class);
-Route::get('coin/status/{userId}', GetUserController::class);
+Route::get('coin/status/{coin_id}', GetCoinController::class);
 Route::post('coin/buy', BuyCoinController::class);
+
+
