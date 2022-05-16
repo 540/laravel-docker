@@ -37,6 +37,6 @@ class GetUserControllerTest extends TestCase
 
         $response = $this->get('/api/user/id/999');
 
-        $response->assertExactJson(['error' => 'user does not exist']);
+        $response->assertExactJson(['error' => 'user xinyu does not exist']);
     }
 }
