@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 use Mockery;
 use Tests\TestCase;
 
-class GetUserControllerTest extends TestCase
+class OpenNewWalletControllerTest extends TestCase
 {
     private UserDataSource $userDataSource;
 
@@ -37,6 +37,6 @@ class GetUserControllerTest extends TestCase
 
         $response = $this->get('/api/user/id/999');
 
-        $response->assertExactJson(['error' => 'user does not exist']);
+        $response->assertExactJson(['error' => 'A user with the specified ID was not found.']);
     }
 }
