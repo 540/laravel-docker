@@ -41,10 +41,10 @@ class BuyCoinController extends BaseController
         curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
 
         $response = json_decode(curl_exec( $ch ));
-        if(is_array($response))
+        if(empty($response))
         {
             return response()->json([
-                'error' => "coin_id no encontrado"
+                'error' => "A coin with the specified ID was not found."
             ], 404);
         }
 

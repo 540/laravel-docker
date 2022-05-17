@@ -26,8 +26,8 @@ class GetCoinController extends BaseController
             $CoinService = $this->CoinService->execute($id);
         } catch (Exception $exception) {
             return response()->json([
-                'error xinyu' => $exception->getMessage()
-            ], Response::HTTP_BAD_REQUEST);
+                'error' => "A coin with the specified ID was not found."
+            ], 404);
         }
 
         return response()->json([
