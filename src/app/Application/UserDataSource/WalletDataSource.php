@@ -8,11 +8,10 @@ use Illuminate\Support\Facades\Cache;
 Class WalletDataSource
 {
 
-    public function addById(int $user_id) {
+    public function addById() {
 
         $wallet = new Wallet();
         $wallet_id = 1;
-        $wallet->data['user_id'] = $user_id;
 
         while (Cache::has($wallet_id)) {
             $wallet_id++;
