@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Infrastructure\Controllers;
-
+use App\Domain\Wallet;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-class BuyCoinController extends BaseController
+class SellCoinController extends BaseController
 {
     public function __invoke(Request $request): JsonResponse
     {
@@ -32,16 +32,9 @@ class BuyCoinController extends BaseController
                 'error' => "amount_usd mandatory"
             ], 400);
         }
-        $url = "https://api.coinlore.net/api/ticker/?id=".$request->coin_id;
-        $ch = curl_init( $url );
-        curl_setopt( $ch, CURLOPT_POST, 1);
 
-        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt( $ch, CURLOPT_HEADER, 0);
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
-
-        $response = json_decode(curl_exec( $ch ));
-        if(empty($response))
+        $response = Cache::get($request->wallet_id);
+        if(empty($response->coin_id))
         {
             return response()->json([
                 'error' => "A coin with the specified ID was not found."
