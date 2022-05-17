@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Providers;
 
-use App\Application\UserDataSource\UserDataSource;
-use App\DataSource\Database\EloquentUserDataSource;
+use App\Application\UserDataSource\WalletDataSource;
+use App\Application\UserDataSource\WalletDataSourceFunctions;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,8 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-//        $this->app->bind(UserDataSource::class, function () {
-//            return new EloquentUserDataSource();
-//        });
+        $this->app->bind(WalletDataSource::class, function () {
+            return new WalletDataSourceFunctions();
+        });
     }
 }

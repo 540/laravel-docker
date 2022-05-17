@@ -23,14 +23,14 @@ class OpenNewWalletController extends BaseController
     public function __invoke(Request $request): JsonResponse
     {
         try{
-            $wallet_id = $this->openNewWalletService->execute();
+            $wallet = $this->openNewWalletService->execute();
         }catch (Exception $exception){
             return response()->json([
                 'error' => $exception->getMessage()
             ], $exception->getCode());
         }
         return response()->json([
-            'wallet_id' => $wallet_id
+            'wallet_id' => $wallet->getWalletId()
         ], Response::HTTP_OK);
     }
 }

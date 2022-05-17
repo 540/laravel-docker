@@ -4,10 +4,10 @@ namespace App\Domain;
 
 class Wallet
 {
-    private string $wallet_id;
+    private int $wallet_id;
     private array $coins;
 
-    public function __construct(string $wallet_id, array $coins)
+    public function __construct(int $wallet_id, array $coins)
     {
         $this->wallet_id = $wallet_id;
         $this->coins = $coins;

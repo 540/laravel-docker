@@ -9,14 +9,13 @@ use Illuminate\Support\Facades\Cache;
 class WalletDataSourceFunctions implements WalletDataSource
 {
     public function add() : Wallet {
-        $wallet = new Wallet();
         $wallet_id = 1;
 
-        while (Cache::has($wallet_id)) {
+        while (Cache::has('wallet'.$wallet_id)) {
             $wallet_id++;
         }
-        $wallet->data['wallet_id'] = $wallet_id;
-        Cache::put($wallet_id,$wallet);
+        $wallet = new Wallet($wallet_id,[]);
+        Cache::put('wallet'.$wallet_id,$wallet);
         return $wallet;
     }
 }
