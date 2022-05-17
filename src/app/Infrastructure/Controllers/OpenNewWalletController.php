@@ -12,7 +12,7 @@ use Exception;
 class OpenNewWalletController extends BaseController
 {
 
-    private $openNewWalletService;
+    private OpenNewWalletService $openNewWalletService;
 
 
     public function __construct(OpenNewWalletService $walletService)
@@ -23,12 +23,11 @@ class OpenNewWalletController extends BaseController
     public function __invoke(Request $request): JsonResponse
     {
         try{
-            $user_id = $request->input("user_id");
-            $wallet_id = $this->openNewWalletService->execute($user_id);
+            $wallet_id = $this->openNewWalletService->execute();
         }catch (Exception $exception){
             return response()->json([
                 'error' => $exception->getMessage()
-            ], Response::HTTP_BAD_REQUEST);
+            ], $exception->getCode());
         }
         return response()->json([
             'wallet_id' => $wallet_id

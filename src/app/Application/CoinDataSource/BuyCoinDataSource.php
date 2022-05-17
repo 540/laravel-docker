@@ -2,10 +2,9 @@
 
 namespace App\Application\CoinDataSource;
 
-use App\Domain\Coin;
 use Mockery\Exception;
 
-Interface CoinDataSource
+Interface BuyCoinDataSource
 {
     public function findByCoinId(string $coin_id);
 }

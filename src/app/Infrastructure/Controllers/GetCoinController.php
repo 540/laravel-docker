@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\Controllers;
 
-use App\Application\EarlyAdopter\CoinService;
+use App\Application\CoinService\CoinService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -25,9 +25,15 @@ class GetCoinController extends BaseController
         try {
             $CoinService = $this->CoinService->execute($id);
         } catch (Exception $exception) {
-            return response()->json([
-                'error' => "A coin with the specified ID was not found."
-            ], 404);
+            if ($exception->getMessage() == "A coin with the specified ID was not found.") {
+                return response()->json([
+                    'error' => $exception->getMessage()
+                ], Response::HTTP_NOT_FOUND);
+            }else{
+                return response()->json([
+                    'error' => 'Service Unavailible'
+                ], Response::HTTP_SERVICE_UNAVAILABLE);
+            }
         }
 
         return response()->json([

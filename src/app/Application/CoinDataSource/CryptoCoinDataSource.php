@@ -4,10 +4,11 @@ namespace App\Application\CoinDataSource;
 
 
 use App\Domain\Coin;
+use Exception;
 
 class CryptoCoinDataSource implements CoinDataSource
 {
-    public function findByCoinId(string $coin_id):Coin
+    public function findByCoinId(string $coin_id)
     {
         $path = 'https://api.coinlore.net/api/ticker/?id=' . $coin_id;
 
@@ -17,6 +18,10 @@ class CryptoCoinDataSource implements CoinDataSource
         $data = json_decode(curl_exec($ch));
         curl_close($ch);
 
+        if($data == null){
+            return new Exception("A coin with the specified ID was not found.");
+            //return new Coin("1","ERROR","ERR","0",1,"ERROR",1);
+        }
         $data = $data[0];
         $name = $data->name;
         $symbol = $data->symbol;
@@ -25,7 +30,7 @@ class CryptoCoinDataSource implements CoinDataSource
         $name_id = $data->nameid;
         $rank = $data->rank;
 
-        $Coin = new Coin($coin_id,$name,$symbol,$amount,$value_usd,$name_id,$rank);
+        $Coin = new Coin($amount,$coin_id,$name,$name_id,$rank,$symbol,$value_usd);
 
         return $Coin;
     }

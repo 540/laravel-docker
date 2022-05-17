@@ -4,33 +4,34 @@ namespace App\Domain;
 
 class Coin
 {
+    public float $amount;
     public string $coin_id;
     public string $name;
-    public string $symbol;
-    public float $amount;
-    public float $value_usd;
     public string $name_id;
     public int $rank;
+    public string $symbol;
+    public float $value_usd;
 
     /**
+     * @param float $amount
      * @param string $coin_id
      * @param string $name
-     * @param string $symbol
-     * @param float $amount
-     * @param float $value_usd
      * @param string $name_id
      * @param int $rank
+     * @param string $symbol
+     * @param float $value_usd
      */
-    public function __construct(string $coin_id, string $name, string $symbol, float $amount, float $value_usd, string $name_id, int $rank)
+    public function __construct(float $amount, string $coin_id, string $name, string $name_id, int $rank, string $symbol, float $value_usd)
     {
+        $this->amount = $amount;
         $this->coin_id = $coin_id;
         $this->name = $name;
-        $this->symbol = $symbol;
-        $this->amount = $amount;
-        $this->value_usd = $value_usd;
         $this->name_id = $name_id;
         $this->rank = $rank;
+        $this->symbol = $symbol;
+        $this->value_usd = $value_usd;
     }
+
 
     /**
      * @return string

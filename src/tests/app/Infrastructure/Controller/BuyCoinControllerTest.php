@@ -2,7 +2,7 @@
 
 namespace Tests\app\Infrastructure\Controller;
 
-use App\Application\CoinDataSource\CoinDataSource;
+use App\Application\CoinDataSource\BuyCoinDataSource;
 use App\Domain\Coin;
 use Mockery;
 use Exception;
@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Tests\TestCase;
 use Illuminate\Http\Response;
 
-class GetCoinControllerTest extends TestCase
+class BuyCoinControllerTest extends TestCase
 {
-    private coinDataSource $coinDataSource;
+    private BuycoinDataSource $coinDataSource;
 
     /**
      * @setUp
@@ -20,8 +20,8 @@ class GetCoinControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->coinDataSource = Mockery::mock(coinDataSource::class);
-        $this->app->bind(coinDataSource::class, fn() => $this->coinDataSource);
+        $this->coinDataSource = Mockery::mock(BuycoinDataSource::class);
+        $this->app->bind(BuycoinDataSource::class, fn() => $this->coinDataSource);
     }
 
     /**
@@ -78,3 +78,4 @@ class GetCoinControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertExactJson([$coin]);
     }
 }
+
