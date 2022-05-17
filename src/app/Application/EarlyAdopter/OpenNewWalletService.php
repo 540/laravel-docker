@@ -2,6 +2,7 @@
 
 namespace App\Application\EarlyAdopter;
 
+
 use App\Application\UserDataSource\WalletDataSource;
 use App\Domain\Wallet;
 use Exception;
@@ -20,7 +21,7 @@ class OpenNewWalletService
     public function execute(): Wallet
     {
         try {
-            $wallet = $this->walletRepository->addById();
+            $wallet = $this->walletRepository->add();
         } catch (Exception) {
             throw new Exception("Service unavailable");
         }

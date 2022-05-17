@@ -2,41 +2,51 @@
 
 namespace Tests\app\Infrastructure\Controller;
 
-use App\Application\UserDataSource\UserDataSource;
-use App\Domain\User;
-use Exception;
-use Illuminate\Http\Response;
 use Mockery;
-use Tests\TestCase;
+use App\Application\UserDataSource\WalletDataSource;
+use App\Domain\Wallet;
+use PHPUnit\Framework\TestCase;
 
 class OpenNewWalletControllerTest extends TestCase
 {
-    private UserDataSource $userDataSource;
+    private WalletDataSource $walletDataSource;
 
-    /**
-     * @setUp
-     */
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->userDataSource = Mockery::mock(UserDataSource::class);
-        $this->app->bind(UserDataSource::class, fn () => $this->userDataSource);
+        $this->walletDataSource = Mockery::mock(WalletDataSource::class);
+
+        $this->app->bind(WalletDataSource::class, fn () => $this->walletDataSource);
+    }
+
+
+    /**
+     * @test
+     */
+    public function walletServiceUnavailable()
+    {
+        $response = $this->post('/api/wallet/open');
+        $response->assertExactJson(['error' => 'Service unavailable']);
     }
 
     /**
      * @test
      */
-    public function userWithGivenIdDoesNotExist()
+    public function walletCreated()
     {
-        $this->userDataSource
-            ->expects('findById')
-            ->with('999')
-            ->never()
-            ->andThrow(new Exception('User not found'));
+        $wallet = new Wallet();
+        $wallet->data['wallet_id'] = 1;
 
-        $response = $this->get('/api/user/id/999');
+        $this->walletDataSource
+            ->expects('add')
+            ->once()
+            ->andReturn($wallet);
 
-        $response->assertExactJson(['error' => 'A user with the specified ID was not found.']);
+        $response = $this->post('/api/wallet/open');
+        $response->assertExactJson(['wallet_id' => '1']);
     }
+
 }
+
