@@ -2,6 +2,7 @@
 
 use App\Infrastructure\Controllers\GetUserController;
 use App\Infrastructure\Controllers\IsEarlyAdopterUserController;
+use App\Infrastructure\Controllers\OpenNewWalletController;
 use App\Infrastructure\Controllers\StatusController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,5 +26,5 @@ Route::get(
     StatusController::class
 );
 
-Route::get('user/{email}', IsEarlyAdopterUserController::class);
-Route::get('coin/status/{userId}', GetUserController::class);
+Route::post('wallet/open', OpenNewWalletController::class);
+
