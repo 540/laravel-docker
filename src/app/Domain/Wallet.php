@@ -4,6 +4,7 @@ namespace App\Domain;
 
 class Wallet
 {
+
     private int $wallet_id;
     private array $coins;
 

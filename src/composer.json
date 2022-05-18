@@ -22,17 +22,27 @@
         "fakerphp/faker": "^1.9.1",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
+<<<<<<< HEAD
+        "phpunit/phpunit": "^9.3.3",
+      "ext-curl": "*"
+=======
         "phpro/grumphp": "^1.12",
         "phpunit/phpunit": "^9.3.3",
         "squizlabs/php_codesniffer": "3.*",
         "friendsofphp/php-cs-fixer": "^v2.19.3"
+>>>>>>> 44b0f218c3db1498c4dd301899bd89886443a8f2
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
+<<<<<<< HEAD
+        "platform": {
+            "php": "8.1.5"
+=======
         "allow-plugins": {
             "phpro/grumphp": true
+>>>>>>> 44b0f218c3db1498c4dd301899bd89886443a8f2
         }
     },
     "extra": {
