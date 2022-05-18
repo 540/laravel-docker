@@ -3,7 +3,7 @@
 namespace Tests\app\Infrastructure\Controller;
 
 use Mockery;
-use App\Application\UserDataSource\WalletDataSource;
+use App\Application\WalletDataSource\WalletDataSource;
 use App\Domain\Wallet;
 use Mockery\Exception;
 use Tests\TestCase;

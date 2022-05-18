@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure;
 
-use App\Application\UserDataSource\UserDataSource;
+use App\Application\WalletDataSource\UserDataSource;
 use App\Domain\User;
 
 class FakeUserDataSource implements UserDataSource
