@@ -3,7 +3,7 @@
 namespace App\Application\EarlyAdopter;
 
 
-use App\Application\UserDataSource\WalletDataSource;
+use App\Application\WalletDataSource\WalletDataSource;
 use Illuminate\Http\Response;
 use App\Domain\Wallet;
 use Exception;
