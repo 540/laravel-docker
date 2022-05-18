@@ -30,7 +30,6 @@ class CoinService
      */
     public function execute(string $coin_id)
     {
-        //Llamar a la api con el coin_id
         $coin = $this->coinDataSource->findByCoinId($coin_id);
         return $coin;
     }
