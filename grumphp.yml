@@ -4,7 +4,7 @@ grumphp:
     fix_by_default: true
   tasks:
     phpunit:
-      config_file: phpunit.xml
+      config_file: ./src/phpunit.xml
     phpcs:
       standard: PSR12
       triggered_by: [ php ]
