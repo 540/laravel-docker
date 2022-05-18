@@ -29,3 +29,4 @@ Route::get(
 
 Route::post('wallet/open', OpenNewWalletController::class);
 Route::get('wallet/{wallet_id}', GetWalletController::class);
+Route::get('coin/status/{coin_id}', GetCoinController::class);
