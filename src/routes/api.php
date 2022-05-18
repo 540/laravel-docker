@@ -1,7 +1,14 @@
 <?php
 
-use App\Http\Controllers\IsEarlyAdopterUserController;
-use App\Http\Controllers\StatusController;
+use App\Infrastructure\Controllers\GetCoinController;
+use App\Infrastructure\Controllers\BuyCoinController;
+use App\Infrastructure\Controllers\SellCoinController;
+
+use App\Infrastructure\Controllers\OpenNewWalletController;
+use App\Infrastructure\Controllers\GetUserController;
+use App\Infrastructure\Controllers\GetWalletController;
+use App\Infrastructure\Controllers\IsEarlyAdopterUserController;
+use App\Infrastructure\Controllers\StatusController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,9 +26,17 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get(
+/*Route::get(
     '/status',
     StatusController::class
-);
+);*/
 
-Route::get('user/{email}', IsEarlyAdopterUserController::class);
+
+Route::post('coin/buy', BuyCoinController::class);
+Route::post('coin/sell', SellCoinController::class);
+
+
+Route::post('wallet/open', OpenNewWalletController::class);
+Route::get('wallet/{wallet_id}', GetWalletController::class);
+Route::get('coin/status/{coin_id}', GetCoinController::class);
+

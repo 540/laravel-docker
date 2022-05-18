@@ -1,0 +1,20 @@
+name: grumPHP
+
+on: [push, pull_request,workflow_dispatch]
+
+jobs:
+  grumphp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: cd ./src;
+             composer install
+
+      - name: Update dependencies
+        run: cd ./src;
+             composer update
+
+      - name: Run grumphp tests
+        run: php ./src/vendor/bin/grumphp run
