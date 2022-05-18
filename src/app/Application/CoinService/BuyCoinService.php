@@ -25,14 +25,22 @@ class BuyCoinService
         $this->BuyCoinDataSource = $BuyCoinDataSource;
     }
 
-    /**use App\Domain\Coin;
-     * @param string $coin_id
-     * @return Coin|Exception
+    /**
+     * @return string|Exception
      * @throws Exception
      */
-    public function execute(string $coin_id,string $wallet_id,float $amount_usd): Coin|Exception
+    public function execute(string $coin_id,string $wallet_id,float $amount_usd): string|Exception
     {
         //Llamar a la api con el coin_id
         return $this->BuyCoinDataSource->findByCoinId($coin_id,$wallet_id,$amount_usd);
+    }
+    /**
+     * @return string|Exception
+     * @throws Exception
+     */
+    public function SellCoin(string $coin_id,string $wallet_id,float $amount_usd): string|Exception
+    {
+        //Llamar a la api con el coin_id
+        return $this->BuyCoinDataSource->SellCoin($coin_id,$wallet_id,$amount_usd);
     }
 }

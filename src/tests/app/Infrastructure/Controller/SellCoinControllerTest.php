@@ -11,7 +11,7 @@ use Tests\TestCase;
 define("token", array(
     'Content-Type: application/json'
 ));
-class BuyCoinControllerTest extends TestCase
+class SellCoinControllerTest extends TestCase
 {
     private BuycoinDataSource $BuyCoinDataSource;
 
