@@ -45,7 +45,7 @@ class Wallet
         $this->coins = $coins;
     }
 
-    public function toJson() :string
+    public function coinsToJson() :string
     {
         $coinsArray = array();
         foreach ($this->coins as $coin) {

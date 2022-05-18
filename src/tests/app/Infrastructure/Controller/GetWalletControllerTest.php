@@ -21,7 +21,6 @@ class GetWalletControllerTest extends TestCase
         $this->app->bind(WalletDataSource::class, fn () => $this->walletDataSource);
     }
 
-
     /**
      * @test
      */
@@ -37,7 +36,6 @@ class GetWalletControllerTest extends TestCase
         $response = $this->get('/api/wallet/' . $wallet_id);
         $response->assertExactJson(['error' => 'A wallet with the specified ID was not found.']);
     }
-
 
     /**
      * @test
@@ -72,7 +70,11 @@ class GetWalletControllerTest extends TestCase
         $response = $this->get('/api/wallet/' . $wallet_id);
 
         $response->assertExactJson([
-        '[{"coin_id":"90","name":"Bitcoin","symbol":"BTC","amount":1,"value_usd":29452.05}]'
+        '[{"coin_id":"90",
+        "name":"Bitcoin",
+        "symbol":"BTC",
+        "amount":1,
+        "value_usd":29452.05}]'
         ]);
     }
 

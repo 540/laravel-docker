@@ -30,7 +30,6 @@ class WalletDataSourceFunctions implements WalletDataSource
             throw new Exception('Service unavailable', Response::HTTP_NOT_FOUND);
         }
         throw new Exception('A wallet with the specified ID was not found.', Response::HTTP_NOT_FOUND);
-
     }
 
 

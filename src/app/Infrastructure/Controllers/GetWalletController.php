@@ -30,9 +30,8 @@ class GetWalletController extends BaseController
         }
 
         return response()->json([
-            $wallet->toJson()
+            $wallet->coinsToJson()
         ], Response::HTTP_OK);
     }
-
 
 }
