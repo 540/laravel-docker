@@ -3,14 +3,13 @@
 namespace App\Application\EarlyAdopter;
 
 
-
-use App\Application\WalletDataSource\WalletDataSource;
+use App\Application\UserDataSource\WalletDataSource;
 use Illuminate\Http\Response;
 use App\Domain\Wallet;
 use Exception;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class OpenNewWalletService
+class GetWalletService
 {
 
     private WalletDataSource $walletRepository;
@@ -21,14 +20,17 @@ class OpenNewWalletService
     }
 
 
-    public function execute(): Wallet
+    /**
+     * @throws Exception
+     */
+    public function execute(int $wallet_id): Wallet
     {
         try {
-            $wallet = $this->walletRepository->add();
-        } catch (Exception) {
-
-            throw new Exception('Service unavailable', Response::HTTP_NOT_FOUND);
+            $wallet = $this->walletRepository->get($wallet_id);
+        } catch (Exception $exception)  {
+            throw new Exception($exception->getMessage(),$exception->getCode());
         }
+
         return $wallet;
     }
 }

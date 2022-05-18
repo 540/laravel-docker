@@ -4,10 +4,11 @@ namespace App\Domain;
 
 class Wallet
 {
-    private string $wallet_id;
+
+    private int $wallet_id;
     private array $coins;
 
-    public function __construct(string $wallet_id, array $coins)
+    public function __construct(int $wallet_id, array $coins)
     {
         $this->wallet_id = $wallet_id;
         $this->coins = $coins;
@@ -43,6 +44,21 @@ class Wallet
     public function setCoins(array $coins): void
     {
         $this->coins = $coins;
+    }
+
+    public function coinsToJson() :string
+    {
+        $coinsArray = array();
+        foreach ($this->coins as $coin) {
+            $coinsArray[] = [
+                'coin_id' => $coin->getCoinId(),
+                'name' => $coin->getName(),
+                'symbol' => $coin->getSymbol(),
+                'amount' => $coin->getAmount(),
+                'value_usd' => $coin->getValueUsd()
+            ];
+        }
+        return json_encode($coinsArray);
     }
 
 
