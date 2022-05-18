@@ -45,5 +45,10 @@ class Wallet
         $this->coins = $coins;
     }
 
+    public function toJson()
+    {
+
+    }
+
 
 }

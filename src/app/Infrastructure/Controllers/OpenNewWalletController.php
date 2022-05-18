@@ -20,7 +20,7 @@ class OpenNewWalletController extends BaseController
         $this->openNewWalletService = $walletService;
     }
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(): JsonResponse
     {
         try{
             $wallet = $this->openNewWalletService->execute();
