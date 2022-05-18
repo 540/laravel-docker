@@ -45,9 +45,19 @@ class Wallet
         $this->coins = $coins;
     }
 
-    public function toJson()
+    public function toJson() :string
     {
-
+        $coinsArray = array();
+        foreach ($this->coins as $coin) {
+            $coinsArray[] = [
+                'coin_id' => $coin->getCoinId(),
+                'name' => $coin->getName(),
+                'symbol' => $coin->getSymbol(),
+                'amount' => $coin->getAmount(),
+                'value_usd' => $coin->getValueUsd()
+            ];
+        }
+        return json_encode($coinsArray);
     }
 
 

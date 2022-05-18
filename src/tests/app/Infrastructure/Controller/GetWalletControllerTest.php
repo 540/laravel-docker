@@ -2,6 +2,7 @@
 
 namespace Tests\app\Infrastructure\Controller;
 
+use App\Domain\Coin;
 use Mockery;
 use App\Application\UserDataSource\WalletDataSource;
 use App\Domain\Wallet;
@@ -59,15 +60,20 @@ class GetWalletControllerTest extends TestCase
      */
     public function walletFound()
     {
-        /*$wallet = new Wallet(1,[]);
-
+        $wallet_id = 1;
+        $coin = new Coin(1,"90","Bitcoin","bitcoin",1,"BTC",29452.05);
+        $wallet = new Wallet($wallet_id,[$coin]);
         $this->walletDataSource
-            ->expects('add')
+            ->expects('get')
             ->once()
+            ->with($wallet_id)
             ->andReturn($wallet);
 
-        $response = $this->post('/api/wallet/open');
-        $response->assertExactJson(['wallet_id' => '1']);*/
+        $response = $this->get('/api/wallet/' . $wallet_id);
+
+        $response->assertExactJson([
+        '[{"coin_id":"90","name":"Bitcoin","symbol":"BTC","amount":1,"value_usd":29452.05}]'
+        ]);
     }
 
 
