@@ -34,14 +34,14 @@ class SellCoinControllerTest extends TestCase
         $wallet_id = "1";
         $amount_usd = 1;
         $this->BuyCoinDataSource
-            ->expects('findByCoinId')
+            ->expects('SellCoin')
             ->with($id,$wallet_id,$amount_usd)
             ->once()
             ->andThrow(new Exception('A coin with the specified ID was not found.'));
 
         $fields = array("coin_id" => $id, "wallet_id" => $wallet_id, 'amount_usd' =>$amount_usd );
 
-        $response = $this->post('api/coin/buy',$fields,token);
+        $response = $this->post('api/coin/sell',$fields,token);
 
         $response->assertStatus(Response::HTTP_NOT_FOUND)->assertExactJson(['error' => 'A coin with the specified ID was not found.']);
     }
@@ -54,38 +54,19 @@ class SellCoinControllerTest extends TestCase
         $wallet_id = "1";
         $amount_usd = 1;
         $this->BuyCoinDataSource
-            ->expects('findByCoinId')
+            ->expects('SellCoin')
             ->with($id,$wallet_id,$amount_usd)
             ->once()
             ->andThrow(new Exception('Service Unavailible'));
 
         $fields = array("coin_id" => $id, "wallet_id" => $wallet_id, 'amount_usd' =>$amount_usd );
 
-        $response = $this->post('api/coin/buy',$fields,token);
+        $response = $this->post('api/coin/sell',$fields,token);
 
         $response->assertStatus(Response::HTTP_SERVICE_UNAVAILABLE)->assertExactJson(['error' => 'Service Unavailible']);
     }
 
-    /**
-     * @test
-     */
-    public function coinWithValidIdReturnJsonCoin()
-    {
-        $id = '10';
-        $wallet_id = "1";
-        $amount_usd = 1;
-        $this->BuyCoinDataSource
-            ->expects('findByCoinId')
-            ->with($id,$wallet_id,$amount_usd)
-            ->once()
-            ->andReturn("successful operation");
 
-        $fields = array("coin_id" => $id, "wallet_id" => $wallet_id, 'amount_usd' =>$amount_usd );
-
-        $response = $this->post('api/coin/buy',$fields,token);
-
-        $response->assertStatus(Response::HTTP_OK)->assertExactJson((array)"successful operation");
-    }
     /**
      * @test
      */
@@ -97,7 +78,7 @@ class SellCoinControllerTest extends TestCase
 
         $fields = array( "wallet_id" => $wallet_id, 'amount_usd' =>$amount_usd );
 
-        $response = $this->post('api/coin/buy',$fields,token);
+        $response = $this->post('api/coin/sell',$fields,token);
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertExactJson(['error' => 'coin_id mandatory']);
     }
@@ -109,7 +90,7 @@ class SellCoinControllerTest extends TestCase
 
         $fields = array( "coin_id"=>'1', 'amount_usd' =>1 );
 
-        $response = $this->post('api/coin/buy',$fields,token);
+        $response = $this->post('api/coin/sell',$fields,token);
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertExactJson(['error' => 'wallet_id mandatory']);
     }
@@ -121,7 +102,7 @@ class SellCoinControllerTest extends TestCase
 
         $fields = array( "coin_id"=>'1',"wallet_id"=>"1");
 
-        $response = $this->post('api/coin/buy',$fields,token);
+        $response = $this->post('api/coin/sell',$fields,token);
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertExactJson(['error' => 'amount_usd mandatory']);
     }

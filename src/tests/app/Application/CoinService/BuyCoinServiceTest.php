@@ -5,8 +5,10 @@ namespace Tests\app\Application\EarlyAdopter;
 use App\Application\CoinDataSource\BuyCoinDataSource;
 use App\Application\CoinService\BuyCoinService;
 use App\Domain\Coin;
+use App\Domain\Wallet;
 use Exception;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tests\CoinTest;
@@ -15,7 +17,7 @@ class BuyCoinServiceTest extends TestCase
 {
     private BuyCoinService $coinService;
     private BuyCoinDataSource $coinDataSource;
-
+    private Cache $cache;
 
     /**
      * @setUp
@@ -25,7 +27,6 @@ class BuyCoinServiceTest extends TestCase
         parent::setUp();
 
         $this->coinDataSource = Mockery::mock(BuyCoinDataSource::class);
-
         $this->coinService = new BuyCoinService($this->coinDataSource);
     }
 
@@ -66,29 +67,12 @@ class BuyCoinServiceTest extends TestCase
     /**
      * @test
      */
-    public function validIdReturn()
-    {
-        $this->coinDataSource
-            ->expects('findByCoinId')
-            ->with('10','1',0)
-            ->once()
-            ->andReturn("successful operation");
-
-        $response = $this->coinService->SellCoin('10','1',0);
-
-
-        $this->assertEquals("successful operation",$response);
-    }
-
-    /**
-     * @test
-     */
     public function coinNotFound()
     {
-        $id = '2000';
+        $id = '20';
 
         $this->coinDataSource
-            ->expects('findByCoinId')
+            ->expects('SellCoin')
             ->with($id,'1',0)
             ->once()
             ->andThrow(new Exception("A coin with the specified ID was not found."));
@@ -97,5 +81,8 @@ class BuyCoinServiceTest extends TestCase
 
         $this->coinService->SellCoin($id,'1',0);
     }
+
+
+
 }
 
