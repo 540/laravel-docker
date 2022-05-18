@@ -4,15 +4,16 @@ namespace Tests\app\Infrastructure\Controller;
 
 use App\Application\CoinDataSource\BuyCoinDataSource;
 use App\Domain\Coin;
+use Illuminate\Http\Response;
 use Mockery;
 use Exception;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Tests\TestCase;
-use Illuminate\Http\Response;
-
+define("token", array(
+    'Content-Type: application/json'
+));
 class BuyCoinControllerTest extends TestCase
 {
-    private BuycoinDataSource $coinDataSource;
+    private BuycoinDataSource $BuyCoinDataSource;
 
     /**
      * @setUp
@@ -20,8 +21,8 @@ class BuyCoinControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->coinDataSource = Mockery::mock(BuycoinDataSource::class);
-        $this->app->bind(BuycoinDataSource::class, fn() => $this->coinDataSource);
+        $this->BuyCoinDataSource = Mockery::mock(BuycoinDataSource::class);
+        $this->app->bind(BuycoinDataSource::class, fn() => $this->BuyCoinDataSource);
     }
 
     /**
@@ -30,31 +31,37 @@ class BuyCoinControllerTest extends TestCase
     public function coinWithGivenIdDoesNotExist()
     {
         $id = '2000';
-        $this->coinDataSource
+        $wallet_id = "1";
+        $amount_usd = 1;
+        $this->BuyCoinDataSource
             ->expects('findByCoinId')
-            ->with($id)
+            ->with($id,$wallet_id,$amount_usd)
             ->once()
             ->andThrow(new Exception('A coin with the specified ID was not found.'));
 
-        $response = $this->get('/api/coin/status/2000');
+        $fields = array("coin_id" => $id, "wallet_id" => $wallet_id, 'amount_usd' =>$amount_usd );
+
+        $response = $this->post('api/coin/buy',$fields,token);
 
         $response->assertStatus(Response::HTTP_NOT_FOUND)->assertExactJson(['error' => 'A coin with the specified ID was not found.']);
     }
-
-
     /**
      * @test
      */
     public function errorInServer()
     {
         $id = '200';
-        $this->coinDataSource
+        $wallet_id = "1";
+        $amount_usd = 1;
+        $this->BuyCoinDataSource
             ->expects('findByCoinId')
-            ->with($id)
+            ->with($id,$wallet_id,$amount_usd)
             ->once()
             ->andThrow(new Exception('Service Unavailible'));
 
-        $response = $this->get('/api/coin/status/200');
+        $fields = array("coin_id" => $id, "wallet_id" => $wallet_id, 'amount_usd' =>$amount_usd );
+
+        $response = $this->post('api/coin/buy',$fields,token);
 
         $response->assertStatus(Response::HTTP_SERVICE_UNAVAILABLE)->assertExactJson(['error' => 'Service Unavailible']);
     }
@@ -65,17 +72,59 @@ class BuyCoinControllerTest extends TestCase
     public function coinWithValidIdReturnJsonCoin()
     {
         $id = '10';
-        $coin = new Coin(0,"10","BlackCoin","blackcoin",1,"BLK",1);
-
-        $this->coinDataSource
+        $wallet_id = "1";
+        $amount_usd = 1;
+        $coin = new Coin(1,"10","BlackCoin","blackcoin",1,"BLK",1);
+        $this->BuyCoinDataSource
             ->expects('findByCoinId')
-            ->with($id)
+            ->with($id,$wallet_id,$amount_usd)
             ->once()
             ->andReturn($coin);
 
-        $response = $this->get('/api/coin/status/10');
+        $fields = array("coin_id" => $id, "wallet_id" => $wallet_id, 'amount_usd' =>$amount_usd );
+
+        $response = $this->post('api/coin/buy',$fields,token);
 
         $response->assertStatus(Response::HTTP_OK)->assertExactJson([$coin]);
+    }
+    /**
+     * @test
+     */
+    public function errorCoinId()
+    {
+        $wallet_id = "1";
+        $amount_usd = 1;
+
+
+        $fields = array( "wallet_id" => $wallet_id, 'amount_usd' =>$amount_usd );
+
+        $response = $this->post('api/coin/buy',$fields,token);
+
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertExactJson(['error' => 'coin_id mandatory']);
+    }
+    /**
+     * @test
+     */
+    public function errorWalletId()
+    {
+
+        $fields = array( "coin_id"=>'1', 'amount_usd' =>1 );
+
+        $response = $this->post('api/coin/buy',$fields,token);
+
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertExactJson(['error' => 'wallet_id mandatory']);
+    }
+    /**
+     * @test
+     */
+    public function erroramount()
+    {
+
+        $fields = array( "coin_id"=>'1',"wallet_id"=>"1");
+
+        $response = $this->post('api/coin/buy',$fields,token);
+
+        $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertExactJson(['error' => 'amount_usd mandatory']);
     }
 }
 

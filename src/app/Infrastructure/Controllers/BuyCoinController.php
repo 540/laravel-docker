@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Controllers;
 
+use App\Application\CoinService\BuyCoinService;
 use Exception;
 
 use Illuminate\Http\JsonResponse;
@@ -11,7 +12,15 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 class BuyCoinController extends BaseController
 {
+    private BuyCoinService $BuyCoinService;
 
+    /**
+     * BuyCoinController constructor.
+     */
+    public function __construct(BuyCoinService $CoinService)
+    {
+        $this->BuyCoinService = $CoinService;
+    }
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -34,26 +43,23 @@ class BuyCoinController extends BaseController
                 'error' => "amount_usd mandatory"
             ], Response::HTTP_BAD_REQUEST);
         }
-        $url = "https://api.coinlore.net/api/ticker/?id=".$request->coin_id;
-        $ch = curl_init( $url );
-        curl_setopt( $ch, CURLOPT_POST, 1);
-
-        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt( $ch, CURLOPT_HEADER, 0);
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
-
-        $response = json_decode(curl_exec( $ch ));
-        if(empty($response))
-        {
-            return response()->json([
-                'error' => "A coin with the specified ID was not found."
-            ], Response::HTTP_NOT_FOUND);
+        try {
+            $BuyCoinService = $this->BuyCoinService->execute($request->coin_id,$request->wallet_id,$request->amount_usd);
+        } catch (Exception $exception) {
+            if ($exception->getMessage() == "A coin with the specified ID was not found.") {
+                return response()->json([
+                    'error' => $exception->getMessage()
+                ], Response::HTTP_NOT_FOUND);
+            }else{
+                return response()->json([
+                    'error' => $exception->getMessage()
+                ], Response::HTTP_SERVICE_UNAVAILABLE);
+            }
         }
 
-        Cache::put($request->wallet_id,$response,600);
 
         return response()->json([
-        $response
+            $BuyCoinService
         ], Response::HTTP_OK);
     }
 }
