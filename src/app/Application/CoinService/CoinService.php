@@ -32,9 +32,6 @@ class CoinService
     {
         //Llamar a la api con el coin_id
         $coin = $this->coinDataSource->findByCoinId($coin_id);
-        /*if($coin->getName() == "ERROR"){
-            return new Exception("A coin with the specified ID was not found.");
-        }*/
         return $coin;
     }
 }
