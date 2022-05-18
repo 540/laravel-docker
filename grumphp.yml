@@ -1,0 +1,15 @@
+grumphp:
+  fixer:
+    enabled: true
+    fix_by_default: true
+  tasks:
+    phpunit:
+      config_file: phpunit.xml
+    phpcs:
+      standard: PSR12
+      triggered_by: [ php ]
+    phpcsfixer:
+      allow_risky: true
+      using_cache: true
+      config: '.php-cs-fixer.php'
+      verbose: true
