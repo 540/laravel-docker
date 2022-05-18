@@ -1,6 +1,7 @@
 <?php
 
 use App\Infrastructure\Controllers\GetCoinController;
+use App\Infrastructure\Controllers\GetWalletController;
 use App\Infrastructure\Controllers\OpenNewWalletController;
 use App\Infrastructure\Controllers\StatusController;
 use Illuminate\Support\Facades\Route;
