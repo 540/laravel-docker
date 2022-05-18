@@ -81,6 +81,26 @@ class BuyCoinServiceTest extends TestCase
 
         $this->coinService->SellCoin($id,'1',0);
     }
+    /**
+     * @test
+     */
+    public function coinWithValidIdReturnJsonCoin()
+    {
+        $id = '1';
+        $wallet_id = "1";
+        $amount_usd = 1;
+
+        $this->coinDataSource
+            ->expects('SellCoin')
+            ->with($id,$wallet_id,$amount_usd)
+            ->once()
+            ->andReturn("successful operation");
+
+
+        $response = $this->coinService->SellCoin('1','1',1);
+
+        $this->assertEquals("successful operation",$response);
+    }
 
 
 

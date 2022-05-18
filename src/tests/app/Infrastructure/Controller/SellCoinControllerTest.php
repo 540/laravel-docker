@@ -106,5 +106,26 @@ class SellCoinControllerTest extends TestCase
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST)->assertExactJson(['error' => 'amount_usd mandatory']);
     }
+    /**
+     * @test
+     */
+    public function coinWithValidIdReturnJsonCoin()
+    {
+        $id = '1';
+        $wallet_id = "1";
+        $amount_usd = 1;
+
+        $this->BuyCoinDataSource
+            ->expects('SellCoin')
+            ->with($id,$wallet_id,$amount_usd)
+            ->once()
+            ->andReturn("successful operation");
+
+        $fields = array( "coin_id"=>$id,"wallet_id" => $wallet_id, 'amount_usd' =>$amount_usd );
+
+        $response = $this->post('api/coin/sell',$fields,token);
+
+        $response->assertStatus(Response::HTTP_OK)->assertExactJson((array)"successful operation");
+    }
 }
 
