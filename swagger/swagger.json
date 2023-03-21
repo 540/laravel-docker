@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Criptocurrencies wallet"
   },
-  "host": "petstore.swagger.io",
+  "host": "localhost:8088",
   "tags": [
     {
       "name": "coin",
@@ -17,10 +17,66 @@
     }
   ],
   "schemes": [
-    "https"
+    "http"
   ],
   "paths": {
-    "/coin/buy": {
+    "/api/coin/status/{coin_id}": {
+      "get": {
+        "tags": [
+          "coin"
+        ],
+        "summary": "Get given coin status",
+        "description": "",
+        "operationId": "coinStatus",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "coin_id",
+            "type": "string",
+            "required": true,
+            "description": "Id of the coin to get information"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coin_id": {
+                  "type": "string"
+                },
+                "symbol": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "name_id": {
+                  "type": "string"
+                },
+                "rank": {
+                  "type": "integer"
+                },
+                "price_usd": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable"
+          },
+          "404": {
+            "description": "A coin with the specified ID was not found."
+          }
+        }
+      }
+    },
+    "/api/coin/buy": {
       "post": {
         "tags": [
           "coin"
@@ -64,16 +120,19 @@
           "200": {
             "description": "successful operation"
           },
-          "400": {
-            "description": "bad request error"
+          "503": {
+            "description": "Service unavailable"
           },
           "404": {
             "description": "A coin with the specified ID was not found."
+          },
+          "400": {
+            "description": "coin_id/wallet_id/amount_usd mandatory (uno para cada caso)"
           }
         }
       }
     },
-    "/coin/sell": {
+    "/api/coin/sell": {
       "post": {
         "tags": [
           "coin"
@@ -117,16 +176,19 @@
           "200": {
             "description": "successful operation"
           },
-          "400": {
-            "description": "bad request error"
+          "503": {
+            "description": "Service unavailable"
           },
           "404": {
             "description": "A coin with the specified ID was not found."
+          },
+          "400": {
+            "description": "coin_id/wallet_id/amount_usd mandatory (uno para cada caso)"
           }
         }
       }
     },
-    "/wallet/open": {
+    "/api/wallet/open": {
       "post": {
         "tags": [
           "wallet"
@@ -140,22 +202,6 @@
         "produces": [
           "application/json"
         ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "User id",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "user_id": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -168,16 +214,13 @@
               }
             }
           },
-          "400": {
-            "description": "bad request error"
-          },
-          "404": {
-            "description": "A user with the specified ID was not found."
+          "503": {
+            "description": "Service unavailable"
           }
         }
       }
     },
-    "/wallet/{wallet_id}/": {
+    "/api/wallet/{wallet_id}": {
       "get": {
         "tags": [
           "wallet"
@@ -207,8 +250,8 @@
               }
             }
           },
-          "400": {
-            "description": "bad request error"
+          "503": {
+            "description": "Service unavailable"
           },
           "404": {
             "description": "a wallet with the specified ID was not found."
@@ -216,7 +259,7 @@
         }
       }
     },
-    "/wallet/{wallet_id}/balance": {
+    "/api/wallet/{wallet_id}/balance": {
       "get": {
         "tags": [
           "wallet"
@@ -249,8 +292,8 @@
               }
             }
           },
-          "400": {
-            "description": "bad request error"
+          "503": {
+            "description": "Service unavailable"
           },
           "404": {
             "description": "a wallet with the specified ID was not found."
