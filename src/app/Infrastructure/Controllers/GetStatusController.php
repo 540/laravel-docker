@@ -6,12 +6,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 
-class GetUserController extends BaseController
+class GetStatusController extends BaseController
 {
-    public function __invoke(string $userId): JsonResponse
+    public function __invoke(): JsonResponse
     {
         return response()->json([
-            'error' => "user does not exist"
-        ], Response::HTTP_BAD_REQUEST);
+            'status' => 'Ok',
+            'message' => 'Systems are up and running',
+        ], Response::HTTP_OK);
     }
 }
