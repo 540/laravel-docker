@@ -3,6 +3,7 @@
 #  please consider a global .gitignore https://help.github.com/articles/ignoring-files
 .vagrant*
 bin
+.phpunit.result.cache
 docker/docker
 .*.swp
 a.out
@@ -22,4 +23,5 @@ bundles/
 .git/
 vendor/pkg/
 pyenv
+mysql
 Vagrantfile
