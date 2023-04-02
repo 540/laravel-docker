@@ -14,7 +14,7 @@ class GetStatusControllerTest extends TestCase
     /**
      * @test
      */
-    public function userWithGivenIdDoesNotExist()
+    public function systemIsUpAndRunning()
     {
         $response = $this->get('/api/status');
 
